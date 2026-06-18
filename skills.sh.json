@@ -1,0 +1,15 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Documentation",
+      "description": "Skills for Agent-first repository documentation setup, cleanup, and maintenance.",
+      "skills": [
+        "documentation-reseed",
+        "documentation-maintenance"
+      ]
+    }
+  ]
+}
+
