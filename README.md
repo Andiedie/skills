@@ -29,6 +29,10 @@ Use it when a repo needs a broad documentation cleanup, not for routine doc edit
 
 The day-to-day Agent-first documentation rule set. Use it when creating, updating, deleting, reviewing, or reorganizing project docs.
 
+### `install-skills`
+
+Install Agent Skills through `npx skills` with explicit global/project scope, explicit skill selection, and the preferred `.agents/skills` canonical plus `.claude/skills` symlink layout.
+
 ## Matt Pocock skills
 
 Before using these skills, it is best to install [mattpocock/skills](https://github.com/mattpocock/skills) too:
