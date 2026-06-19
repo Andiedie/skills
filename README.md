@@ -9,43 +9,34 @@ npx skills add Andiedie/skills --list
 npx skills add Andiedie/skills
 ```
 
-## Skills
-
-### `documentation-reseed`
-
-A one-off repository documentation reset flow:
-
-1. Back up existing docs while preserving structure.
-2. Keep product/code-layer docs in place.
-3. Set up agent discoverability.
-4. Harvest durable facts from old docs and current code.
-5. Rebuild Agent-first docs.
-6. Delete stale material.
-7. Validate links and stale references.
-
-Use it when a repo needs a broad documentation cleanup, not for routine doc edits.
+## Repository Skills
 
 ### `documentation-maintenance`
 
-The day-to-day Agent-first documentation rule set. Use it when creating, updating, deleting, reviewing, or reorganizing project docs.
+Agent-first documentation maintenance workflow for deciding when to create, update, merge, or delete project documentation.
+
+### `documentation-reseed`
+
+One-off repository documentation reseed workflow for backing up existing docs, rebuilding durable agent-facing docs from current facts, and pruning stale material.
 
 ### `install-skills`
 
-Install Agent Skills through `npx skills` with explicit global/project scope, explicit skill selection, and the preferred `.agents/skills` canonical plus `.claude/skills` symlink layout.
+Predictable `npx skills` installation workflow for global or project-local skills, explicit skill selection, and the `.agents/skills` plus `.claude/skills` symlink layout.
 
-## Matt Pocock skills
+## Appendix: Current Personal Skills
 
-Before using these skills, it is best to install [mattpocock/skills](https://github.com/mattpocock/skills) too:
+Snapshot from my local skill environment on 2026-06-19. This is a reference list of skills currently in use, grouped by source.
 
-```bash
-npx skills add mattpocock/skills --list
-npx skills add mattpocock/skills
-```
-
-Required:
-
-- `setup-matt-pocock-skills`: run once in each target repo before using Matt's engineering skills. It configures issue tracker, triage labels, and domain docs.
-
-Recommended:
-
-- `writing-great-skills`: use when creating or editing skills.
+| Source | Skills |
+| --- | --- |
+| [Andiedie/skills](https://github.com/Andiedie/skills) | `documentation-maintenance`, `documentation-reseed`, `install-skills` |
+| [Andiedie/loopmark](https://github.com/Andiedie/loopmark) | `loopmark` |
+| [anthropics/skills](https://github.com/anthropics/skills) | `docx`, `pdf`, `pptx`, `xlsx` |
+| [mattpocock/skills](https://github.com/mattpocock/skills) | `ask-matt`, `codebase-design`, `diagnosing-bugs`, `domain-modeling`, `grill-with-docs`, `grilling`, `handoff`, `improve-codebase-architecture`, `prototype`, `scaffold-exercises`, `setup-matt-pocock-skills`, `tdd`, `teach`, `to-issues`, `to-prd`, `writing-great-skills` |
+| [vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser) | `agent-browser` |
+| [vercel-labs/skills](https://github.com/vercel-labs/skills) | `find-skills` |
+| Codex built-in system skills ([openai/skills](https://github.com/openai/skills/tree/main/skills/.system/imagegen)) | `imagegen` |
+| Codex plugin [`browser@openai-bundled`](https://developers.openai.com/codex/app/browser) | `browser:control-in-app-browser` |
+| Codex plugin [`chrome@openai-bundled`](https://developers.openai.com/codex/app/chrome-extension) | `chrome:control-chrome` |
+| Codex plugin [`computer-use@openai-bundled`](https://developers.openai.com/codex/app/computer-use) | `computer-use:computer-use` |
+| Codex plugin [`github@openai-curated`](https://github.com/openai/plugins) | `github:github`, `github:gh-address-comments`, `github:gh-fix-ci`, `github:yeet` |
