@@ -18,8 +18,9 @@ Code should explain current behavior through names, types, schemas, tests, and m
 3. **Decide if docs are needed.** Write docs only when future agents would likely misunderstand, miss, or have to rediscover the context from code alone.
 4. **Choose one source of truth.** Update the nearest existing source instead of creating duplicates. Link to source facts rather than copying them.
 5. **Write for retrieval.** Include trigger conditions, invariants, risks, verification paths, and relevant code entry points.
-6. **Prune stale material.** Delete, merge, or redirect outdated docs. Incorrect docs are worse than missing docs.
-7. **Report the decision.** In the final response, say which docs changed, or why no doc update was needed.
+6. **Guard semantic rewrites.** When replacing a doc rather than editing it, compare the old and new meaning before pruning.
+7. **Prune stale material.** Delete, merge, or redirect outdated docs. Incorrect docs are worse than missing docs.
+8. **Report the decision.** In the final response, say which docs changed, or why no doc update was needed.
 
 ## Write Docs When
 
@@ -28,6 +29,7 @@ Code should explain current behavior through names, types, schemas, tests, and m
 - The rule spans multiple modules or systems and cannot be safely inferred from one file.
 - The work reveals a recurring debugging, migration, rollback, or verification procedure.
 - The project needs stable vocabulary for domain concepts, issue titles, tests, or future implementation work.
+- A design, UX, accessibility, content, or visual rule guides future implementation and is not obvious from code alone.
 - A future agent would otherwise need to repeat expensive investigation.
 
 ## Do Not Write Docs When
@@ -64,6 +66,18 @@ When creating or reshaping a document, prefer these sections when relevant:
 - **Update when:** changes that require revisiting the document.
 
 Use concise headings and searchable terms. Avoid long narrative chronology except in historical change records.
+
+## Semantic Rewrite Guard
+
+Use this when replacing or heavily compressing an existing document, especially `DESIGN.md`, runbooks, ADRs, README files, and domain context.
+
+- Compare the old and new document by meaning, not by line count.
+- Keep a retention ledger, explicit or internal: fact or constraint, current source, disposition, and reason.
+- Delete a fact only when it is stale, duplicated in a better source, or safely recoverable from code, tests, schemas, tokens, or config.
+- Preserve design constraints that code does not explain: product stance, interaction rules, layout boundaries, component behavior, accessibility, motion, content style, and acceptance checks.
+- Preserve operational constraints that are easy to get wrong: permissions, rollout, rollback, verification, security boundaries, and external service setup.
+
+Completion criterion: a future agent reading the new doc plus linked sources can make the same important implementation and operations decisions as one reading the old doc.
 
 ## ADR Guidance
 
