@@ -23,6 +23,10 @@ One-off repository documentation reseed workflow for backing up existing docs, r
 
 Predictable `npx skills` installation workflow for global or project-local skills, explicit skill selection, and the `.agents/skills` plus `.claude/skills` symlink layout.
 
+### `normalize-agent-instructions`
+
+Normalize `AGENTS.md` and `CLAUDE.md` project instruction files so `AGENTS.md` is canonical and `CLAUDE.md` imports it.
+
 ## Appendix: Current Personal Skills
 
 Snapshot from my local skill environment on 2026-06-19. This is a reference list of skills currently in use, grouped by source.
