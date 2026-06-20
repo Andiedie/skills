@@ -15,6 +15,7 @@
       "title": "Skill Tooling",
       "description": "Skills for installing and maintaining Agent Skills with predictable npx skills behavior.",
       "skills": [
+        "audit-installed-skills",
         "install-skills"
       ]
     }

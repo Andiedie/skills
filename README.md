@@ -11,6 +11,10 @@ npx skills add Andiedie/skills
 
 ## Repository Skills
 
+### `audit-installed-skills`
+
+Audit installed Agent Skills for upstream deletion, updates, new available skills, known-event state, and README drift.
+
 ### `documentation-maintenance`
 
 Agent-first documentation maintenance workflow for deciding when to create, update, merge, or delete project documentation.
@@ -29,15 +33,16 @@ Normalize `AGENTS.md` and `CLAUDE.md` project instruction files so `AGENTS.md` i
 
 ## Appendix: Current Personal Skills
 
-Snapshot from my local skill environment on 2026-06-19. This is a reference list of skills currently in use, grouped by source.
+Snapshot from my local skill environment on 2026-06-21. This is a reference list of skills currently in use, grouped by source.
 
 | Source | Skills |
 | --- | --- |
-| [Andiedie/skills](https://github.com/Andiedie/skills) | `documentation-maintenance`, `documentation-reseed`, `install-skills` |
+| [Andiedie/skills](https://github.com/Andiedie/skills) | `documentation-maintenance`, `documentation-reseed`, `install-skills`, `normalize-agent-instructions` |
 | [Andiedie/loopmark](https://github.com/Andiedie/loopmark) | `loopmark` |
 | [anthropics/skills](https://github.com/anthropics/skills) | `docx`, `pdf`, `pptx`, `xlsx` |
 | [mattpocock/skills](https://github.com/mattpocock/skills) | `ask-matt`, `codebase-design`, `diagnosing-bugs`, `domain-modeling`, `grill-with-docs`, `grilling`, `handoff`, `improve-codebase-architecture`, `prototype`, `scaffold-exercises`, `setup-matt-pocock-skills`, `tdd`, `teach`, `to-issues`, `to-prd`, `writing-great-skills` |
 | [vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser) | `agent-browser` |
+| [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | `web-design-guidelines`, `writing-guidelines` |
 | [vercel-labs/skills](https://github.com/vercel-labs/skills) | `find-skills` |
 | Codex built-in system skills ([openai/skills](https://github.com/openai/skills/tree/main/skills/.system/imagegen)) | `imagegen` |
 | Codex plugin [`browser@openai-bundled`](https://developers.openai.com/codex/app/browser) | `browser:control-in-app-browser` |
