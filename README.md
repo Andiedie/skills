@@ -37,7 +37,7 @@ Snapshot from my local skill environment on 2026-06-21. This is a reference list
 
 | Source | Skills |
 | --- | --- |
-| [Andiedie/skills](https://github.com/Andiedie/skills) | `documentation-maintenance`, `documentation-reseed`, `install-skills`, `normalize-agent-instructions` |
+| [Andiedie/skills](https://github.com/Andiedie/skills) | `audit-installed-skills`, `documentation-maintenance`, `documentation-reseed`, `install-skills`, `normalize-agent-instructions` |
 | [Andiedie/loopmark](https://github.com/Andiedie/loopmark) | `loopmark` |
 | [anthropics/skills](https://github.com/anthropics/skills) | `docx`, `pdf`, `pptx`, `xlsx` |
 | [mattpocock/skills](https://github.com/mattpocock/skills) | `ask-matt`, `codebase-design`, `diagnosing-bugs`, `domain-modeling`, `grill-with-docs`, `grilling`, `handoff`, `improve-codebase-architecture`, `prototype`, `scaffold-exercises`, `setup-matt-pocock-skills`, `tdd`, `teach`, `to-issues`, `to-prd`, `writing-great-skills` |
