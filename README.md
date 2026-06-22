@@ -21,7 +21,7 @@ One-off repository documentation reseed workflow for backing up existing docs, r
 
 ### `install-skills`
 
-Predictable `npx skills` installation workflow for global or project-local skills, explicit skill selection, and the `.agents/skills` plus `.claude/skills` symlink layout.
+Predictable `npx skills` installation and update workflow for global or project-local skills, explicit skill selection, lock-aware update classification, and the `.agents/skills` plus `.claude/skills` layout.
 
 ### `normalize-agent-instructions`
 
