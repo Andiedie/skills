@@ -1,6 +1,6 @@
 ---
 name: documentation-maintenance
-description: Agent-first documentation maintenance workflow for deciding whether documentation is needed, choosing the right document type and location, avoiding code repetition, updating or deleting stale docs, and creating discoverable docs. Use when an agent is asked to create, update, clean up, reorganize, review, or decide whether to maintain project documentation, README/AGENTS/CONTEXT/ADR/runbook files, or docs-as-code content.
+description: Documentation maintenance for agent-first project docs. Use when asked to create, update, prune, reorganize, review, or decide whether to document repository knowledge such as agent instructions, context maps, ADRs, runbooks, docs indexes, or docs-as-code.
 ---
 
 # Documentation Maintenance
@@ -13,14 +13,16 @@ Code should explain current behavior through names, types, schemas, tests, and m
 
 ## Workflow
 
-1. **Inspect local rules first.** Read project entry points such as `AGENTS.md`, `CLAUDE.md`, `docs/agents/*.md`, `CONTEXT.md`, and existing `docs/` indexes when present.
-2. **Classify the change.** Decide whether the task affects implementation only, business rules, operations, architecture, cross-module contracts, domain language, or historical context.
+1. **Inspect local rules first.** Read project documentation conventions before applying these defaults: agent entrypoints, context maps, docs indexes, and repository-specific doc guidance when present.
+2. **Classify the change.** Identify durable facts, decisions, constraints, procedures, vocabulary, and source-of-truth changes; then classify them as implementation-only, business rules, operations, architecture, cross-module contracts, domain language, or historical context.
 3. **Decide if docs are needed.** Write docs only when future agents would likely misunderstand, miss, or have to rediscover the context from code alone.
-4. **Choose one source of truth.** Update the nearest existing source instead of creating duplicates. Link to source facts rather than copying them.
+4. **Choose one source of truth.** Update the nearest existing source instead of creating duplicates. Link to source facts rather than copying them. For docs-as-code, update the upstream schema, generator, config, source comments, or specification before generated output.
 5. **Write for retrieval.** Include trigger conditions, invariants, risks, verification paths, and relevant code entry points.
 6. **Guard semantic rewrites.** When replacing a doc rather than editing it, compare the old and new meaning before pruning.
 7. **Prune stale material.** Delete, merge, or redirect outdated docs. Incorrect docs are worse than missing docs.
 8. **Report the decision.** In the final response, say which docs changed, or why no doc update was needed.
+
+Completion criterion: every durable fact, decision, constraint, procedure, vocabulary change, and source-of-truth change has one disposition: updated in an existing source, documented in a new location with a stable reader and update trigger, pruned or redirected as stale, or intentionally left undocumented because code, tests, or existing docs are sufficient.
 
 ## Write Docs When
 
@@ -38,19 +40,21 @@ Code should explain current behavior through names, types, schemas, tests, and m
 - Good naming, types, schemas, tests, or small comments can make the code self-explanatory.
 - The content is temporary and belongs in a scratch note, issue, PR comment, or final response.
 - The same fact already exists elsewhere and can be linked.
-- There is no clear maintenance trigger.
+- No predictable future change would require revisiting it.
 
 ## Location Heuristics
 
-- **Agent entry/index:** `AGENTS.md` or `CLAUDE.md`. Keep it short; use it as a router to deeper docs.
-- **Agent-local rules:** `docs/agents/*.md`. Use for project-specific instructions that agents should read when doing a class of task.
-- **Domain vocabulary:** `CONTEXT.md`, or a context map if the repo is multi-context.
-- **Architecture decisions:** `docs/adr/NNNN-title.md`. Use for durable decisions, alternatives, tradeoffs, and consequences.
-- **Stable runbooks/reference:** `docs/<topic>.md`. Use for operations, environment, deployment, data, billing, worker, API, or integration procedures.
-- **Historical records:** `docs/changes/YYYY-MM-title.md`. Use for one-time migrations, incidents, validation records, or background that should not clutter current runbooks.
-- **Active work:** `.scratch/<feature>/`. Use for PRDs, issue breakdowns, exploration notes, and unstable plans.
+Follow local documentation conventions first. When no stronger convention exists, use these destinations:
 
-Prefer updating an existing topic doc over creating a new one unless the topic has a stable independent reader and maintenance trigger.
+- **Agent entry/index:** the repo's agent entrypoint, such as `AGENTS.md` or `CLAUDE.md`. Keep it short; use it as a router to deeper docs.
+- **Agent-local rules:** a dedicated agent-docs area, such as `docs/agents/*.md`. Use for project-specific instructions that agents should read when doing a class of task.
+- **Domain vocabulary:** the repo's context map or domain glossary. Use for stable terminology and bounded contexts.
+- **Architecture decisions:** an ADR-style record. Use for durable decisions, alternatives, tradeoffs, and consequences.
+- **Stable runbooks/reference:** a topic doc. Use for operations, environment, deployment, data, billing, worker, API, or integration procedures.
+- **Historical records:** a dated change, migration, incident, or validation record. Use for background that should not clutter current runbooks.
+- **Active work:** a scratch, planning, or issue-tracking area. Use for PRDs, issue breakdowns, exploration notes, and unstable plans.
+
+Prefer updating an existing topic doc over creating a new one unless the topic has a stable independent reader and a predictable future change that would require revisiting it.
 
 ## Agent-First Structure
 
@@ -69,11 +73,11 @@ Use concise headings and searchable terms. Avoid long narrative chronology excep
 
 ## Semantic Rewrite Guard
 
-Use this when replacing or heavily compressing an existing document, especially `DESIGN.md`, runbooks, ADRs, README files, and domain context.
+Use this when replacing or heavily compressing an existing document, especially legacy design docs, runbooks, ADRs, README files, and domain context.
 
 - Compare the old and new document by meaning, not by line count.
 - Keep a retention ledger, explicit or internal: fact or constraint, current source, disposition, and reason.
-- Delete a fact only when it is stale, duplicated in a better source, or safely recoverable from code, tests, schemas, tokens, or config.
+- Delete a fact only when it is stale, duplicated in a better source, or safely recoverable from code, tests, schemas, design tokens, generated artifacts, or config.
 - Preserve design constraints that code does not explain: product stance, interaction rules, layout boundaries, component behavior, accessibility, motion, content style, and acceptance checks.
 - Preserve operational constraints that are easy to get wrong: permissions, rollout, rollback, verification, security boundaries, and external service setup.
 
