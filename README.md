@@ -39,11 +39,14 @@ Reference list of global skills currently in use, grouped by source.
 
 - Repository skill source files live under `skills/*/SKILL.md`.
 - The `Managed by npx skills` table should match `~/.agents/.skill-lock.json`.
+- The `Codex-visible global skills outside the npx lock` table should be checked against Codex's active global skills, not only against plugin cache files, because plugin cache can contain stale copies.
 - Verify global state with:
 
 ```bash
-npx --yes skills list -g --json
+npx --yes skills list -g -a codex --json
 jq -r '.skills | to_entries[] | [.key, .value.source] | @tsv' ~/.agents/.skill-lock.json
+find ~/.codex/skills -name SKILL.md -print
+find ~/.codex/plugins/cache -path '*/skills/*/SKILL.md' -print
 ```
 
 - After adding a repository skill, commit and push first, then install it globally:
@@ -65,9 +68,15 @@ npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill <skill
 | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | `web-design-guidelines`, `writing-guidelines` |
 | [vercel-labs/skills](https://github.com/vercel-labs/skills) | `find-skills` |
 
-### Bundled or External Skills
+### Codex-visible global skills outside the npx lock
 
 | Source | Skills |
 | --- | --- |
+| Manual user skill | `codex-pr-review-loop` |
 | [Surge.app bundle](https://manual.nssurge.com/others/cli.html) | `Surge` |
-| Codex bundled skills | `playwright`, `playwright-interactive` |
+| Codex local skills | `imagegen`, `playwright`, `playwright-interactive` |
+| Codex browser plugin | `browser:control-in-app-browser` |
+| Codex Chrome plugin | `chrome:control-chrome` |
+| Codex Computer Use plugin | `computer-use:computer-use` |
+| Codex GitHub plugin | `github:github`, `github:gh-address-comments`, `github:gh-fix-ci`, `github:yeet` |
+| Codex primary runtime plugins | `documents:documents`, `pdf:pdf`, `presentations:Presentations`, `spreadsheets:Spreadsheets`, `template-creator:template-creator` |
