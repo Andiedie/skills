@@ -33,27 +33,41 @@ Normalize `AGENTS.md` and `CLAUDE.md` project instruction files so `AGENTS.md` i
 
 ## Appendix: Current Personal Skills
 
-Snapshot from my local skill environment on 2026-06-22. This is a reference list of skills currently in use, grouped by source.
+Reference list of global skills currently in use, grouped by source.
+
+### Maintenance
+
+- Repository skill source files live under `skills/*/SKILL.md`.
+- The `Managed by npx skills` table should match `~/.agents/.skill-lock.json`.
+- Verify global state with:
+
+```bash
+npx --yes skills list -g --json
+jq -r '.skills | to_entries[] | [.key, .value.source] | @tsv' ~/.agents/.skill-lock.json
+```
+
+- After adding a repository skill, commit and push first, then install it globally:
+
+```bash
+npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill <skill> -y
+```
 
 ### Managed by `npx skills`
 
 | Source | Skills |
 | --- | --- |
-| [Andiedie/skills](https://github.com/Andiedie/skills) | `codex-pr-review-loop`, `documentation-maintenance`, `documentation-reseed`, `install-skills`, `normalize-agent-instructions` |
+| [Andiedie/cd2-skills](https://github.com/Andiedie/cd2-skills) | `cd2` |
 | [Andiedie/loopmark](https://github.com/Andiedie/loopmark) | `loopmark` |
+| [Andiedie/openlist-skills](https://github.com/Andiedie/openlist-skills) | `openlist` |
+| [Andiedie/skills](https://github.com/Andiedie/skills) | `documentation-maintenance`, `documentation-reseed`, `install-skills`, `normalize-agent-instructions` |
 | [anthropics/skills](https://github.com/anthropics/skills) | `docx`, `pdf`, `pptx`, `xlsx` |
-| [mattpocock/skills](https://github.com/mattpocock/skills) | `ask-matt`, `codebase-design`, `diagnosing-bugs`, `domain-modeling`, `grill-with-docs`, `grilling`, `handoff`, `improve-codebase-architecture`, `prototype`, `scaffold-exercises`, `setup-matt-pocock-skills`, `tdd`, `teach`, `to-issues`, `to-prd`, `writing-great-skills` |
-| [vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser) | `agent-browser` |
+| [mattpocock/skills](https://github.com/mattpocock/skills) | `ask-matt`, `codebase-design`, `diagnosing-bugs`, `domain-modeling`, `grill-with-docs`, `grilling`, `handoff`, `implement`, `improve-codebase-architecture`, `prototype`, `scaffold-exercises`, `setup-matt-pocock-skills`, `tdd`, `teach`, `to-issues`, `to-prd`, `writing-great-skills` |
 | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | `web-design-guidelines`, `writing-guidelines` |
 | [vercel-labs/skills](https://github.com/vercel-labs/skills) | `find-skills` |
 
-### Provided by Apps
+### Bundled or External Skills
 
 | Source | Skills |
 | --- | --- |
 | [Surge.app bundle](https://manual.nssurge.com/others/cli.html) | `Surge` |
-| Codex built-in system skills ([openai/skills](https://github.com/openai/skills/tree/main/skills/.system/imagegen)) | `imagegen` |
-| Codex plugin [`browser@openai-bundled`](https://developers.openai.com/codex/app/browser) | `browser:control-in-app-browser` |
-| Codex plugin [`chrome@openai-bundled`](https://developers.openai.com/codex/app/chrome-extension) | `chrome:control-chrome` |
-| Codex plugin [`computer-use@openai-bundled`](https://developers.openai.com/codex/app/computer-use) | `computer-use:computer-use` |
-| Codex plugin [`github@openai-curated`](https://github.com/openai/plugins) | `github:github`, `github:gh-address-comments`, `github:gh-fix-ci`, `github:yeet` |
+| Codex bundled skills | `playwright`, `playwright-interactive` |
