@@ -17,6 +17,13 @@
       "skills": [
         "install-skills"
       ]
+    },
+    {
+      "title": "Code Review",
+      "description": "Skills for running PR review loops with external reviewers.",
+      "skills": [
+        "codex-pr-review-loop"
+      ]
     }
   ]
 }
