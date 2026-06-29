@@ -27,6 +27,10 @@ Predictable `npx skills` installation and update workflow for global or project-
 
 Tracker intake flow for recording raw requests as clear issues without tying the issue text to one project's labels, templates, or follow-up flows.
 
+### `issue-pick`
+
+Pick agent-ready GitHub issues from the current repository, gather their bodies, comments, images, and linked context, then synthesize the recommended next requirement.
+
 ### `codex-pr-review-loop`
 
 Loop a GitHub PR through `@codex review`, fix agent-solvable feedback, push, and re-review until clean or blocked on user judgement.

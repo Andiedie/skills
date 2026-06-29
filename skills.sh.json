@@ -20,9 +20,10 @@
     },
     {
       "title": "Issue Tracking",
-      "description": "Skills for recording raw requests as clear issue tracker entries.",
+      "description": "Skills for recording raw requests as issues and choosing agent-ready issue work.",
       "skills": [
-        "issue-intake"
+        "issue-intake",
+        "issue-pick"
       ]
     },
     {
