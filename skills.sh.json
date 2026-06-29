@@ -19,6 +19,13 @@
       ]
     },
     {
+      "title": "Issue Tracking",
+      "description": "Skills for recording raw requests as clear issue tracker entries.",
+      "skills": [
+        "issue-intake"
+      ]
+    },
+    {
       "title": "Code Review",
       "description": "Skills for running PR review loops with external reviewers.",
       "skills": [

@@ -23,6 +23,10 @@ One-off repository documentation reseed workflow for backing up existing docs, r
 
 Predictable `npx skills` installation and update workflow for global or project-local skills, explicit skill selection, lock-aware update classification, and the `.agents/skills` plus `.claude/skills` layout.
 
+### `issue-intake`
+
+Tracker intake flow for recording raw requests as clear issues without tying the issue text to one project's labels, templates, or follow-up flows.
+
 ### `codex-pr-review-loop`
 
 Loop a GitHub PR through `@codex review`, fix agent-solvable feedback, push, and re-review until clean or blocked on user judgement.
