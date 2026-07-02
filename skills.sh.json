@@ -19,11 +19,17 @@
       ]
     },
     {
-      "title": "Issue Tracking",
-      "description": "Skills for recording raw requests as issues and choosing agent-ready issue work.",
+      "title": "AI-Native Development",
+      "description": "Workflow skills for turning ambiguous signals into verified software changes.",
       "skills": [
+        "ask-andie",
         "issue-intake",
-        "issue-pick"
+        "issue-triage",
+        "issue-pack",
+        "issue-pick",
+        "issue-claim",
+        "issue-sweeper",
+        "setup-ai-native-development"
       ]
     },
     {

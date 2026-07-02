@@ -1,88 +1,68 @@
 # Andie's Agent Skills
 
-Personal agent skills for coding agents.
+Reusable skills for coding agents.
 
-These skills are written to be installable with the open `skills` CLI:
+Read this repository when you want to install the skills, understand what each package is for, or maintain the skill source files.
 
-```bash
-npx skills add Andiedie/skills --list
-npx skills add Andiedie/skills
-```
+## Install
 
-## Repository Skills
-
-### `documentation-maintenance`
-
-Agent-first documentation maintenance workflow for deciding when to create, update, merge, or delete project documentation.
-
-### `documentation-reseed`
-
-One-off repository documentation reseed workflow for backing up existing docs, rebuilding durable agent-facing docs from current facts, and pruning stale material.
-
-### `install-skills`
-
-Predictable `npx skills` installation and update workflow for global or project-local skills, explicit skill selection, lock-aware update classification, and the `.agents/skills` plus `.claude/skills` layout.
-
-### `issue-intake`
-
-Tracker intake flow for recording raw requests as clear issues without tying the issue text to one project's labels, templates, or follow-up flows.
-
-### `issue-pick`
-
-Pick agent-ready GitHub issues from the current repository, gather their bodies, comments, images, and linked context, then synthesize the recommended next requirement.
-
-### `codex-pr-review-loop`
-
-Loop a GitHub PR through `@codex review`, fix agent-solvable feedback, push, and re-review until clean or blocked on user judgement.
-
-### `normalize-agent-instructions`
-
-Normalize `AGENTS.md` and `CLAUDE.md` project instruction files so `AGENTS.md` is canonical and `CLAUDE.md` imports it.
-
-## Appendix: Current Personal Skills
-
-Reference list of global skills currently in use, grouped by source.
-
-### Maintenance
-
-- Repository skill source files live under `skills/*/SKILL.md`.
-- The `Managed by npx skills` table should match `~/.agents/.skill-lock.json`.
-- The `Codex-visible global skills outside the npx lock` table should include only enabled Codex global skills. Use `~/.codex/config.toml` as the source for enabled plugins and disabled system skills; plugin cache files are only lookup targets and can contain stale copies.
-- Verify global state with:
+List the skills exposed by this repository:
 
 ```bash
-npx --yes skills list -g -a codex --json
-jq -r '.skills | to_entries[] | [.key, .value.source] | @tsv' ~/.agents/.skill-lock.json
-awk '/^\[plugins\./ { p=$0; gsub(/^\[plugins\."|"\]$/, "", p) } /^enabled = true/ && p { print p }' ~/.codex/config.toml
-awk '/^\[\[skills.config\]\]/ { path=""; enabled="" } /^path = / { path=$0; sub(/^path = "/, "", path); sub(/"$/, "", path) } /^enabled = / { enabled=$3; if (path != "") print enabled "\t" path }' ~/.codex/config.toml
+npx --yes skills add Andiedie/skills --list
 ```
 
-- After adding a repository skill, commit and push first, then install it globally:
+Install them:
 
 ```bash
-npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill <skill> -y
+npx --yes skills add Andiedie/skills
 ```
 
-### Managed by `npx skills`
+Install one skill explicitly:
 
-| Source | Skills |
-| --- | --- |
-| [Andiedie/cd2-skills](https://github.com/Andiedie/cd2-skills) | `cd2` |
-| [Andiedie/loopmark](https://github.com/Andiedie/loopmark) | `loopmark` |
-| [Andiedie/openlist-skills](https://github.com/Andiedie/openlist-skills) | `openlist` |
-| [Andiedie/skills](https://github.com/Andiedie/skills) | `codex-pr-review-loop`, `documentation-maintenance`, `documentation-reseed`, `install-skills`, `normalize-agent-instructions` |
-| [anthropics/skills](https://github.com/anthropics/skills) | `docx`, `pdf`, `pptx`, `xlsx` |
-| [mattpocock/skills](https://github.com/mattpocock/skills) | `ask-matt`, `codebase-design`, `diagnosing-bugs`, `domain-modeling`, `grill-with-docs`, `grilling`, `handoff`, `implement`, `improve-codebase-architecture`, `prototype`, `scaffold-exercises`, `setup-matt-pocock-skills`, `tdd`, `teach`, `to-issues`, `to-prd`, `writing-great-skills` |
-| [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | `web-design-guidelines`, `writing-guidelines` |
-| [vercel-labs/skills](https://github.com/vercel-labs/skills) | `find-skills` |
+```bash
+npx --yes skills add Andiedie/skills --skill <skill-name>
+```
 
-### Codex-visible global skills outside the npx lock
+## Skill Packages
 
-| Source | Skills |
-| --- | --- |
-| [Surge.app bundle](https://manual.nssurge.com/others/cli.html) | `Surge` |
-| Codex local skills | `imagegen`, `playwright`, `playwright-interactive` |
-| Codex browser plugin | `browser:control-in-app-browser` |
-| Codex Chrome plugin | `chrome:control-chrome` |
-| Codex Computer Use plugin | `computer-use:computer-use` |
-| Codex GitHub plugin | `github:github`, `github:gh-address-comments`, `github:gh-fix-ci`, `github:yeet` |
+### AI-native development
+
+[AI-native development](skills/ai-native-development/README.md) defines the delivery loop for turning ambiguous signals into packed, claimed, and implemented software changes.
+
+It includes:
+
+- `ask-andie`
+- `issue-intake`
+- `issue-triage`
+- `issue-pack`
+- `issue-pick`
+- `issue-claim`
+- `issue-sweeper`
+- `setup-ai-native-development`
+
+### Documentation
+
+- `documentation-maintenance`: maintain agent-facing project docs without turning them into stale notes.
+- `documentation-reseed`: rebuild a repository's docs from verified current facts when the existing structure is too stale to maintain incrementally.
+- `normalize-agent-instructions`: make `AGENTS.md` canonical and keep related agent instruction files consistent.
+
+### Skill Tooling
+
+- `install-skills`: install, update, inspect, and troubleshoot `npx skills` managed skills.
+
+### Code Review
+
+- `codex-pr-review-loop`: run a GitHub PR through `@codex review`, fix agent-solvable feedback, and continue until clean or blocked on user judgment.
+
+## External Skills
+
+Several workflows in this repository intentionally compose with skills from [Matt Pocock's skills repository](https://github.com/mattpocock/skills), especially `grill-with-docs` for decision clarification and `implement` for execution after claim.
+
+The `issue-pack` skill adapts the PRD and tracer-bullet issue ideas from Matt's `to-prd` and `to-issues` to this repository's `needs-pack`, PRD package, relationship, and claim rules.
+
+## Maintenance
+
+- Skill source files live under `skills/*/SKILL.md` or package directories such as `skills/ai-native-development/*/SKILL.md`.
+- When adding, renaming, or removing a skill, update `skills.sh.json`.
+- When changing the AI-native issue workflow, update [Delivery loop](skills/ai-native-development/docs/delivery-loop.md), [Skills](skills/ai-native-development/docs/skills.md), and the affected workflow `SKILL.md` files together.
