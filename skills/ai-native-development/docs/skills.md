@@ -17,8 +17,8 @@ If the next step is unclear, use `ask-andie` first.
 | Observe | A raw signal has not been recorded yet. | `issue-intake` | Durable issue, usually entering `needs-triage`. | `issue-triage` |
 | Decide | A recorded issue needs routing. | `issue-triage` | Closed issue, `needs-info`, or `needs-pack`. | `grill-with-docs`, `issue-pack`, or human input |
 | Clarify | Human product, domain, architecture, naming, testing, access, or acceptance input is missing. | Matt `grill-with-docs` when a decision interview is needed; otherwise capture the answer on the issue. | Recorded decision or specific unanswered question. | `issue-pack` or `issue-triage` |
-| Pack | Worth-doing work is not executable yet. | `issue-pack` | Ordinary ready issue or PRD package. | `issue-pick` |
-| Ready | Executable work exists. | `issue-pick` | Recommended ordinary issue or PRD package. | `issue-claim` |
+| Pack | Worth-doing work is not executable yet. | `issue-pack` | Single issue package or PRD package. | `issue-pick` |
+| Ready | Executable work exists. | `issue-pick` | Recommended single issue package or PRD package. | `issue-claim` |
 | Claim | A delivery unit has been chosen. | `issue-claim` | Ownership recorded without changing scope. | Matt `implement` |
 | Execute | Claimed work is being implemented. | Matt `implement` | Code, tests, verification, PR, or commit. | Close or route back to `issue-pack` |
 | Close/Learn | Work is complete or workflow state has drifted. | `issue-sweeper` for drift. | Closed work, cleanup, docs, or follow-up issues. | New signal or no action |
@@ -49,7 +49,7 @@ If the next step is unclear, use `ask-andie` first.
 ### `issue-pack`
 
 - Use when: worth-doing work needs to become one executable delivery unit.
-- Produces: an ordinary `ready-for-agent` issue or a `parent-prd + ready-for-agent` PRD package with child issues, relationships, blockers, and verification criteria.
+- Produces: a `ready-for-agent` single issue package, or a `parent-prd + ready-for-agent` PRD package with independently-grabbable child slices, relationships, blockers, and verification criteria.
 - Must not: replace `grill-with-docs`, claim, implement, or mark PRD children as independently ready.
 - Usually next: `issue-pick`.
 
@@ -63,16 +63,16 @@ If the next step is unclear, use `ask-andie` first.
 ### `issue-claim`
 
 - Use when: a specific delivery unit has been chosen and ownership should be recorded.
-- Produces: assignee/comment/branch/PR ownership signal according to repository setup.
+- Produces: assignee/comment/branch/PR ownership signal for the whole delivery unit; PRD child slices may be used for internal subagent delegation under that claim.
 - Must not: change scope, claim PRD children independently, or claim around unresolved external blockers.
 - Usually next: Matt `implement`.
 
 ### `issue-sweeper`
 
 - Use when: tracker state may have drifted.
-- Produces: findings for stale claims, contradictory labels, wrong relationships, blocked ready work, and closable parent PRDs.
+- Produces: findings for stale claims, contradictory labels, wrong relationships, blocked ready work, and parent PRDs needing follow-up.
 - Must not: implement, decide priority, or override active owners without approval.
-- Usually next: approved metadata cleanup, `issue-triage`, or `issue-pack`.
+- Usually next: approved metadata cleanup, `issue-triage`, `issue-pack`, `issue-claim`, or human approval.
 
 ### `setup-ai-native-development`
 

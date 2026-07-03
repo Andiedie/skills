@@ -8,6 +8,8 @@ disable-model-invocation: true
 
 You do not need to remember every issue skill. Ask when you need to know where the work is, what should happen next, or which skill fits the current situation.
 
+Do more than route. Teach the rule that made the route obvious, so the user can learn the loop and need this skill less often.
+
 ## Main Loop
 
 The usual route for issue work:
@@ -15,11 +17,15 @@ The usual route for issue work:
 1. **`issue-intake`** records a raw signal as durable tracker work.
 2. **`issue-triage`** decides whether recorded work should close, wait for information, or move to pack.
 3. **`grill-with-docs`** resolves blocking human decisions when a package cannot be correct without them.
-4. **`issue-pack`** creates one executable delivery unit: an ordinary ready issue or a PRD package.
+4. **`issue-pack`** creates one executable delivery unit: a single issue package or a PRD package.
 5. **`issue-pick`** chooses one unblocked, unclaimed delivery unit from ready work. It is read-only.
 6. **`issue-claim`** records ownership for the complete delivery unit without changing its scope.
 7. **Matt `implement`** implements the claimed work.
 8. **Close or learn** when the work is merged, rejected, duplicated, already done, or needs follow-up documentation.
+
+## Context Hygiene
+
+Keep clarification and packaging in one context until the package is published. After a PRD package is claimed, the owner may use child issues as fresh subagent work units, each grounded in the parent PRD plus its child issue.
 
 ## On-Ramps
 
@@ -30,10 +36,11 @@ Pick the route from the current surface:
 - **Existing issue marked `needs-info` with new reporter or maintainer activity** -> `issue-triage`.
 - **Existing issue marked `needs-info` because decisions are missing** -> `grill-with-docs`.
 - **Existing issue marked `needs-pack`** -> `issue-pack`.
-- **Ready ordinary issue or PRD package slate and no specific delivery unit chosen** -> `issue-pick`.
-- **Specific ready ordinary issue or PRD package already chosen** -> `issue-claim`.
-- **Claimed ordinary issue or PRD package** -> Matt `implement`.
+- **Ready single issue package or PRD package slate and no specific delivery unit chosen** -> `issue-pick`.
+- **Specific ready single issue package or PRD package already chosen** -> `issue-claim`.
+- **Claimed single issue package or PRD package** -> Matt `implement`.
 - **Tracker drift, stale claim, blocked ready work, PRD child picked independently, or parent PRD cleanup** -> `issue-sweeper`.
+- **New repository with no workflow setup** -> `setup-ai-native-development`.
 
 ## Precondition
 
@@ -42,15 +49,18 @@ Run `setup-ai-native-development` before relying on the workflow in a new reposi
 ## When Invoked
 
 1. Identify the current surface: request, issue, PR, branch, local diff, or tracker audit.
-2. Read only the evidence needed to route: labels, comments, blockers, assignees, linked PRs, parent/sub-issues, and current branch or diff when relevant.
-3. Name the current loop position and the next skill.
-4. Report the route using this shape:
+2. Read only the evidence needed to route: open or closed state, labels, comments, blockers, assignees, claim comments, linked PRs, parent/sub-issues, and current branch or diff when relevant.
+3. Name the current loop position, the next skill, and the general rule the user can remember next time.
+4. If the route is uncertain, choose the smallest clarifying route: `issue-triage` for unclear tracker state, `grill-with-docs` for missing product or business decisions, `setup-ai-native-development` for missing repository rules, or one direct question when the user must decide.
+5. Report the route using this shape:
 
 ```markdown
 Current position: <stage or surface>
 Evidence: <facts used to route>
 Next skill: <skill>
 Why: <one or two sentences>
+Rule to learn: <general routing rule>
+Skip ask next time when: <recognizable condition>
 Human input needed: <none / exact question>
 Watch-outs: <blocker, claim, parent PRD, stale state, or none>
 ```
@@ -60,6 +70,7 @@ Completion criterion: the user can run one named skill next, or can answer one c
 ## Boundaries
 
 - Do not edit tracker state.
+- Do not synthesize full requirements, rank ready work, or repair tracker drift.
 - Do not claim work.
 - Do not implement work.
 - Do not decide product priority unless the user supplied the priority rule.

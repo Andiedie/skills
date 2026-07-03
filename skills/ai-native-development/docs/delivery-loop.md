@@ -39,7 +39,7 @@ Each stage reduces a different kind of uncertainty:
 | Observe | What signal did we receive? What facts are already known? | Raw request, context, reproduction clues, evidence |
 | Decide | Is it worth acting on? What is missing? | Close reason, information request, or pack route |
 | Clarify | Which human decision blocks a correct package? | Recorded decision, docs update, or specific unanswered question |
-| Pack | What is the executable delivery unit? | Ordinary ready issue or PRD package |
+| Pack | What is the executable delivery unit? | Single issue package or PRD package |
 | Claim | Who owns this delivery unit now? | Assignee, claim comment, branch, or PR link |
 | Implement | What code change satisfies the package? | Code, tests, verification, PR, or commit |
 | Close/Learn | How does the result close? What should be recorded? | Closed work, docs, follow-up work |
@@ -110,18 +110,24 @@ Flow rules:
 
 ## Delivery Units
 
-Before implementation, work must be packed into one delivery unit. The package can be lightweight, but it must tell the implementation agent:
+Before implementation, work must be packed into one delivery unit. The package can be concise, but it must tell the implementation agent:
 
 - current behavior;
 - desired behavior;
+- user stories or stakeholder value;
 - out of scope;
 - key interfaces, domain concepts, or constraints;
-- how completion will be verified.
+- the testing seam or verification strategy;
+- acceptance criteria and how completion will be verified.
+
+The package is the implementation contract. The original issue, comments, and discussion are context.
 
 Delivery unit shapes:
 
-- **Ordinary issue**: one issue with an Agent Brief and `ready-for-agent`.
-- **PRD package**: one parent PRD with child issues for progress, ordering, and acceptance tracking.
+- **Single issue package**: one issue with the complete Package Contract and `ready-for-agent`; no child issues are created.
+- **PRD package**: one parent PRD with the complete Package Contract and child issues for internal execution, progress, ordering, delegation, and acceptance tracking.
+
+Both shapes require the same contract strength. The difference is whether the work needs child slices.
 
 Do not treat file paths and line numbers as the specification itself. They become stale; behavior, interfaces, constraints, and acceptance criteria are more durable.
 
@@ -140,14 +146,14 @@ Use each tracker mechanism for one purpose: queue labels for pre-execution routi
 
 ## State Labels
 
-Each delivery unit should have at most one queue state label. Delivery units are ordinary issues and parent PRDs. Child issues under a parent PRD inherit the parent PRD's queue state and are not picked independently.
+Each top-level issue or parent PRD should have at most one queue state label. PRD child issues inherit the parent PRD's queue state and are not picked independently.
 
 | State | Stage | Meaning |
 | --- | --- | --- |
 | `needs-triage` | Decide | The routing decision has not been completed. |
 | `needs-info` | Clarify | Human, reporter, maintainer, external-system, or manual acceptance input is missing. |
 | `needs-pack` | Pack | The work is worth doing but is not yet packaged as an executable delivery unit. |
-| `ready-for-agent` | Ready | The ordinary issue or PRD package has an executable package and can be picked after blocker and claim checks. |
+| `ready-for-agent` | Ready | The single issue package or PRD package has an executable package and can be picked after blocker and claim checks. |
 
 Closed work uses the tracker lifecycle state, not a queue label. Use the closing comment, and close-reason labels only when the repository already has that convention.
 
@@ -162,7 +168,7 @@ Pack rules:
 - `issue-pack` is the only workflow skill that creates `ready-for-agent` delivery units.
 - Use `parent-prd` as the structural label for the parent issue.
 - A parent PRD can carry `ready-for-agent`; that means the whole PRD package is ready to pick, claim, and implement.
-- Child issues are progress and acceptance slices inside the PRD package.
+- Child issues are independently-grabbable tracer-bullet slices inside the PRD package. A claiming agent may delegate them to subagents while keeping one owner for the package.
 - Do not mark PRD children `ready-for-agent`; they are not independent pick targets.
 - If a slice should be independently picked by another agent, make it a standalone issue rather than a PRD child.
 - Do not duplicate the same sub-issues with a Markdown task list.
@@ -179,9 +185,10 @@ Dependency rules:
 
 The claim unit must equal the delivery unit.
 
-- A single `ready-for-agent` issue can be claimed.
+- A single issue package with `ready-for-agent` can be claimed.
 - A `parent-prd` with `ready-for-agent` is claimed as the whole PRD package: parent plus all children.
-- PRD children cannot be claimed separately.
+- PRD children cannot be claimed separately through the tracker workflow.
+- The parent PRD owner may use child issues as internal subagent work units, but remains responsible for integration, verification, and closure of the whole package.
 - A delivery unit with an open external blocker cannot be claimed.
 - If the delivery unit is unclear, move the work back to `needs-pack`.
 
@@ -202,11 +209,11 @@ These are workflow roles, not necessarily separate people or separate agents. On
 | Intake | Raw signal | Durable work item, usually entering `needs-triage`. |
 | Triage | `needs-triage`, or `needs-info` with new input | Closed, `needs-info`, or `needs-pack`. |
 | Clarify | `needs-info` caused by missing decisions | Recorded human decision; often via Matt `grill-with-docs`. |
-| Pack | `needs-pack`, or clarified work | Ordinary ready issue or PRD package. |
-| Pick | `ready-for-agent` delivery units | Recommended ordinary issue or PRD package. |
+| Pack | `needs-pack`, or clarified work | Single issue package or PRD package. |
+| Pick | `ready-for-agent` delivery units | Recommended single issue package or PRD package. |
 | Claim | Picked delivery unit | Recorded ownership and confirmed claim scope. |
 | Implement | Claimed delivery unit | Hand off to Matt `implement`. |
-| Sweep | Active work set | Stale claims, incorrect labels, incorrect relationships, closable parent PRDs. |
+| Sweep | Active work set | Stale claims, incorrect labels, incorrect relationships, and parent PRDs needing follow-up. |
 
 Skill directions:
 
@@ -229,7 +236,7 @@ All related skills must maintain these invariants:
 - `ready-for-agent` means only blocker and claim checks are needed before implementation.
 - A delivery unit has at most one queue state label.
 - `parent-prd` plus `ready-for-agent` means the PRD package is executable as a whole.
-- PRD children are not independent pick, claim, or implementation targets.
+- PRD children are not independent pick or claim targets, but may be internal implementation units under the parent PRD owner.
 - An open external blocker makes a delivery unit not pickable.
 - Claim scope must cover the full delivery unit.
 - When the package is wrong, route back to `needs-pack` or `needs-info` instead of privately changing scope.

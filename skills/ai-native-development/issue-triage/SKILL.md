@@ -8,6 +8,8 @@ disable-model-invocation: true
 
 Triage runs the Decide stage for recorded work. It determines whether an issue should close, wait for information, or move to `needs-pack`.
 
+Triage produces an evidence-backed routing decision. It does not make work executable.
+
 ## Outcomes
 
 Triage may produce only one outcome:
@@ -36,25 +38,26 @@ Use this skill in two ways:
 2. Collect target context.
    - Read title, body, labels, comments, assignees, milestone, linked PRs, attachments, parent/sub-issues, blockers, and prior triage notes.
    - Inspect related code, tests, docs, domain glossary, architectural decision records, and current behavior only when they materially affect the route.
+   - Classify the request as `bug`, `enhancement`, or another repository-defined category when that affects verification. This category does not need to become a label.
    - Check redundancy by concept, not wording: is the requested behavior already implemented?
    - Check prior rejection or out-of-scope records when the repository has them.
    - For bugs, make a proportionate reproduction attempt from reporter steps.
    - For PRs, inspect the diff and relevant checks.
-   - Completion criterion: the recommendation can name established facts, confidence, unknowns, reproduction or PR verification result, redundancy result, and prior rejection result.
+   - Completion criterion: the recommendation can name category, established facts, verified behavior, assumptions, unknowns, blockers, reproduction or PR verification result, redundancy result, and prior rejection result.
 
 3. Recommend a route before editing.
    - If a maintainer explicitly requests one of the triage outcomes above, confirm label, comment, and closure side effects, then use that outcome without reopening the judgment.
    - Choose `closed` for duplicate, already implemented, rejected, not actionable, or no-longer-relevant work.
    - Choose `needs-info` when a specific missing fact, human decision, permission, external dependency, or acceptance gate blocks safe packing.
    - Recommend `grill-with-docs` when the missing input is a product, domain, architecture, naming, or testing decision that needs a structured interview.
-   - Choose `needs-pack` when the work is valuable and ready to be packaged as an ordinary issue or PRD package.
+   - Choose `needs-pack` when the work is worth doing and ready to be packaged as a single issue package or PRD package.
    - Completion criterion: the recommendation names the outcome, evidence, risk, and next skill.
 
 4. Apply the confirmed outcome.
    - Unless the user explicitly asks for batch work, update one issue or PR at a time.
    - Remove conflicting active queue labels.
    - For `needs-info`, post the needs-info template below.
-   - For `needs-pack`, comment with established facts, package inputs, likely package shape, and verification clues.
+   - For `needs-pack`, comment with category, established facts, package inputs, likely package shape, verification clues, evidence links, and non-blocking unknowns.
    - For `closed`, comment with the reason and close the issue. Use close-reason labels only when the repository already has that convention.
    - Completion criterion: tracker state, comments, and labels express one route without contradictory active queue state.
 
@@ -69,21 +72,31 @@ Use this skill in two ways:
 ```markdown
 ## Triage Notes
 
+Category: <bug, enhancement, or repository category>
+
 Established facts:
 
 - <fact>
+
+Verified behavior:
+
+- <reproduction, PR check, current behavior check, or not applicable>
 
 Needed from <person, role, or skill>:
 
 - <specific question or decision>
 
 Recommended next skill: <grill-with-docs or none>
+
+Resume point: <where triage or pack should continue>
 ```
 
 ### Needs Pack
 
 ```markdown
 ## Triage Notes
+
+Category: <bug, enhancement, or repository category>
 
 Established facts:
 
@@ -93,10 +106,13 @@ Package inputs:
 
 - Current behavior:
 - Desired behavior:
+- Known constraints:
 - Scope clues:
 - Verification clues:
+- Evidence links:
+- Non-blocking unknowns:
 
-Recommended package shape: <ordinary issue or PRD package>
+Recommended package shape: <single issue package or PRD package>
 ```
 
 ## Boundaries
@@ -105,4 +121,6 @@ Recommended package shape: <ordinary issue or PRD package>
 - Do not mark work `ready-for-agent`.
 - Do not claim or implement work.
 - Do not ask broad questions when a specific missing fact can be named.
+- Do not run a full product interview; route structured decisions to `grill-with-docs`.
+- Do not deep-dive code unless the route depends on that evidence.
 - Do not mark PRD children with active queue labels.
