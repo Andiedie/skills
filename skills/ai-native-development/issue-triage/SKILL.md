@@ -49,7 +49,7 @@ Use this skill in two ways:
    - If a maintainer explicitly requests one of the triage outcomes above, confirm label, comment, and closure side effects, then use that outcome without reopening the judgment.
    - Choose `closed` for duplicate, already implemented, rejected, not actionable, or no-longer-relevant work.
    - Choose `needs-info` when a specific missing fact, human decision, permission, external dependency, or acceptance gate blocks safe packing.
-   - Recommend `grill-with-docs` when the missing input is a product, domain, architecture, naming, or testing decision that needs a structured interview.
+   - Recommend `issue-grill` when the missing input is a product, domain, architecture, naming, or testing decision that needs a structured interview.
    - Choose `needs-pack` when the work is worth doing and ready to be packaged as a single issue package or PRD package.
    - Completion criterion: the recommendation names the outcome, evidence, risk, and next skill.
 
@@ -86,7 +86,7 @@ Needed from <person, role, or skill>:
 
 - <specific question or decision>
 
-Recommended next skill: <grill-with-docs or none>
+Recommended next skill: <issue-grill or none>
 
 Resume point: <where triage or pack should continue>
 ```
@@ -121,6 +121,6 @@ Recommended package shape: <single issue package or PRD package>
 - Do not mark work `ready-for-agent`.
 - Do not claim or implement work.
 - Do not ask broad questions when a specific missing fact can be named.
-- Do not run a full product interview; route structured decisions to `grill-with-docs`.
+- Do not run a full product interview; route structured decisions to `issue-grill`.
 - Do not deep-dive code unless the route depends on that evidence.
 - Do not mark PRD children with active queue labels.

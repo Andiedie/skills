@@ -26,8 +26,9 @@ Both shapes require the same contract strength. A single issue package is not a 
 - Avoid file paths and line numbers unless they are evidence.
 - Acceptance criteria must be concrete and independently verifiable.
 - Out of scope is required.
-- User stories must be a long enough numbered list to cover the package's meaningful actors and behaviors. Each story uses this format: `As an <actor>, I want <feature>, so that <benefit>.`
+- User stories must be a LONG, numbered list that covers the package's meaningful actors, behaviors, edge cases, and acceptance-relevant scenarios. Each story uses this format: `As an <actor>, I want <feature>, so that <benefit>.`
 - Testing decisions must name a test seam or verification strategy. Prefer existing seams and the highest practical seam; fewer seams are better when they still prove the behavior.
+- Documentation proposals from `issue-grill` must become package requirements, acceptance criteria, or child slices. Do not apply them locally during pack.
 - Prototype snippets may be included only when they express a decision more precisely than prose, such as a state machine, reducer shape, schema, type shape, or API payload shape. Keep only decision-rich parts, label them as prototype-derived, and do not paste a working demo.
 
 ## Blocked Route
@@ -36,13 +37,13 @@ If human judgment, reporter detail, permission, external access, acceptance inpu
 
 - the exact blocker;
 - recommended next state: `needs-info`;
-- recommended next skill: `grill-with-docs` when a structured decision interview is needed, otherwise human or external input;
+- recommended next skill: `issue-grill` when a structured decision interview is needed, otherwise human or external input;
 - where to resume in `issue-pack` after the blocker is resolved.
 
 ## Process
 
 1. Load the work.
-   - Read the issue body, comments, labels, parent/sub-issues, blockers, linked PRs, attachments, triage notes, and any existing PRD.
+   - Read the issue body, comments, labels, parent/sub-issues, blockers, linked PRs, attachments, triage notes, `issue-grill` notes, and any existing PRD.
    - Read relevant code, tests, docs, glossary, architectural decision records, and tracker conventions when they materially affect the package.
    - Identify current behavior, desired outcome, constraints, domain terms, verification path, test seams or verification strategy, blockers, and unresolved decisions.
    - Prefer existing test seams and the highest practical seam that can verify the behavior. If a new seam or prefactoring is needed, make that explicit.
@@ -51,8 +52,8 @@ If human judgment, reporter detail, permission, external access, acceptance inpu
 2. Check for decision blockers.
    - Prefer repository facts over asking the user.
    - When human product, domain, architecture, naming, or testing decisions block a correct package, stop and report the blocked route.
-   - Do not replace `grill-with-docs` with an ad hoc interview.
-   - Completion criterion: either no blocking decision remains, or the report names `needs-info`, the exact decision, `grill-with-docs` as the next skill, and the resume point.
+   - Do not replace `issue-grill` with an ad hoc interview.
+   - Completion criterion: either no blocking decision remains, or the report names `needs-info`, the exact decision, `issue-grill` as the next skill, and the resume point.
 
 3. Choose the package shape.
    - Use a single issue package when one issue can carry the complete Package Contract.
@@ -110,6 +111,8 @@ Describe the completed behavior from the user or system perspective, including i
 
 ## User Stories
 
+A LONG, numbered list of user stories. Each user story should use this format:
+
 1. As an <actor>, I want <feature>, so that <benefit>.
 
 Example:
@@ -119,6 +122,10 @@ Example:
 ## Implementation Decisions
 
 - <modules, interfaces, types, schemas, API contracts, commands, config shapes, interactions, architectural decisions, or domain concepts>
+
+## Documentation / Domain Updates
+
+- <glossary, ADR, context, README, runbook, or none>
 
 ## Testing / Verification Decisions
 
@@ -167,6 +174,10 @@ Describe the end-to-end behavior, not layer-by-layer work.
 
 Test seam or verification strategy:
 
+## Documentation / domain updates
+
+- <glossary, ADR, context, README, runbook, or none>
+
 ## Blocked by
 
 None - can start immediately
@@ -177,7 +188,7 @@ None - can start immediately
 ## Boundaries
 
 - Do not claim or implement work.
-- Do not replace `grill-with-docs` with an ad hoc interview.
+- Do not replace `issue-grill` with an ad hoc interview.
 - Do not publish a package while human decisions, a test seam or verification strategy, or verifiable acceptance criteria are missing.
 - Do not publish while out of scope, package shape, child granularity, or dependency relationships are unclear.
 - Do not treat file paths or line numbers as the specification.

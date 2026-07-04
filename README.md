@@ -15,7 +15,7 @@ npx --yes skills add Andiedie/skills --list
 Install the AI-native development loop globally for Codex and Claude Code:
 
 ```bash
-npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill ask-andie issue-intake issue-triage issue-pack issue-pick issue-claim issue-sweeper setup-ai-native-development -y
+npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill ask-andie issue-intake issue-triage issue-grill issue-pack issue-pick issue-claim issue-sweeper setup-ai-native-development -y
 ```
 
 Install the repository interactively:
@@ -41,6 +41,7 @@ It includes:
 - `ask-andie`
 - `issue-intake`
 - `issue-triage`
+- `issue-grill`
 - `issue-pack`
 - `issue-pick`
 - `issue-claim`
@@ -68,6 +69,7 @@ Several workflows in this repository intentionally compose with skills from [Mat
 For the AI-native development loop, keep these Matt skills installed:
 
 - `grill-with-docs`
+- `grilling`
 - `implement`
 - `code-review`
 - `tdd`
@@ -76,6 +78,8 @@ For the AI-native development loop, keep these Matt skills installed:
 - `codebase-design`
 - `ask-matt`
 - `setup-matt-pocock-skills`
+
+The `issue-grill` skill is a tracker-safe adaptation of Matt's `grill-with-docs`: it keeps the `/grilling` and `/domain-modeling` handfeel, but records decisions and documentation proposals on the issue for `issue-pack` instead of editing local docs during clarification.
 
 The `issue-pack` skill adapts the PRD and tracer-bullet issue ideas from Matt's `to-prd` and `to-issues` to this repository's `needs-pack`, PRD package, relationship, and claim rules.
 
@@ -90,7 +94,7 @@ Snapshot from my local skill environment on 2026-07-03. This records the skills 
 | [Andiedie/cd2-skills](https://github.com/Andiedie/cd2-skills) | `cd2` |
 | [Andiedie/loopmark](https://github.com/Andiedie/loopmark) | `loopmark` |
 | [Andiedie/openlist-skills](https://github.com/Andiedie/openlist-skills) | `openlist` |
-| [Andiedie/skills](https://github.com/Andiedie/skills) | `ask-andie`, `codex-pr-review-loop`, `documentation-maintenance`, `documentation-reseed`, `install-skills`, `issue-claim`, `issue-intake`, `issue-pack`, `issue-pick`, `issue-sweeper`, `issue-triage`, `normalize-agent-instructions`, `setup-ai-native-development` |
+| [Andiedie/skills](https://github.com/Andiedie/skills) | `ask-andie`, `codex-pr-review-loop`, `documentation-maintenance`, `documentation-reseed`, `install-skills`, `issue-claim`, `issue-grill`, `issue-intake`, `issue-pack`, `issue-pick`, `issue-sweeper`, `issue-triage`, `normalize-agent-instructions`, `setup-ai-native-development` |
 | [anthropics/skills](https://github.com/anthropics/skills) | `docx`, `pdf`, `pptx`, `xlsx` |
 | [mattpocock/skills](https://github.com/mattpocock/skills) | `ask-matt`, `code-review`, `codebase-design`, `diagnosing-bugs`, `domain-modeling`, `grill-with-docs`, `grilling`, `handoff`, `implement`, `improve-codebase-architecture`, `prototype`, `scaffold-exercises`, `setup-matt-pocock-skills`, `tdd`, `teach`, `to-issues`, `to-prd`, `writing-great-skills` |
 | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | `web-design-guidelines`, `writing-guidelines` |

@@ -15,8 +15,8 @@ If the next step is unclear, use `ask-andie` first.
 | Stage | Situation | Primary skill | Output | Usually next |
 | --- | --- | --- | --- | --- |
 | Observe | A raw signal has not been recorded yet. | `issue-intake` | Durable issue, usually entering `needs-triage`. | `issue-triage` |
-| Decide | A recorded issue needs routing. | `issue-triage` | Closed issue, `needs-info`, or `needs-pack`. | `grill-with-docs`, `issue-pack`, or human input |
-| Clarify | Human product, domain, architecture, naming, testing, access, or acceptance input is missing. | Matt `grill-with-docs` when a decision interview is needed; otherwise capture the answer on the issue. | Recorded decision or specific unanswered question. | `issue-pack` or `issue-triage` |
+| Decide | A recorded issue needs routing. | `issue-triage` | Closed issue, `needs-info`, or `needs-pack`. | `issue-grill`, `issue-pack`, or human input |
+| Clarify | Human product, domain, architecture, naming, testing, access, or acceptance input is missing. | `issue-grill` when a decision interview is needed; otherwise capture the answer on the issue. | Recorded decision, documentation proposal, or specific unanswered question. | `issue-pack` or `issue-triage` |
 | Pack | Worth-doing work is not executable yet. | `issue-pack` | Single issue package or PRD package. | `issue-pick` |
 | Ready | Executable work exists. | `issue-pick` | Recommended single issue package or PRD package. | `issue-claim` |
 | Claim | A delivery unit has been chosen. | `issue-claim` | Ownership recorded without changing scope. | Matt `implement` |
@@ -44,13 +44,20 @@ If the next step is unclear, use `ask-andie` first.
 - Use when: a recorded issue needs a route.
 - Produces: close with reason, `needs-info`, or `needs-pack`.
 - Must not: write a PRD, create child issues, mark ready, claim, or implement.
-- Usually next: `grill-with-docs`, `issue-pack`, or human input.
+- Usually next: `issue-grill`, `issue-pack`, or human input.
+
+### `issue-grill`
+
+- Use when: a correct package depends on human product, domain, architecture, naming, testing, access, or acceptance decisions.
+- Produces: tracker-safe issue notes with resolved decisions, documentation proposals, acceptance implications, remaining blockers, and the resume point; when blockers are resolved, moves the issue to `needs-pack`.
+- Must not: edit local docs, create ADRs, update `CONTEXT.md`, pack, claim, or implement.
+- Usually next: `issue-pack` when decisions are resolved, or `issue-triage` when new information changes the route.
 
 ### `issue-pack`
 
 - Use when: worth-doing work needs to become one executable delivery unit.
 - Produces: a `ready-for-agent` single issue package, or a `parent-prd + ready-for-agent` PRD package with independently-grabbable child slices, relationships, blockers, and verification criteria.
-- Must not: replace `grill-with-docs`, claim, implement, or mark PRD children as independently ready.
+- Must not: replace `issue-grill`, claim, implement, or mark PRD children as independently ready.
 - Usually next: `issue-pick`.
 
 ### `issue-pick`
@@ -81,14 +88,17 @@ If the next step is unclear, use `ask-andie` first.
 - Must not: change product requirements, implementation code, or existing issues unless explicitly asked.
 - Usually next: `issue-intake` or `issue-triage`.
 
-## External Route Targets
+## External Matt Skills
 
-These are Matt skills used by this workflow. They are explicit route targets, not hidden substeps inside another skill.
+These Matt skills are used directly or adapted by this workflow.
 
 | Skill | Use when |
 | --- | --- |
-| `grill-with-docs` | A correct package depends on human product, domain, architecture, naming, or testing decisions that should be recorded. |
+| `grilling` | `issue-grill` needs a relentless one-question-at-a-time interview. |
+| `domain-modeling` | `issue-grill` needs domain vocabulary and ADR judgment without writing local docs. |
 | `implement` | A delivery unit has been claimed and is ready for code execution. |
+
+`issue-grill` adapts Matt `grill-with-docs` for this issue workflow. It keeps the `/grilling` and `/domain-modeling` handfeel, but records decisions and documentation proposals on the issue so `issue-pack` can make them part of the delivery unit.
 
 `issue-pack` adapts the PRD and tracer-bullet issue ideas from Matt `to-prd` and `to-issues`, but the published tracker state follows this package's `needs-pack`, PRD package, relationship, and claim rules.
 
@@ -101,4 +111,4 @@ These are Matt skills used by this workflow. They are explicit route targets, no
 
 ## Acknowledgements
 
-This workflow builds on [Matt Pocock's skills repository](https://github.com/mattpocock/skills). It reuses `grill-with-docs` and `implement` directly, and adapts the PRD and tracer-bullet issue patterns from `to-prd` and `to-issues` to this repository's delivery loop, tracker vocabulary, and ownership rules.
+This workflow builds on [Matt Pocock's skills repository](https://github.com/mattpocock/skills). It adapts `grill-with-docs` into `issue-grill`, reuses `implement` directly, and adapts the PRD and tracer-bullet issue patterns from `to-prd` and `to-issues` to this repository's delivery loop, tracker vocabulary, and ownership rules.

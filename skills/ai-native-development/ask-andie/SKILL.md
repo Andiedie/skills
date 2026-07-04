@@ -16,7 +16,7 @@ The usual route for issue work:
 
 1. **`issue-intake`** records a raw signal as durable tracker work.
 2. **`issue-triage`** decides whether recorded work should close, wait for information, or move to pack.
-3. **`grill-with-docs`** resolves blocking human decisions when a package cannot be correct without them.
+3. **`issue-grill`** resolves blocking human decisions and records tracker-safe packaging input.
 4. **`issue-pack`** creates one executable delivery unit: a single issue package or a PRD package.
 5. **`issue-pick`** chooses one unblocked, unclaimed delivery unit from ready work. It is read-only.
 6. **`issue-claim`** records ownership for the complete delivery unit without changing its scope.
@@ -34,7 +34,7 @@ Pick the route from the current surface:
 - **Raw request, idea, bug report, screenshot, or note not yet tracked** -> `issue-intake`.
 - **Existing issue with unclear state** -> `issue-triage`.
 - **Existing issue marked `needs-info` with new reporter or maintainer activity** -> `issue-triage`.
-- **Existing issue marked `needs-info` because decisions are missing** -> `grill-with-docs`.
+- **Existing issue marked `needs-info` because decisions are missing** -> `issue-grill`.
 - **Existing issue marked `needs-pack`** -> `issue-pack`.
 - **Ready single issue package or PRD package slate and no specific delivery unit chosen** -> `issue-pick`.
 - **Specific ready single issue package or PRD package already chosen** -> `issue-claim`.
@@ -51,7 +51,7 @@ Run `setup-ai-native-development` before relying on the workflow in a new reposi
 1. Identify the current surface: request, issue, PR, branch, local diff, or tracker audit.
 2. Read only the evidence needed to route: open or closed state, labels, comments, blockers, assignees, claim comments, linked PRs, parent/sub-issues, and current branch or diff when relevant.
 3. Name the current loop position, the next skill, and the general rule the user can remember next time.
-4. If the route is uncertain, choose the smallest clarifying route: `issue-triage` for unclear tracker state, `grill-with-docs` for missing product or business decisions, `setup-ai-native-development` for missing repository rules, or one direct question when the user must decide.
+4. If the route is uncertain, choose the smallest clarifying route: `issue-triage` for unclear tracker state, `issue-grill` for missing product or business decisions, `setup-ai-native-development` for missing repository rules, or one direct question when the user must decide.
 5. Report the route using this shape:
 
 ```markdown

@@ -38,7 +38,7 @@ Each stage reduces a different kind of uncertainty:
 | --- | --- | --- |
 | Observe | What signal did we receive? What facts are already known? | Raw request, context, reproduction clues, evidence |
 | Decide | Is it worth acting on? What is missing? | Close reason, information request, or pack route |
-| Clarify | Which human decision blocks a correct package? | Recorded decision, docs update, or specific unanswered question |
+| Clarify | Which human decision blocks a correct package? | Recorded decision, documentation proposal, or specific unanswered question |
 | Pack | What is the executable delivery unit? | Single issue package or PRD package |
 | Claim | Who owns this delivery unit now? | Assignee, claim comment, branch, or PR link |
 | Implement | What code change satisfies the package? | Code, tests, verification, PR, or commit |
@@ -75,7 +75,7 @@ flowchart TD
   Signal["Signal<br/>idea / bug / feedback / PR"]
   Intake["Observe / Intake<br/>record signal and context"]
   Triage["Decide / Triage<br/>close, request info, or route to pack"]
-  Info["Clarify<br/>human input or grill-with-docs"]
+  Info["Clarify<br/>human input or issue-grill"]
   Pack["Pack<br/>create executable delivery unit"]
   Ready["Ready<br/>agent-executable"]
   Claim["Pick / Claim<br/>choose delivery unit and owner"]
@@ -101,7 +101,7 @@ Flow rules:
 
 1. **Observe / Intake** records the signal without rushing into solution design.
 2. **Decide / Triage** decides whether the work should close, wait for information, or be packed.
-3. **Clarify** contains human input that must be resolved before a correct package can be created. Use `grill-with-docs` when a structured decision interview is needed.
+3. **Clarify** contains human input that must be resolved before a correct package can be created. Use `issue-grill` when a structured decision interview is needed.
 4. **Pack** turns worth-doing work into exactly one executable delivery unit.
 5. **Ready** means an implementation agent can begin blocker and claim checks.
 6. **Pick / Claim** identifies the delivery unit and current owner.
@@ -208,7 +208,7 @@ These are workflow roles, not necessarily separate people or separate agents. On
 | --- | --- | --- |
 | Intake | Raw signal | Durable work item, usually entering `needs-triage`. |
 | Triage | `needs-triage`, or `needs-info` with new input | Closed, `needs-info`, or `needs-pack`. |
-| Clarify | `needs-info` caused by missing decisions | Recorded human decision; often via Matt `grill-with-docs`. |
+| Clarify | `needs-info` caused by missing decisions | Recorded human decision and documentation proposals via `issue-grill`. |
 | Pack | `needs-pack`, or clarified work | Single issue package or PRD package. |
 | Pick | `ready-for-agent` delivery units | Recommended single issue package or PRD package. |
 | Claim | Picked delivery unit | Recorded ownership and confirmed claim scope. |
@@ -219,7 +219,8 @@ Skill directions:
 
 - `issue-intake`: record requests only; do not triage or pack.
 - `issue-triage`: make routing decisions; do not create packages.
-- `issue-pack`: create the executable delivery unit; route to `grill-with-docs` when human decisions block packaging.
+- `issue-grill`: run the decision interview and record tracker-safe packaging input; do not edit local docs.
+- `issue-pack`: create the executable delivery unit; route to `issue-grill` when human decisions block packaging.
 - `issue-pick`: choose work read-only; do not mutate the tracker.
 - `issue-claim`: perform the ownership side effects and point to Matt `implement`.
 - `issue-sweeper`: audit state, claim, and relationship drift.

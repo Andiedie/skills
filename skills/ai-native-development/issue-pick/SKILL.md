@@ -28,6 +28,7 @@ A delivery unit is pickable when it is:
 - not carrying contradictory active queue labels
 - backed by a Package Contract
 - carrying a verification strategy and out of scope
+- carrying explicit documentation or domain update requirements when the Package Contract requires them
 - specified enough to implement and verify completion
 
 For a PRD package, child slices must be coherent, linked to the parent, not independently `ready-for-agent`, and not partially claimed.
@@ -64,7 +65,7 @@ Child-to-child blockers inside one PRD package express implementation order. The
    - Completion criterion: synthesized notes cover facts, assumptions, blockers, unresolved questions, verification evidence, body, comments, material attachments, children when present, and linked implementation evidence, or name the exact inaccessible evidence.
 
 5. Synthesize the next requirement.
-   - State desired behavior, known current behavior, constraints, acceptance checks, verification expectations, and out of scope.
+   - State desired behavior, known current behavior, constraints, documentation or domain update requirements, acceptance checks, verification expectations, and out of scope.
    - State key interfaces and where implementation should start when the Package Contract already says so.
    - For a PRD package, summarize the parent goal, child slice list, internal order, children covered by the claim unit, and parent-level completion rule.
    - If evidence contradicts the pick, return to the slate instead of forcing the candidate.
@@ -93,6 +94,7 @@ Package contract summary:
 - Problem / current behavior:
 - Desired behavior:
 - Key interfaces:
+- Documentation/domain updates:
 - Acceptance criteria:
 - Verification strategy:
 - Out of scope:

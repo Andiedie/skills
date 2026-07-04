@@ -19,6 +19,7 @@ This package contains the issue workflow skills:
 - `ask-andie`
 - `issue-intake`
 - `issue-triage`
+- `issue-grill`
 - `issue-pack`
 - `issue-pick`
 - `issue-claim`
@@ -27,4 +28,4 @@ This package contains the issue workflow skills:
 
 ## Acknowledgements
 
-This workflow builds on [Matt Pocock's skills repository](https://github.com/mattpocock/skills), especially `grill-with-docs`, `implement`, `to-prd`, and `to-issues`. The AI-native loop reuses the decision-clarification and implementation skills directly, and adapts the PRD and tracer-bullet issue ideas to this repository's tracker vocabulary, PRD package model, and claim/relationship rules.
+This workflow builds on [Matt Pocock's skills repository](https://github.com/mattpocock/skills), especially `grill-with-docs`, `implement`, `to-prd`, and `to-issues`. The AI-native loop adapts `grill-with-docs` into `issue-grill` so clarification records tracker-safe packaging input instead of local doc edits, reuses `implement` for execution, and adapts the PRD and tracer-bullet issue ideas to this repository's tracker vocabulary, PRD package model, and claim/relationship rules.

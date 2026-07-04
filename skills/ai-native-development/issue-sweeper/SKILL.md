@@ -96,7 +96,7 @@ Metadata cleanup:
 
 Candidate follow-up:
 - <issue>: <reason>
-  Route: <issue-triage, issue-pack, issue-claim, human approval, or no action>
+  Route: <issue-triage, issue-grill, issue-pack, issue-claim, human approval, or no action>
 ```
 
 ## Boundaries
