@@ -1,6 +1,6 @@
 ---
 name: issue-pick
-description: Pick agent-ready GitHub issues or PRD packages and synthesize their full context into the next requirement.
+description: Pick agent-ready GitHub issues or PRD packages and recommend one claimable delivery unit.
 disable-model-invocation: true
 ---
 
@@ -35,6 +35,12 @@ For a PRD package, child slices must be coherent, linked to the parent, not inde
 
 Child-to-child blockers inside one PRD package express implementation order. They do not block picking the parent PRD package.
 
+## Report Style
+
+A compact pick report is not a shortcut through the evidence. Do the full slate, blocker, ownership, relationship, and package-contract checks, then report only what helps the user act.
+
+Use the user's language for user-facing output. Keep issue numbers, labels, skill names, commands, and code identifiers literal.
+
 ## Process
 
 1. Resolve the repository and focus.
@@ -64,18 +70,19 @@ Child-to-child blockers inside one PRD package express implementation order. The
    - Check linked issues or PRs when they carry requirements, duplicate context, prior attempts, active implementation, or evidence that the work is already done.
    - Completion criterion: synthesized notes cover facts, assumptions, blockers, unresolved questions, verification evidence, body, comments, material attachments, children when present, and linked implementation evidence, or name the exact inaccessible evidence.
 
-5. Synthesize the next requirement.
-   - State desired behavior, known current behavior, constraints, documentation or domain update requirements, acceptance checks, verification expectations, and out of scope.
-   - State key interfaces and where implementation should start when the Package Contract already says so.
-   - For a PRD package, summarize the parent goal, child slice list, internal order, children covered by the claim unit, and parent-level completion rule.
+5. Validate claim readiness.
+   - Verify that the Package Contract contains desired behavior, known current behavior, constraints, acceptance checks, verification expectations, and out of scope.
+   - Verify that key interfaces and documentation or domain update requirements are present when the package depends on them.
+   - For a PRD package, verify the parent goal, child slice list, internal order, children covered by the claim unit, and parent-level completion rule.
    - If evidence contradicts the pick, return to the slate instead of forcing the candidate.
    - Recommend `issue-pack` when the Package Contract, scope, PRD child structure, dependencies, acceptance criteria, verification strategy, or out of scope are wrong.
    - Recommend `needs-info` when missing human or external input blocks safe execution.
-   - Recommend `issue-sweeper` when stale claims, contradictory labels, or relationship drift block a clean pick.
-   - Completion criterion: the requirement can guide claim and implementation without rereading the issue thread.
+   - Recommend `issue-sweep` when stale claims, contradictory labels, or relationship drift block a clean pick.
+   - Completion criterion: the delivery unit can be safely claimed, and the implementation source of truth remains the issue or parent PRD package.
 
 6. Report the pick and stop.
-   - Use the pick report template.
+   - Use the compact pick report template.
+   - Include optional sections only when they contain real information or risk.
    - If no delivery unit is pickable, name the best candidate and its smallest blocker.
    - Completion criterion: the user knows the recommended delivery unit and can run `issue-claim` or route the best candidate elsewhere.
 
@@ -83,24 +90,32 @@ Child-to-child blockers inside one PRD package express implementation order. The
 
 ```markdown
 Recommended pick: <single issue package or PRD package>
-Why this is ready: <evidence-based reason>
-Why not the others: <brief exclusion summary or slate boundary>
+Why this is ready:
+- <evidence-based reason>
+
 Claim unit: <issue or parent PRD + all children>
-Children covered: <none or child list>
-Internal order: <none or child blocker order>
-External blockers checked: <none or list>
-Owner status: <unclaimed, claimed by ..., or possibly stale>
-Package contract summary:
-- Problem / current behavior:
-- Desired behavior:
-- Key interfaces:
-- Documentation/domain updates:
-- Acceptance criteria:
-- Verification strategy:
-- Out of scope:
-Implementation handoff:
-- Start with:
-- Watch for:
+
+PRD children: <child list; PRD packages only>
+Internal order: <child blocker order; include only when non-trivial>
+
+Source of truth:
+- <issue or parent PRD link>
+
+Next step: `issue-claim`
+```
+
+Only include these sections when they are useful:
+
+```markdown
+Why not the others:
+- <brief exclusion summary or slate boundary>
+
+Blockers checked:
+- <external blocker evidence>
+
+Owner risk:
+- <claimed, stale, or contradictory ownership evidence>
+
 Route back if:
 - <condition -> skill or state>
 ```
@@ -112,7 +127,7 @@ No pickable delivery unit found.
 
 Best candidate: <single issue package or PRD package>
 Blocker: <smallest blocker>
-Recommended route: <issue-pack, needs-info, issue-sweeper, issue-triage, or wait>
+Recommended route: <issue-pack, needs-info, issue-sweep, issue-triage, or wait>
 ```
 
 ## Boundaries

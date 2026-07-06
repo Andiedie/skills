@@ -15,7 +15,7 @@ npx --yes skills add Andiedie/skills --list
 Install the AI-native development loop globally for Codex and Claude Code:
 
 ```bash
-npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill ask-andie issue-intake issue-triage issue-grill issue-pack issue-pick issue-claim issue-sweeper setup-ai-native-development -y
+npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill ask-andie issue-intake issue-triage issue-grill issue-pack issue-pick issue-claim issue-implement issue-sweep setup-ai-native-development -y
 ```
 
 Install the repository interactively:
@@ -45,7 +45,8 @@ It includes:
 - `issue-pack`
 - `issue-pick`
 - `issue-claim`
-- `issue-sweeper`
+- `issue-implement`
+- `issue-sweep`
 - `setup-ai-native-development`
 
 ### Documentation
@@ -82,6 +83,8 @@ For the AI-native development loop, keep these Matt skills installed:
 The `issue-grill` skill is a tracker-safe adaptation of Matt's `grill-with-docs`: it keeps the `/grilling` and `/domain-modeling` handfeel, but records decisions and documentation proposals on the issue for `issue-pack` instead of editing local docs during clarification.
 
 The `issue-pack` skill adapts the PRD and tracer-bullet issue ideas from Matt's `to-prd` and `to-issues` to this repository's `needs-pack`, PRD package, relationship, and claim rules.
+
+The `issue-implement` skill adapts Matt's `implement` for claimed AI-native delivery units by adding tracker source-of-truth and isolated worktree requirements.
 
 ## Current Personal Skills
 

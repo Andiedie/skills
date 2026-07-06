@@ -30,6 +30,8 @@ Both shapes require the same contract strength. A single issue package is not a 
 - Testing decisions must name a test seam or verification strategy. Prefer existing seams and the highest practical seam; fewer seams are better when they still prove the behavior.
 - Documentation proposals from `issue-grill` must become package requirements, acceptance criteria, or child slices. Do not apply them locally during pack.
 - Prototype snippets may be included only when they express a decision more precisely than prose, such as a state machine, reducer shape, schema, type shape, or API payload shape. Keep only decision-rich parts, label them as prototype-derived, and do not paste a working demo.
+- User-facing reports should be compact. Do the full packaging legwork, but show only the decision, material tracker edits, blockers, and next step.
+- Use the user's language for user-facing summaries. Keep issue numbers, labels, skill names, commands, and code identifiers literal.
 
 ## Blocked Route
 
@@ -70,13 +72,13 @@ If human judgment, reporter detail, permission, external access, acceptance inpu
    - A child issue should be independently grabbable by a subagent working under the parent PRD claim, but `issue-pick` and `issue-claim` still treat the parent PRD as the public delivery unit.
    - Completion criterion: an implementation agent can start from the package without replaying the whole discussion.
 
-5. Confirm the package before publishing.
-   - Show the selected shape, scope, out of scope, verification path, test seams or verification strategy, and blockers.
-   - Ask whether the Package Contract, test seam or verification strategy, acceptance criteria, and out of scope are correct.
-   - For a PRD package, show child slices, child ordering blockers, user stories covered, parent completion rule, possible merges, and possible splits.
-   - Ask whether child slice granularity and dependency relationships are correct.
-   - Ask for confirmation before durable tracker edits unless the user already explicitly approved this exact package.
-   - Completion criterion: the user approved the exact package or the blocked route is reported.
+5. Check publishability.
+   - Do not reopen product, domain, architecture, naming, testing, access, acceptance, or scope decisions already resolved in the issue thread or `issue-grill`.
+   - If the draft exposes a new blocking decision, stop and report the blocked route instead of asking inside `issue-pack`.
+   - Treat invocation as authorization to publish a package from confirmed issue state.
+   - Do not ask for confirmation before normal package tracker edits: issue body updates, active queue label changes, parent/sub-issue links, new child issues, blocked-by/blocking links, or ownership-neutral metadata.
+   - Ask before publishing only when the target issue is ambiguous, publishing would overwrite unrelated maintainer text, tracker permissions/access are unclear, or the package requires an unconfirmed human judgment.
+   - Completion criterion: the package is publishable from existing confirmed state, or the blocked route is reported.
 
 6. Publish.
    - Remove conflicting active queue labels.
@@ -87,7 +89,9 @@ If human judgment, reporter detail, permission, external access, acceptance inpu
    - Completion criterion: tracker state expresses one executable delivery unit without contradiction.
 
 7. Report.
-   - Include links, state and label changes, delivery unit shape, PRD package structure when present, blockers, verification path, and decisions used.
+   - Use a compact user-facing report.
+   - Include links, state and label changes, delivery unit shape, PRD package structure when present, blockers, verification path, and next skill.
+   - Include decisions used only when they were newly material, surprising, or needed to explain the package.
    - Name `issue-pick` as the next skill when the package is ready.
    - For a blocked route, name the unresolved input and stop without naming `issue-pick`.
    - Completion criterion: the next actor can pick the ready delivery unit or resolve the named blocker without rereading the pack session.
@@ -189,6 +193,7 @@ None - can start immediately
 
 - Do not claim or implement work.
 - Do not replace `issue-grill` with an ad hoc interview.
+- Do not re-ask decisions that `issue-grill` or the issue thread already resolved.
 - Do not publish a package while human decisions, a test seam or verification strategy, or verifiable acceptance criteria are missing.
 - Do not publish while out of scope, package shape, child granularity, or dependency relationships are unclear.
 - Do not treat file paths or line numbers as the specification.

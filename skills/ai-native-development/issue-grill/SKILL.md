@@ -16,6 +16,13 @@ Use this when a triaged issue is `needs-info` because a correct package depends 
 
 Ask one question at a time, recommend an answer for each question, and explore the codebase instead of asking when the answer can be verified locally.
 
+## Decision Capture
+
+- A resolved decision must come from repository evidence, a direct user answer, or the user's explicit acceptance of a recommended answer.
+- Do not record guesses as resolved decisions. If the user has not confirmed a needed judgment, record it as a remaining blocker.
+- The invocation authorizes recording confirmed decisions on the issue. Do not ask for a second confirmation before writing the tracker note.
+- Ask before writing only when the target issue is ambiguous, the write would overwrite or contradict existing maintainer text, or tracker permissions/access are unclear.
+
 ## Record
 
 When the decision is clear enough to package, comment on the issue:
@@ -46,6 +53,8 @@ Resume point:
 ```
 
 If no blocker remains, move the issue from `needs-info` to `needs-pack` when tracker edits are allowed, then recommend `issue-pack`. If a blocker remains, keep `needs-info` and name the exact unanswered question.
+
+Report with a short receipt: issue link, decisions recorded, label change when any, remaining blocker when any, and next skill. Do not paste the full `Issue Grill Notes` back into chat after writing them to the tracker.
 
 Do not edit local files, create ADRs, update `CONTEXT.md`, pack, claim, or implement work.
 

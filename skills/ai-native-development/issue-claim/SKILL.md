@@ -37,16 +37,18 @@ For a PRD package, claiming the parent PRD claims all of its children. PRD child
    - Reject delivery units with open external blockers.
    - Reject work already claimed by assignee, claim comment, active branch, draft PR, or active PR. For a PRD package, any claimed child means the package is already partly claimed.
    - Absence of ownership evidence satisfies `unclaimed`.
-   - If existing ownership evidence looks old or inactive, report it as possibly stale; do not release or override it without explicit approval or an `issue-sweeper` route.
+   - If existing ownership evidence looks old or inactive, report it as possibly stale; do not release or override it without explicit approval or an `issue-sweep` route.
    - Route unclear scope, weak package contract, missing verification, or broken PRD child structure to `issue-pack`.
-   - Completion criterion: the claim is valid, or the report names the correct route back to `issue-pick`, `issue-pack`, `issue-sweeper`, or `needs-info`.
+   - Reject or route hard blockers here; do not move them into confirmation gates. Open external blockers, unclaimable targets, PRD child claims, and scope-changing claims cannot be made safe by confirmation.
+   - Completion criterion: the claim is valid, or the report names the correct route back to `issue-pick`, `issue-pack`, `issue-sweep`, or `needs-info`.
 
-3. Confirm side effects.
+3. Prepare side effects and check confirmation gates.
    - State claimant, issues affected, claim comment, assignee changes, branch or PR link, and any ownership metadata.
    - For a PRD package, state that the parent and all children will be covered by one claim.
    - If known, record any internal subagent split as delegation under the parent owner, not as separate ownership.
-   - If the user already gave an explicit claim instruction, include this confirmation in the action summary before applying.
-   - Completion criterion: the durable tracker edits are known before they happen.
+   - Treat invocation as authorization to claim the resolved delivery unit after claimability validation.
+   - Ask before applying ownership changes only when the claim target is ambiguous, the claimant is ambiguous, the delivery-unit boundary is unclear, existing ownership or active work exists, stale ownership must be released or overridden, or tracker permissions/access are unclear.
+   - Completion criterion: the claim side effects are safe to apply, or one exact confirmation question is asked with the ownership risk named.
 
 4. Apply the claim.
    - Prefer assignee plus claim comment.
@@ -58,8 +60,11 @@ For a PRD package, claiming the parent PRD claims all of its children. PRD child
    - Completion criterion: the tracker shows one clear owner for the whole delivery unit.
 
 5. Report.
-   - Include claim links, owner, delivery unit, dependencies checked, and the Matt `implement` handoff.
-   - Completion criterion: an implementation agent can start Matt `implement` from the claim.
+   - Keep the user-facing report as a short receipt; the claim comment is the durable structured record.
+   - Include claim links, owner, delivery unit, material dependency or ownership risks, and the `issue-implement` handoff.
+   - Do not repeat the Package Contract or child issue bodies in chat.
+   - Omit empty risk sections.
+   - Completion criterion: an implementation agent can start `issue-implement` from the claim.
 
 ## Claim comment
 
@@ -73,7 +78,7 @@ Children covered: <none or child issue list>
 External blockers checked: <none or list>
 Existing ownership checked: <assignee, comment, branch, or PR evidence>
 Internal delegation: <none or child slices delegated under this claim>
-Expected next step: <run implement, branch, draft PR, or implementation update>
+Expected next step: <run issue-implement, branch, draft PR, or implementation update>
 ```
 
 ## Boundaries

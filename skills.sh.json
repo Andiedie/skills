@@ -29,7 +29,8 @@
         "issue-pack",
         "issue-pick",
         "issue-claim",
-        "issue-sweeper",
+        "issue-implement",
+        "issue-sweep",
         "setup-ai-native-development"
       ]
     },

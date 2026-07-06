@@ -6,17 +6,17 @@ disable-model-invocation: true
 
 # Setup AI-Native Development
 
-Set up a repository so the AI-native issue workflow can run with shared tracker rules, labels, relationship conventions, claim policy, domain references, and agent-facing docs.
+Set up a repository so the AI-native issue workflow can run with shared tracker rules, labels, relationship conventions, claim policy, implementation isolation, domain references, and agent-facing docs.
 
 This is a prompt-driven setup skill. Explore first, present findings, walk the user through one decision at a time, then write only after confirmation.
 
 ## Process
 
 1. Explore the repository.
-   - Inspect `git remote -v`, `.git/config`, root `AGENTS.md` / `CLAUDE.md`, `docs/agents/`, current issue-tracker docs, label docs, claim docs, domain docs, ADRs, glossary, out-of-scope records, and existing issue workflow conventions.
+   - Inspect `git remote -v`, `.git/config`, root `AGENTS.md` / `CLAUDE.md`, `docs/agents/`, current issue-tracker docs, label docs, claim docs, branch or worktree docs, domain docs, ADRs, glossary, out-of-scope records, and existing issue workflow conventions.
    - If GitHub is the likely tracker and `gh` is available, inspect existing labels and issue relationship support.
    - Note whether external PRs are treated as request surfaces.
-   - Completion criterion: you can state the current tracker, labels, relationship conventions, claim signals, domain and ADR layout, agent-doc layout, out-of-scope convention, and gaps.
+   - Completion criterion: you can state the current tracker, labels, relationship conventions, claim signals, implementation branch or worktree conventions, domain and ADR layout, agent-doc layout, out-of-scope convention, and gaps.
 
 2. Present setup decisions one at a time.
    - Start each section with a short explainer: what the decision controls, why the workflow needs it, and what changes if the user picks differently.
@@ -47,7 +47,8 @@ This is a prompt-driven setup skill. Explore first, present findings, walk the u
    - PRD children are independently-grabbable internal execution slices, not public pick or claim targets.
    - Claim policy chooses assignee, claim comment, branch or PR link, stale-claim threshold, who can release or override claims, where PRD package claims are recorded, and whether child coverage comments are required.
    - Claim policy may define how a parent PRD owner records internal subagent delegation without creating separate public ownership.
-   - Completion criterion: the repository has one rule for structure, one rule for execution dependencies, and one rule for ownership.
+   - Decide implementation isolation: branch naming, worktree root or convention, base branch, how linked branches or PRs are recorded, and what counts as an unsafe dirty worktree.
+   - Completion criterion: the repository has one rule for structure, one rule for execution dependencies, one rule for ownership, and one rule for isolated implementation work.
 
 6. Decide domain, decision, and rejection sources.
    - Locate or create the repository's domain glossary, ADR directory, and agent-facing domain reference.
@@ -58,7 +59,7 @@ This is a prompt-driven setup skill. Explore first, present findings, walk the u
 
 7. Draft the changes for review.
    - Prepare an agent entrypoint block for the existing `AGENTS.md` or `CLAUDE.md`.
-   - Prepare project docs such as `docs/agents/ai-native-development.md`, `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`, `docs/agents/claim-rules.md`, and `docs/agents/domain.md`.
+   - Prepare project docs such as `docs/agents/ai-native-development.md`, `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`, `docs/agents/claim-rules.md`, `docs/agents/implementation-rules.md`, and `docs/agents/domain.md`.
    - Prepare label creations only when labels do not already exist and the user approved them.
    - Completion criterion: the user can review exact file edits and tracker changes before anything durable is written.
 
@@ -69,7 +70,7 @@ This is a prompt-driven setup skill. Explore first, present findings, walk the u
    - Completion criterion: docs, labels, and tracker assumptions match the confirmed setup.
 
 9. Report.
-   - List files changed, labels created or mapped, tracker assumptions, PR-as-request setting, relationship rules, claim rules, domain and ADR locations, out-of-scope convention, and skills now ready to use.
+   - List files changed, labels created or mapped, tracker assumptions, PR-as-request setting, relationship rules, claim rules, implementation isolation rules, domain and ADR locations, out-of-scope convention, and skills now ready to use.
    - Completion criterion: a future agent can run `issue-intake`, `issue-triage`, or `ask-andie` without rediscovering setup decisions.
 
 ## Boundaries

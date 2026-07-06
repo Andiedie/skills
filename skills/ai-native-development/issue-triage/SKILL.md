@@ -45,24 +45,28 @@ Use this skill in two ways:
    - For PRs, inspect the diff and relevant checks.
    - Completion criterion: the recommendation can name category, established facts, verified behavior, assumptions, unknowns, blockers, reproduction or PR verification result, redundancy result, and prior rejection result.
 
-3. Recommend a route before editing.
-   - If a maintainer explicitly requests one of the triage outcomes above, confirm label, comment, and closure side effects, then use that outcome without reopening the judgment.
+3. Decide the route and identify confirmation gates.
+   - Apply ordinary `needs-info` and `needs-pack` routing directly when the target is clear and the evidence supports one route.
+   - If a maintainer explicitly requests one of the triage outcomes above, treat that as authorization for ordinary routing side effects and use that outcome without reopening the judgment.
    - Choose `closed` for duplicate, already implemented, rejected, not actionable, or no-longer-relevant work.
    - Choose `needs-info` when a specific missing fact, human decision, permission, external dependency, or acceptance gate blocks safe packing.
    - Recommend `issue-grill` when the missing input is a product, domain, architecture, naming, or testing decision that needs a structured interview.
    - Choose `needs-pack` when the work is worth doing and ready to be packaged as a single issue package or PRD package.
-   - Completion criterion: the recommendation names the outcome, evidence, risk, and next skill.
+   - Ask before editing only when the target is ambiguous, the route is uncertain, the route depends on a human judgment not already recorded, closure is needed without explicit closure authorization, the duplicate target is unclear, the edit would overwrite a maintainer conclusion, or existing ownership, linked PRs, parent/sub-issues, or blockers make the routing side effect unsafe.
+   - Completion criterion: the route is safe to apply, or one exact confirmation question is asked with the evidence and risk named.
 
-4. Apply the confirmed outcome.
+4. Apply the route when safe or confirmed.
    - Unless the user explicitly asks for batch work, update one issue or PR at a time.
    - Remove conflicting active queue labels.
    - For `needs-info`, post the needs-info template below.
    - For `needs-pack`, comment with category, established facts, package inputs, likely package shape, verification clues, evidence links, and non-blocking unknowns.
-   - For `closed`, comment with the reason and close the issue. Use close-reason labels only when the repository already has that convention.
+   - For `closed`, comment with the reason and close the issue only after explicit closure authorization or confirmation. Use close-reason labels only when the repository already has that convention.
    - Completion criterion: tracker state, comments, and labels express one route without contradictory active queue state.
 
 5. Report.
-   - Include the issue link, outcome, labels changed, facts verified, unresolved questions, and next skill.
+   - Keep the user-facing report short; tracker comments may use the structured templates.
+   - Include the issue link, outcome, labels changed, material facts verified, unresolved questions, and next skill.
+   - Omit empty sections.
    - Completion criterion: the next actor can continue without rereading the whole triage session.
 
 ## Templates

@@ -52,7 +52,9 @@ Intake records a raw signal as durable tracker work. It observes and preserves f
    - Completion criterion: the tracker returns an issue URL or update success, or the user receives a complete ready-to-file draft with a concrete blocker.
 
 5. Report the result.
-   - Return the issue link when available, final title, labels or state set, captured facts, unresolved questions, and `issue-triage` as the next skill.
+   - Return a short receipt: issue link when available, final title, labels or state set, what kind of information was recorded, and `issue-triage` as the next skill.
+   - Do not repeat the issue body, draft acceptance clues, or triage questions in chat when they were written to the tracker.
+   - Show unresolved questions only when no tracker write happened, or when a question must be answered before the issue target can be created or updated safely.
    - Completion criterion: the user can open the issue, see where the signal landed, and know that triage is the next workflow step.
 
 ## Generic issue template

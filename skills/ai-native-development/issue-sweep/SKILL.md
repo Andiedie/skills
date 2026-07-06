@@ -1,14 +1,14 @@
 ---
-name: issue-sweeper
+name: issue-sweep
 description: Audit AI-native issue workflow drift and stale work.
 disable-model-invocation: true
 ---
 
-# Issue Sweeper
+# Issue Sweep
 
-Sweeper audits tracker invariants. It finds contradictions, stale workflow state, and relationship drift that would make pick, claim, or implementation unsafe.
+Sweep audits tracker invariants. It finds contradictions, stale workflow state, and relationship drift that would make pick, claim, or implementation unsafe.
 
-Sweeper is not triage and not pick. When a finding needs value judgment, scope repair, packaging, ownership repair, or closure, route it to the right skill or to human approval.
+Sweep is not triage and not pick. When a finding needs value judgment, scope repair, packaging, ownership repair, or closure, route it to the right skill or to human approval.
 
 ## Drift checks
 
@@ -62,12 +62,14 @@ Sweeper is not triage and not pick. When a finding needs value judgment, scope r
    - Completion criterion: every relevant invariant has been checked or explicitly skipped with a reason.
 
 4. Report before editing.
+   - Keep the user-facing report focused on findings, not empty headings.
    - Group findings by severity:
      - blocks execution
      - risks duplicate work
      - metadata cleanup
      - candidate follow-up
    - For each finding, include issue link, observed state, expected state, evidence, impact, and recommended route or safe fix.
+   - If a severity group has no findings, omit it.
    - Completion criterion: the user can approve fixes without rereading the entire tracker.
 
 5. Apply low-risk fixes only after confirmation.
@@ -76,6 +78,8 @@ Sweeper is not triage and not pick. When a finding needs value judgment, scope r
    - Completion criterion: applied fixes match the approved list and remaining findings are reported.
 
 ## Report shape
+
+Include only groups that have findings. If there are no findings, say so directly with the scope checked.
 
 ```markdown
 Scope: <query and count>

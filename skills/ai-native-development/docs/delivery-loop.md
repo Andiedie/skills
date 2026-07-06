@@ -67,6 +67,11 @@ Principles:
 - Agents should first look for facts in code, tests, logs, docs, and the tracker.
 - Every executable delivery unit should have a clear boundary and verification path.
 - When execution proves the package wrong, do not privately expand the scope; route the work back to Pack or Clarify.
+- Requirements, acceptance, child issues, relationships, and blockers belong in the tracker. Chat output is a receipt, not a second specification.
+- Human decisions should be made once at the right stage. Clarification confirms decisions; later stages consume them.
+- A skill should refuse and route back when its preconditions are missing, rather than improvising the missing upstream work.
+- Normal tracker writes are part of the invoked stage. Stop for confirmation only when the write introduces unconfirmed judgment, overrides ownership, closes work, releases a claim, or mutates an ambiguous target.
+- Implementation starts from the tracker source of truth in an isolated branch or worktree.
 
 ## End-To-End Flow
 
@@ -79,7 +84,7 @@ flowchart TD
   Pack["Pack<br/>create executable delivery unit"]
   Ready["Ready<br/>agent-executable"]
   Claim["Pick / Claim<br/>choose delivery unit and owner"]
-  Implement["Implement<br/>Matt implement"]
+  Implement["Implement<br/>isolated worktree"]
   Closed["Close / Learn<br/>close, record, or create follow-up"]
 
   Signal --> Intake
@@ -102,10 +107,10 @@ Flow rules:
 1. **Observe / Intake** records the signal without rushing into solution design.
 2. **Decide / Triage** decides whether the work should close, wait for information, or be packed.
 3. **Clarify** contains human input that must be resolved before a correct package can be created. Use `issue-grill` when a structured decision interview is needed.
-4. **Pack** turns worth-doing work into exactly one executable delivery unit.
+4. **Pack** turns worth-doing work into exactly one executable delivery unit. It synthesizes resolved decisions and publishes normal package tracker edits; it does not reopen the clarification interview.
 5. **Ready** means an implementation agent can begin blocker and claim checks.
-6. **Pick / Claim** identifies the delivery unit and current owner.
-7. **Implement** uses Matt `implement` on the claimed delivery unit.
+6. **Pick / Claim** identifies the delivery unit and current owner. Pick should do the full evidence check but report a concise recommendation.
+7. **Implement** uses `issue-implement` on the claimed delivery unit in an isolated branch or worktree.
 8. **Close / Learn** closes the work and records docs, out-of-scope decisions, or follow-up work when needed.
 
 ## Delivery Units
@@ -212,7 +217,7 @@ These are workflow roles, not necessarily separate people or separate agents. On
 | Pack | `needs-pack`, or clarified work | Single issue package or PRD package. |
 | Pick | `ready-for-agent` delivery units | Recommended single issue package or PRD package. |
 | Claim | Picked delivery unit | Recorded ownership and confirmed claim scope. |
-| Implement | Claimed delivery unit | Hand off to Matt `implement`. |
+| Implement | Claimed delivery unit | Implemented, verified, reviewed, and committed in an isolated worktree. |
 | Sweep | Active work set | Stale claims, incorrect labels, incorrect relationships, and parent PRDs needing follow-up. |
 
 Skill directions:
@@ -222,8 +227,9 @@ Skill directions:
 - `issue-grill`: run the decision interview and record tracker-safe packaging input; do not edit local docs.
 - `issue-pack`: create the executable delivery unit; route to `issue-grill` when human decisions block packaging.
 - `issue-pick`: choose work read-only; do not mutate the tracker.
-- `issue-claim`: perform the ownership side effects and point to Matt `implement`.
-- `issue-sweeper`: audit state, claim, and relationship drift.
+- `issue-claim`: perform the ownership side effects and point to `issue-implement`.
+- `issue-implement`: execute the claimed delivery unit in an isolated worktree from the tracker source of truth.
+- `issue-sweep`: audit state, claim, and relationship drift.
 - `ask-andie`: recommend the next skill from the current state and context.
 
 ## Invariants
@@ -240,6 +246,7 @@ All related skills must maintain these invariants:
 - PRD children are not independent pick or claim targets, but may be internal implementation units under the parent PRD owner.
 - An open external blocker makes a delivery unit not pickable.
 - Claim scope must cover the full delivery unit.
+- Implementation must not happen in a shared dirty worktree or from chat summaries.
 - When the package is wrong, route back to `needs-pack` or `needs-info` instead of privately changing scope.
 
 ## Update Triggers

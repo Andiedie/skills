@@ -19,9 +19,9 @@ If the next step is unclear, use `ask-andie` first.
 | Clarify | Human product, domain, architecture, naming, testing, access, or acceptance input is missing. | `issue-grill` when a decision interview is needed; otherwise capture the answer on the issue. | Recorded decision, documentation proposal, or specific unanswered question. | `issue-pack` or `issue-triage` |
 | Pack | Worth-doing work is not executable yet. | `issue-pack` | Single issue package or PRD package. | `issue-pick` |
 | Ready | Executable work exists. | `issue-pick` | Recommended single issue package or PRD package. | `issue-claim` |
-| Claim | A delivery unit has been chosen. | `issue-claim` | Ownership recorded without changing scope. | Matt `implement` |
-| Execute | Claimed work is being implemented. | Matt `implement` | Code, tests, verification, PR, or commit. | Close or route back to `issue-pack` |
-| Close/Learn | Work is complete or workflow state has drifted. | `issue-sweeper` for drift. | Closed work, cleanup, docs, or follow-up issues. | New signal or no action |
+| Claim | A delivery unit has been chosen. | `issue-claim` | Ownership recorded without changing scope. | `issue-implement` |
+| Execute | Claimed work is being implemented. | `issue-implement` | Code, tests, verification, review, and commit from an isolated worktree. | Close or route back to `issue-pack` |
+| Close/Learn | Work is complete or workflow state has drifted. | `issue-sweep` for drift. | Closed work, cleanup, docs, or follow-up issues. | New signal or no action |
 
 ## Workflow Skills
 
@@ -57,13 +57,14 @@ If the next step is unclear, use `ask-andie` first.
 
 - Use when: worth-doing work needs to become one executable delivery unit.
 - Produces: a `ready-for-agent` single issue package, or a `parent-prd + ready-for-agent` PRD package with independently-grabbable child slices, relationships, blockers, and verification criteria.
+- Before publishing: refuses when a missing decision blocks a correct package; otherwise publishes normal package tracker edits without re-confirming decisions already resolved by the issue thread or `issue-grill`.
 - Must not: replace `issue-grill`, claim, implement, or mark PRD children as independently ready.
 - Usually next: `issue-pick`.
 
 ### `issue-pick`
 
 - Use when: the tracker has ready work and the agent needs one delivery unit.
-- Produces: a read-only recommendation with claim unit, blockers checked, PRD context, and verification expectations.
+- Produces: a concise read-only recommendation with the claim unit, readiness reason, source-of-truth links, PRD context when present, and any real blocker or ownership risk.
 - Must not: edit issues, claim, implement, pick PRD children independently, or pick blocked, claimed, or contradictory work.
 - Usually next: `issue-claim`.
 
@@ -72,9 +73,16 @@ If the next step is unclear, use `ask-andie` first.
 - Use when: a specific delivery unit has been chosen and ownership should be recorded.
 - Produces: assignee/comment/branch/PR ownership signal for the whole delivery unit; PRD child slices may be used for internal subagent delegation under that claim.
 - Must not: change scope, claim PRD children independently, or claim around unresolved external blockers.
-- Usually next: Matt `implement`.
+- Usually next: `issue-implement`.
 
-### `issue-sweeper`
+### `issue-implement`
+
+- Use when: a delivery unit has been claimed and should be implemented.
+- Produces: implementation in an isolated worktree, focused and full verification, review result, and commit or PR evidence.
+- Must not: implement unclaimed work, work from chat summaries instead of the tracker source of truth, use a shared dirty worktree, or silently change scope.
+- Usually next: close, merge, route back to `issue-pack`, or route back to `issue-grill`.
+
+### `issue-sweep`
 
 - Use when: tracker state may have drifted.
 - Produces: findings for stale claims, contradictory labels, wrong relationships, blocked ready work, and parent PRDs needing follow-up.
@@ -96,7 +104,8 @@ These Matt skills are used directly or adapted by this workflow.
 | --- | --- |
 | `grilling` | `issue-grill` needs a relentless one-question-at-a-time interview. |
 | `domain-modeling` | `issue-grill` needs domain vocabulary and ADR judgment without writing local docs. |
-| `implement` | A delivery unit has been claimed and is ready for code execution. |
+| `implement` | General implementation reference; `issue-implement` adapts it for claimed AI-native delivery units. |
+| `code-review` | `issue-implement` needs a review pass over the implementation diff. |
 
 `issue-grill` adapts Matt `grill-with-docs` for this issue workflow. It keeps the `/grilling` and `/domain-modeling` handfeel, but records decisions and documentation proposals on the issue so `issue-pack` can make them part of the delivery unit.
 
@@ -111,4 +120,4 @@ These Matt skills are used directly or adapted by this workflow.
 
 ## Acknowledgements
 
-This workflow builds on [Matt Pocock's skills repository](https://github.com/mattpocock/skills). It adapts `grill-with-docs` into `issue-grill`, reuses `implement` directly, and adapts the PRD and tracer-bullet issue patterns from `to-prd` and `to-issues` to this repository's delivery loop, tracker vocabulary, and ownership rules.
+This workflow builds on [Matt Pocock's skills repository](https://github.com/mattpocock/skills). It adapts `grill-with-docs` into `issue-grill`, adapts `implement` into `issue-implement`, and adapts the PRD and tracer-bullet issue patterns from `to-prd` and `to-issues` to this repository's delivery loop, tracker vocabulary, and ownership rules.

@@ -20,7 +20,7 @@ The usual route for issue work:
 4. **`issue-pack`** creates one executable delivery unit: a single issue package or a PRD package.
 5. **`issue-pick`** chooses one unblocked, unclaimed delivery unit from ready work. It is read-only.
 6. **`issue-claim`** records ownership for the complete delivery unit without changing its scope.
-7. **Matt `implement`** implements the claimed work.
+7. **`issue-implement`** implements the claimed work in an isolated worktree.
 8. **Close or learn** when the work is merged, rejected, duplicated, already done, or needs follow-up documentation.
 
 ## Context Hygiene
@@ -38,8 +38,8 @@ Pick the route from the current surface:
 - **Existing issue marked `needs-pack`** -> `issue-pack`.
 - **Ready single issue package or PRD package slate and no specific delivery unit chosen** -> `issue-pick`.
 - **Specific ready single issue package or PRD package already chosen** -> `issue-claim`.
-- **Claimed single issue package or PRD package** -> Matt `implement`.
-- **Tracker drift, stale claim, blocked ready work, PRD child picked independently, or parent PRD cleanup** -> `issue-sweeper`.
+- **Claimed single issue package or PRD package** -> `issue-implement`.
+- **Tracker drift, stale claim, blocked ready work, PRD child picked independently, or parent PRD cleanup** -> `issue-sweep`.
 - **New repository with no workflow setup** -> `setup-ai-native-development`.
 
 ## Precondition
@@ -52,7 +52,7 @@ Run `setup-ai-native-development` before relying on the workflow in a new reposi
 2. Read only the evidence needed to route: open or closed state, labels, comments, blockers, assignees, claim comments, linked PRs, parent/sub-issues, and current branch or diff when relevant.
 3. Name the current loop position, the next skill, and the general rule the user can remember next time.
 4. If the route is uncertain, choose the smallest clarifying route: `issue-triage` for unclear tracker state, `issue-grill` for missing product or business decisions, `setup-ai-native-development` for missing repository rules, or one direct question when the user must decide.
-5. Report the route using this shape:
+5. Report the route compactly using the user's language. Keep skill names, labels, issue numbers, commands, and code identifiers literal. Omit optional lines when they would only say `none`.
 
 ```markdown
 Current position: <stage or surface>
