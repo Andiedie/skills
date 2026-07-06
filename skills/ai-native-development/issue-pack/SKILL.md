@@ -26,7 +26,7 @@ Both shapes require the same contract strength. A single issue package is not a 
 - Avoid file paths and line numbers unless they are evidence.
 - Acceptance criteria must be concrete and independently verifiable.
 - Out of scope is required.
-- User stories must be a LONG, numbered list that covers the package's meaningful actors, behaviors, edge cases, and acceptance-relevant scenarios. Each story uses this format: `As an <actor>, I want <feature>, so that <benefit>.`
+- User stories must be a numbered list that covers the package's meaningful actors, behaviors, edge cases, and acceptance-relevant scenarios. Use the shortest list that covers distinct behavior paths. Recommended story count: simple single issue package 1-3, normal single issue package 3-6, PRD package 6-12, larger PRD package more than 12 only when distinct actors, modes, edge cases, or acceptance paths require it. Each story uses this format: `As an <actor>, I want <feature>, so that <benefit>.`
 - Testing decisions must name a test seam or verification strategy. Prefer existing seams and the highest practical seam; fewer seams are better when they still prove the behavior.
 - Documentation proposals from `issue-grill` must become package requirements, acceptance criteria, or child slices. Do not apply them locally during pack.
 - Prototype snippets may be included only when they express a decision more precisely than prose, such as a state machine, reducer shape, schema, type shape, or API payload shape. Keep only decision-rich parts, label them as prototype-derived, and do not paste a working demo.
@@ -115,7 +115,16 @@ Describe the completed behavior from the user or system perspective, including i
 
 ## User Stories
 
-A LONG, numbered list of user stories. Each user story should use this format:
+A numbered list of user stories that covers distinct behavior paths, not a target word count.
+
+Recommended story count:
+
+- Simple single issue package: 1-3.
+- Normal single issue package: 3-6.
+- PRD package: 6-12.
+- Larger PRD package: more than 12 only when distinct actors, modes, edge cases, or acceptance paths require it.
+
+Each user story should use this format:
 
 1. As an <actor>, I want <feature>, so that <benefit>.
 
