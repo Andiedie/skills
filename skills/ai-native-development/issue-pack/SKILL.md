@@ -39,8 +39,23 @@ If human judgment, reporter detail, permission, external access, acceptance inpu
 
 - the exact blocker;
 - recommended next state: `needs-info`;
-- recommended next skill: `issue-grill` when a structured decision interview is needed, otherwise human or external input;
-- where to resume in `issue-pack` after the blocker is resolved.
+- blocker owner: `reporter`, `maintainer`, `human`, `agent`, or `external-system`;
+- resume with: `issue-triage`, `issue-grill`, or `issue-pack`;
+- where `issue-pack` should resume after the blocker is resolved.
+
+When tracker edits are safe, also move the issue back to `needs-info` and append a Blocker block. Do not ask the blocker in chat from inside `issue-pack`.
+
+Use `Owner: human` and `Resume with: issue-grill` for a structured decision interview. Use the accountable reporter, maintainer, agent, or external system as `Owner` for missing facts, access, external state, or acceptance input, and usually `Resume with: issue-triage` after that input arrives.
+
+```markdown
+## Blocker
+
+Cause: <missing-facts, decision-needed, access-needed, external-state, or acceptance-needed>
+Owner: <reporter, maintainer, human, agent, or external-system>
+Question: <one specific question, decision, permission, external event, or acceptance gate>
+Resume with: <issue-triage, issue-grill, or issue-pack>
+Exit criteria: <what must be true before this issue can leave needs-info>
+```
 
 ## Process
 
@@ -55,7 +70,7 @@ If human judgment, reporter detail, permission, external access, acceptance inpu
    - Prefer repository facts over asking the user.
    - When human product, domain, architecture, naming, or testing decisions block a correct package, stop and report the blocked route.
    - Do not replace `issue-grill` with an ad hoc interview.
-   - Completion criterion: either no blocking decision remains, or the report names `needs-info`, the exact decision, `issue-grill` as the next skill, and the resume point.
+   - Completion criterion: either no blocking decision remains, or the tracker/report names `needs-info`, the exact decision, blocker owner, resume skill, and `issue-pack` resume point.
 
 3. Choose the package shape.
    - Use a single issue package when one issue can carry the complete Package Contract.
@@ -78,7 +93,7 @@ If human judgment, reporter detail, permission, external access, acceptance inpu
    - Treat invocation as authorization to publish a package from confirmed issue state.
    - Do not ask for confirmation before normal package tracker edits: issue body updates, active queue label changes, parent/sub-issue links, new child issues, blocked-by/blocking links, or ownership-neutral metadata.
    - Ask before publishing only when the target issue is ambiguous, publishing would overwrite unrelated maintainer text, tracker permissions/access are unclear, or the package requires an unconfirmed human judgment.
-   - Completion criterion: the package is publishable from existing confirmed state, or the blocked route is reported.
+   - Completion criterion: the package is publishable from existing confirmed state, or the blocked route is recorded in the tracker when safe and reported.
 
 6. Publish.
    - Remove conflicting active queue labels.

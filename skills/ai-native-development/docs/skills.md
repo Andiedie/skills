@@ -15,8 +15,8 @@ If the next step is unclear, use `ask-andie` first.
 | Stage | Situation | Primary skill | Output | Usually next |
 | --- | --- | --- | --- | --- |
 | Observe | A raw signal has not been recorded yet. | `issue-intake` | Durable issue, usually entering `needs-triage`. | `issue-triage` |
-| Decide | A recorded issue needs routing. | `issue-triage` | Closed issue, `needs-info`, or `needs-pack`. | `issue-grill`, `issue-pack`, or human input |
-| Clarify | Human product, domain, architecture, naming, testing, access, or acceptance input is missing. | `issue-grill` when a decision interview is needed; otherwise capture the answer on the issue. | Recorded decision, documentation proposal, or specific unanswered question. | `issue-pack` or `issue-triage` |
+| Decide | A recorded issue needs routing. | `issue-triage` | Closed issue, `needs-info` with a Blocker block, or `needs-pack`. | `issue-grill`, `issue-pack`, or the blocker owner |
+| Clarify | Human product, domain, architecture, naming, testing, access, or acceptance input is missing. | `issue-grill` when a decision interview is needed; otherwise capture the answer on the issue. | Recorded decision, documentation proposal, or current Blocker block. | `issue-pack` or `issue-triage` |
 | Pack | Worth-doing work is not executable yet. | `issue-pack` | Single issue package or PRD package. | `issue-pick` |
 | Ready | Executable work exists. | `issue-pick` | Recommended single issue package or PRD package. | `issue-claim` |
 | Claim | A delivery unit has been chosen. | `issue-claim` | Ownership recorded without changing scope. | `issue-implement` |
@@ -28,7 +28,7 @@ If the next step is unclear, use `ask-andie` first.
 ### `ask-andie`
 
 - Use when: the current position in the loop is unclear.
-- Produces: current stage, evidence used, next recommended skill, and any human decision needed.
+- Produces: current stage, evidence used, next recommended skill, and the current Blocker question when one exists.
 - Must not: edit tracker state, claim, or implement work.
 - Usually next: whichever skill it routes to.
 
@@ -42,14 +42,14 @@ If the next step is unclear, use `ask-andie` first.
 ### `issue-triage`
 
 - Use when: a recorded issue needs a route.
-- Produces: close with reason, `needs-info`, or `needs-pack`.
+- Produces: close with reason, `needs-info` with a Blocker block, or `needs-pack`.
 - Must not: write a PRD, create child issues, mark ready, claim, or implement.
 - Usually next: `issue-grill`, `issue-pack`, or human input.
 
 ### `issue-grill`
 
 - Use when: a correct package depends on human product, domain, architecture, naming, testing, access, or acceptance decisions.
-- Produces: tracker-safe issue notes with resolved decisions, documentation proposals, acceptance implications, remaining blockers, and the resume point; when blockers are resolved, moves the issue to `needs-pack`.
+- Produces: tracker-safe issue notes with resolved decisions, documentation proposals, acceptance implications, current Blocker block when still blocked, and the resume point; when blockers are resolved, moves the issue to `needs-pack`.
 - Must not: edit local docs, create ADRs, update `CONTEXT.md`, pack, claim, or implement.
 - Usually next: `issue-pack` when decisions are resolved, or `issue-triage` when new information changes the route.
 
@@ -57,7 +57,7 @@ If the next step is unclear, use `ask-andie` first.
 
 - Use when: worth-doing work needs to become one executable delivery unit.
 - Produces: a `ready-for-agent` single issue package, or a `parent-prd + ready-for-agent` PRD package with independently-grabbable child slices, relationships, blockers, and verification criteria.
-- Before publishing: refuses when a missing decision blocks a correct package; otherwise publishes normal package tracker edits without re-confirming decisions already resolved by the issue thread or `issue-grill`.
+- Before publishing: refuses when missing input blocks a correct package and records a `needs-info` Blocker block when safe; otherwise publishes normal package tracker edits without re-confirming decisions already resolved by the issue thread or `issue-grill`.
 - Must not: replace `issue-grill`, claim, implement, or mark PRD children as independently ready.
 - Usually next: `issue-pick`.
 
@@ -85,7 +85,7 @@ If the next step is unclear, use `ask-andie` first.
 ### `issue-sweep`
 
 - Use when: tracker state may have drifted.
-- Produces: findings for stale claims, contradictory labels, wrong relationships, blocked ready work, and parent PRDs needing follow-up.
+- Produces: findings for stale claims, contradictory labels, missing `needs-info` Blocker blocks, wrong relationships, blocked ready work, and parent PRDs needing follow-up.
 - Must not: implement, decide priority, or override active owners without approval.
 - Usually next: approved metadata cleanup, `issue-triage`, `issue-pack`, `issue-claim`, or human approval.
 

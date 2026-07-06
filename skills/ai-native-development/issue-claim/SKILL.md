@@ -40,7 +40,7 @@ For a PRD package, claiming the parent PRD claims all of its children. PRD child
    - If existing ownership evidence looks old or inactive, report it as possibly stale; do not release or override it without explicit approval or an `issue-sweep` route.
    - Route unclear scope, weak package contract, missing verification, or broken PRD child structure to `issue-pack`.
    - Reject or route hard blockers here; do not move them into confirmation gates. Open external blockers, unclaimable targets, PRD child claims, and scope-changing claims cannot be made safe by confirmation.
-   - Completion criterion: the claim is valid, or the report names the correct route back to `issue-pick`, `issue-pack`, `issue-sweep`, or `needs-info`.
+   - Completion criterion: the claim is valid, or the report names the correct route back to `issue-pick`, `issue-pack`, `issue-sweep`, or `issue-triage` for a `needs-info` Blocker.
 
 3. Prepare side effects and check confirmation gates.
    - State claimant, issues affected, claim comment, assignee changes, branch or PR link, and any ownership metadata.

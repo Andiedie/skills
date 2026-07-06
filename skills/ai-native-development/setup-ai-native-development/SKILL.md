@@ -37,6 +37,7 @@ This is a prompt-driven setup skill. Explore first, present findings, walk the u
    - Optional category labels: map `bug` and `enhancement` only when the repository actually uses category labels.
    - Closure convention: tracker closed state plus closing comment; close-reason labels only when the repository already uses them.
    - Queue invariant: each delivery unit has at most one active state label, and PRD children do not carry active state labels.
+   - `needs-info` convention: every current `needs-info` route carries an append-only Blocker block with `Cause`, `Owner`, `Question`, `Resume with`, and `Exit criteria`; `Resume with` must name a workflow skill, and the latest Blocker supersedes earlier Blockers.
    - Completion criterion: every label the skills may apply is mapped to an existing label or an approved label to create.
 
 5. Decide relationships and claims.

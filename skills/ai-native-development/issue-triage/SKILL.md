@@ -20,6 +20,10 @@ Triage may produce only one outcome:
 
 Every open triaged delivery unit should have at most one active queue label.
 
+Every `needs-info` route must include a current Blocker block. The latest Blocker block is the source of truth for why the issue is waiting, who owns the answer, what question must be answered, which skill should resume after the answer arrives, and what condition clears the blocker.
+
+Blockers are append-only. Do not edit or delete earlier Blocker comments during normal workflow; append a new Blocker when the blocker materially changes. The latest Blocker supersedes earlier Blockers.
+
 ## Invocation
 
 Use this skill in two ways:
@@ -50,6 +54,8 @@ Use this skill in two ways:
    - If a maintainer explicitly requests one of the triage outcomes above, treat that as authorization for ordinary routing side effects and use that outcome without reopening the judgment.
    - Choose `closed` for duplicate, already implemented, rejected, not actionable, or no-longer-relevant work.
    - Choose `needs-info` when a specific missing fact, human decision, permission, external dependency, or acceptance gate blocks safe packing.
+   - For `needs-info`, classify the blocker cause as `missing-facts`, `decision-needed`, `access-needed`, `external-state`, or `acceptance-needed`.
+   - Set the blocker owner to the smallest accountable owner: `reporter`, `maintainer`, `human`, `agent`, or `external-system`.
    - Recommend `issue-grill` when the missing input is a product, domain, architecture, naming, or testing decision that needs a structured interview.
    - Choose `needs-pack` when the work is worth doing and ready to be packaged as a single issue package or PRD package.
    - Ask before editing only when the target is ambiguous, the route is uncertain, the route depends on a human judgment not already recorded, closure is needed without explicit closure authorization, the duplicate target is unclear, the edit would overwrite a maintainer conclusion, or existing ownership, linked PRs, parent/sub-issues, or blockers make the routing side effect unsafe.
@@ -58,7 +64,7 @@ Use this skill in two ways:
 4. Apply the route when safe or confirmed.
    - Unless the user explicitly asks for batch work, update one issue or PR at a time.
    - Remove conflicting active queue labels.
-   - For `needs-info`, post the needs-info template below.
+   - For `needs-info`, post the needs-info template below with a Blocker block.
    - For `needs-pack`, comment with category, established facts, package inputs, likely package shape, verification clues, evidence links, and non-blocking unknowns.
    - For `closed`, comment with the reason and close the issue only after explicit closure authorization or confirmation. Use close-reason labels only when the repository already has that convention.
    - Completion criterion: tracker state, comments, and labels express one route without contradictory active queue state.
@@ -90,9 +96,15 @@ Needed from <person, role, or skill>:
 
 - <specific question or decision>
 
-Recommended next skill: <issue-grill or none>
+## Blocker
 
-Resume point: <where triage or pack should continue>
+Cause: <missing-facts, decision-needed, access-needed, external-state, or acceptance-needed>
+Owner: <reporter, maintainer, human, agent, or external-system>
+Question: <one specific question, decision, permission, external event, or acceptance gate>
+Resume with: <issue-triage, issue-grill, or issue-pack>
+Exit criteria: <what must be true before this issue can leave needs-info>
+
+Recommended next skill: <issue-grill, issue-triage, issue-pack, or none>
 ```
 
 ### Needs Pack

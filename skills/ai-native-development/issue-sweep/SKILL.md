@@ -17,6 +17,9 @@ Sweep is not triage and not pick. When a finding needs value judgment, scope rep
 - more than one active queue label
 - open top-level issue or parent PRD with no known queue state
 - `ready-for-agent` combined with `needs-info` or `needs-pack`
+- `needs-info` without a current Blocker block
+- `needs-info` with missing or contradictory `Cause`, `Owner`, `Question`, `Resume with`, or `Exit criteria`
+- `needs-info` whose `Resume with` is not a workflow skill
 - PRD child with an active queue label
 - PRD child marked `ready-for-agent`
 
@@ -40,6 +43,7 @@ Sweep is not triage and not pick. When a finding needs value judgment, scope rep
 
 - `ready-for-agent` delivery unit with an open external blocker
 - `needs-info` with new reporter or maintainer activity
+- `needs-info` whose blocker owner or resume skill no longer matches newer issue activity
 - parent PRD whose children are all closed while the parent remains open
 - issue appears implemented or closed by PR while active queue labels remain
 

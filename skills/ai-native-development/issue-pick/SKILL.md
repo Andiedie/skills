@@ -76,7 +76,7 @@ Use the user's language for user-facing output. Keep issue numbers, labels, skil
    - For a PRD package, verify the parent goal, child slice list, internal order, children covered by the claim unit, and parent-level completion rule.
    - If evidence contradicts the pick, return to the slate instead of forcing the candidate.
    - Recommend `issue-pack` when the Package Contract, scope, PRD child structure, dependencies, acceptance criteria, verification strategy, or out of scope are wrong.
-   - Recommend `needs-info` when missing human or external input blocks safe execution.
+   - Recommend `issue-triage` to record a `needs-info` Blocker block when missing human or external input blocks safe execution.
    - Recommend `issue-sweep` when stale claims, contradictory labels, or relationship drift block a clean pick.
    - Completion criterion: the delivery unit can be safely claimed, and the implementation source of truth remains the issue or parent PRD package.
 
@@ -127,7 +127,7 @@ No pickable delivery unit found.
 
 Best candidate: <single issue package or PRD package>
 Blocker: <smallest blocker>
-Recommended route: <issue-pack, needs-info, issue-sweep, issue-triage, or wait>
+Recommended route: <issue-pack, issue-triage, issue-sweep, or wait>
 ```
 
 ## Boundaries

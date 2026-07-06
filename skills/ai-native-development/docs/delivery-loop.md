@@ -164,6 +164,26 @@ Closed work uses the tracker lifecycle state, not a queue label. Use the closing
 
 Keep this queue small. Add another active queue label only when the repository has a real queue with a clear owner, entry condition, and exit condition.
 
+### Needs-Info Blocker
+
+`needs-info` is one queue with a structured reason. Do not split it into separate state labels until the repository has separate real queues with different owners.
+
+Every current `needs-info` route should include a latest Blocker block:
+
+```markdown
+## Blocker
+
+Cause: <missing-facts, decision-needed, access-needed, external-state, or acceptance-needed>
+Owner: <reporter, maintainer, human, agent, or external-system>
+Question: <one specific question, decision, permission, external event, or acceptance gate>
+Resume with: <issue-triage, issue-grill, or issue-pack>
+Exit criteria: <what must be true before this issue can leave needs-info>
+```
+
+Use `Cause` to describe why the issue is waiting, `Owner` to show who can unblock it, `Question` to make the next action concrete, `Resume with` to name the workflow skill to run after the owner supplies input, and `Exit criteria` to prevent partial answers from looking complete.
+
+Blockers are append-only. When the blocker materially changes, append a new Blocker instead of editing or deleting the old one. The latest Blocker supersedes earlier Blockers.
+
 ## Pack And Dependencies
 
 Large work should be expressed as a PRD package: one parent PRD plus child issues that track vertical slices. The PRD package is the delivery unit.
@@ -203,7 +223,7 @@ Recommended claim signals:
 - claim comment;
 - linked branch or draft PR.
 
-Claims must not quietly change scope. If execution discovers that the package is wrong, route the work back to `needs-pack` or `needs-info`.
+Claims must not quietly change scope. If execution discovers that the package is wrong, route the work back to `needs-pack` or to `needs-info` with a Blocker block.
 
 ## Roles And Skills
 
@@ -212,8 +232,8 @@ These are workflow roles, not necessarily separate people or separate agents. On
 | Role | Input | Output |
 | --- | --- | --- |
 | Intake | Raw signal | Durable work item, usually entering `needs-triage`. |
-| Triage | `needs-triage`, or `needs-info` with new input | Closed, `needs-info`, or `needs-pack`. |
-| Clarify | `needs-info` caused by missing decisions | Recorded human decision and documentation proposals via `issue-grill`. |
+| Triage | `needs-triage`, or `needs-info` with new input | Closed, `needs-info` with a Blocker block, or `needs-pack`. |
+| Clarify | `needs-info` caused by missing decisions | Recorded human decision, documentation proposals, or current Blocker block via `issue-grill`. |
 | Pack | `needs-pack`, or clarified work | Single issue package or PRD package. |
 | Pick | `ready-for-agent` delivery units | Recommended single issue package or PRD package. |
 | Claim | Picked delivery unit | Recorded ownership and confirmed claim scope. |
@@ -239,6 +259,7 @@ All related skills must maintain these invariants:
 - A raw signal cannot jump to implementation unless it has been packed.
 - `issue-triage` does not create `ready-for-agent` work.
 - Missing human judgment, external access, or acceptance input should route to `needs-info`.
+- `needs-info` must carry a current Blocker block.
 - `needs-pack` means packaging can continue, but implementation should not start.
 - `ready-for-agent` means only blocker and claim checks are needed before implementation.
 - A delivery unit has at most one queue state label.
@@ -247,7 +268,7 @@ All related skills must maintain these invariants:
 - An open external blocker makes a delivery unit not pickable.
 - Claim scope must cover the full delivery unit.
 - Implementation must not happen in a shared dirty worktree or from chat summaries.
-- When the package is wrong, route back to `needs-pack` or `needs-info` instead of privately changing scope.
+- When the package is wrong, route back to `needs-pack` or to `needs-info` with a Blocker block instead of privately changing scope.
 
 ## Update Triggers
 

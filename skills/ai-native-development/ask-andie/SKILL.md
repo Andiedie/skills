@@ -34,7 +34,8 @@ Pick the route from the current surface:
 - **Raw request, idea, bug report, screenshot, or note not yet tracked** -> `issue-intake`.
 - **Existing issue with unclear state** -> `issue-triage`.
 - **Existing issue marked `needs-info` with new reporter or maintainer activity** -> `issue-triage`.
-- **Existing issue marked `needs-info` because decisions are missing** -> `issue-grill`.
+- **Existing issue marked `needs-info` with `Resume with: issue-grill` or `Cause: decision-needed`** -> `issue-grill`.
+- **Existing issue marked `needs-info` with missing reporter facts, access, external state, or acceptance input** -> route the Blocker question to the owner; run the `Resume with` skill after new information arrives.
 - **Existing issue marked `needs-pack`** -> `issue-pack`.
 - **Ready single issue package or PRD package slate and no specific delivery unit chosen** -> `issue-pick`.
 - **Specific ready single issue package or PRD package already chosen** -> `issue-claim`.
@@ -49,10 +50,11 @@ Run `setup-ai-native-development` before relying on the workflow in a new reposi
 ## When Invoked
 
 1. Identify the current surface: request, issue, PR, branch, local diff, or tracker audit.
-2. Read only the evidence needed to route: open or closed state, labels, comments, blockers, assignees, claim comments, linked PRs, parent/sub-issues, and current branch or diff when relevant.
+2. Read only the evidence needed to route: open or closed state, labels, latest Blocker block, comments, blockers, assignees, claim comments, linked PRs, parent/sub-issues, and current branch or diff when relevant.
 3. Name the current loop position, the next skill, and the general rule the user can remember next time.
-4. If the route is uncertain, choose the smallest clarifying route: `issue-triage` for unclear tracker state, `issue-grill` for missing product or business decisions, `setup-ai-native-development` for missing repository rules, or one direct question when the user must decide.
-5. Report the route compactly using the user's language. Keep skill names, labels, issue numbers, commands, and code identifiers literal. Omit optional lines when they would only say `none`.
+4. If a `needs-info` issue lacks a current Blocker block, route to `issue-triage` to restore the blocker before choosing another skill.
+5. If the route is uncertain, choose the smallest clarifying route: `issue-triage` for unclear tracker state, `issue-grill` for missing product or business decisions, `setup-ai-native-development` for missing repository rules, or one direct question when the user must decide.
+6. Report the route compactly using the user's language. Keep skill names, labels, issue numbers, commands, and code identifiers literal. Omit optional lines when they would only say `none`.
 
 ```markdown
 Current position: <stage or surface>
@@ -61,7 +63,7 @@ Next skill: <skill>
 Why: <one or two sentences>
 Rule to learn: <general routing rule>
 Skip ask next time when: <recognizable condition>
-Human input needed: <none / exact question>
+Human input needed: <none / exact Blocker question>
 Watch-outs: <blocker, claim, parent PRD, stale state, or none>
 ```
 
