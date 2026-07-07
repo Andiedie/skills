@@ -1,0 +1,3 @@
+# Separate markdown-file workflow state from GitHub issues
+
+For markdown-file-based workflow state, `.and/work` is the authoritative storage and GitHub issues are not used as a discussion, notification, mirror, or synchronization surface. This preserves a single source of truth and avoids the drift and ambiguity that would come from mixing file-based workflow state with GitHub issue state; repositories that want GitHub to be authoritative should choose the GitHub-native backend instead. Git branches, commits, pull requests, CI, and reviews may still be referenced as implementation artifacts, but they do not carry package contracts, stage state, relationships, claims, or completion rules.
