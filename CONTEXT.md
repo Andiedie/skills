@@ -5,7 +5,7 @@ This context describes the language for the AI-native skills package and its del
 ## Language
 
 **Workflow state backend**:
-The source of truth for AI-native delivery loop state, including package contracts, delivery-unit structure, dependencies, blockers, ownership, implementation links, and completion evidence.
+The source of truth for AI-native delivery loop state, including package contracts, delivery-unit structure, dependencies, blockers, ownership, implementation artifact references, and completion evidence.
 _Avoid_: Issue tracker adapter, tracker fallback
 
 **Markdown-file-based backend**:
@@ -13,7 +13,7 @@ A workflow state backend where `.and/work` is the authoritative storage for deli
 _Avoid_: GitHub issue mirror, text fallback
 
 **GitHub-native backend**:
-A workflow state backend where GitHub Issues, labels, native relationships, comments, assignees, branches, and PR links are the authoritative storage for delivery-loop state.
+A workflow state backend where GitHub Issues, labels, native relationships, comments, and assignees are the authoritative storage for delivery-loop state.
 _Avoid_: Markdown shadow state
 
 **Backend contract**:
@@ -42,7 +42,7 @@ _Avoid_: Implementation progress, child slice status
 
 **State reason**:
 The structured explanation for why a delivery unit is in its current stage state, especially why it is waiting in needs-info.
-_Avoid_: Blocker block, dependency blocker
+_Avoid_: Dependency relationship, external blocker
 
 **Lifecycle outcome**:
 The terminal result of a delivery unit, such as completed, rejected, duplicate, or superseded.
@@ -51,6 +51,10 @@ _Avoid_: Active queue state
 **Completion evidence**:
 The receipt or linked proof that explains why a delivery unit reached its lifecycle outcome, such as verification results, PR links, commits, or closing notes.
 _Avoid_: Stage state
+
+**Receipt**:
+Append-only evidence written by a workflow stage, such as grill decisions, pack publication, claim, implementation, review, verification, completion, rejection, or follow-up.
+_Avoid_: Package contract, mutable status field
 
 **Implementation artifact**:
 A Git branch, commit, pull request, test result, or review result produced while implementing a delivery unit; it can be referenced as evidence but does not carry workflow state.

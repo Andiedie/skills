@@ -6,28 +6,36 @@ disable-model-invocation: true
 
 # Issue Sweep
 
-Sweep audits tracker invariants. It finds contradictions, stale workflow state, and relationship drift that would make pick, claim, or implementation unsafe.
+Sweep audits workflow backend invariants. It finds contradictions, stale workflow state, and relationship drift that would make pick, claim, or implementation unsafe.
 
 Sweep is not triage and not pick. When a finding needs value judgment, scope repair, packaging, ownership repair, or closure, route it to the right skill or to human approval.
+
+## Backend Rule
+
+Before auditing, read `.and/config.yml`, then use `ai-native-backend-contract` for the backend contract and configured backend reference. Use the configured backend reference for stage-state, relationship, ownership, receipt, implementation-artifact, and lifecycle invariants.
+
+If `ai-native-backend-contract` is unavailable, stop and ask the user to install it; do not infer backend rules.
+
+If setup is missing or the backend value is unsupported, route to `setup-ai-native-development`.
 
 ## Drift checks
 
 ### Queue state drift
 
-- more than one active queue label
-- open top-level issue or parent PRD with no known queue state
+- more than one public stage state
+- open top-level work record or parent PRD with no known queue state
 - `ready-for-agent` combined with `needs-info` or `needs-pack`
-- `needs-info` without a current Blocker block
+- `needs-info` without a current State Reason
 - `needs-info` with missing or contradictory `Cause`, `Owner`, `Question`, `Resume with`, or `Exit criteria`
 - `needs-info` whose `Resume with` is not a workflow skill
-- PRD child with an active queue label
+- PRD child with a public stage state
 - PRD child marked `ready-for-agent`
 
 ### Package structure drift
 
 - PRD child whose parent link is missing or inconsistent
 - parent PRD whose child links are incomplete or inconsistent
-- Markdown task lists duplicating GitHub sub-issues
+- Markdown task lists duplicating backend containment relationships
 - parent PRD used as a blocker for its children
 - parent PRD marked `ready-for-agent` while child structure is incomplete
 
@@ -36,33 +44,35 @@ Sweep is not triage and not pick. When a finding needs value judgment, scope rep
 - PRD child claimed without its parent PRD
 - PRD package partially claimed through one or more children
 - claimed delivery unit with no activity past the repository stale threshold
-- claim comment, assignee, branch, or PR evidence that contradicts another ownership signal
-- active PR exists while the linked delivery unit appears unclaimed
+- assignee, claim comment, or claim receipt that contradicts another ownership signal
+- active branch or PR exists while the linked delivery unit appears unclaimed
 
 ### Execution drift
 
 - `ready-for-agent` delivery unit with an open external blocker
+- external blocker whose exit criteria appears satisfied or whose owner is no longer current
 - `needs-info` with new reporter or maintainer activity
-- `needs-info` whose blocker owner or resume skill no longer matches newer issue activity
+- `needs-info` whose State Reason owner or resume skill no longer matches newer work activity
 - parent PRD whose children are all closed while the parent remains open
-- issue appears implemented or closed by PR while active queue labels remain
+- work appears implemented or closed by PR while active stage state remains
 
 ## Process
 
 1. Resolve sweep scope.
-   - Determine repository, tracker, and issue subset from the user request.
-   - Default to open issues in the current repository.
-   - Ask before sweeping a large or ambiguous tracker.
+   - Determine repository, configured backend, and work subset from the user request.
+   - Default to open work in the current repository.
+   - Ask before sweeping a large or ambiguous backend scope.
    - Completion criterion: scope, query, and limit or pagination strategy are explicit.
 
 2. Collect issue data.
-   - Fetch labels, state, assignees, comments, linked PRs, parent/sub-issues, blockers, updated time, and close status.
+   - Fetch stage state, lifecycle state, ownership, comments or receipts, linked implementation artifacts, containment, dependency relationships, blockers, updated time, and close status.
+   - For `markdown-file-based`, derive ownership from claim receipts and treat ownership frontmatter fields as drift.
    - Use explicit pagination or limits.
    - Completion criterion: the audit set is complete for the declared scope, or gaps are named.
 
 3. Check invariants.
    - Apply every drift check above.
-   - Skip a check only when the tracker lacks that feature or the repository has no convention for it.
+   - Skip a check only when the configured backend lacks that feature or the repository has no convention for it.
    - Completion criterion: every relevant invariant has been checked or explicitly skipped with a reason.
 
 4. Report before editing.
@@ -72,13 +82,13 @@ Sweep is not triage and not pick. When a finding needs value judgment, scope rep
      - risks duplicate work
      - metadata cleanup
      - candidate follow-up
-   - For each finding, include issue link, observed state, expected state, evidence, impact, and recommended route or safe fix.
+   - For each finding, include issue link or work ID, observed state, expected state, evidence, impact, and recommended route or safe fix.
    - If a severity group has no findings, omit it.
-   - Completion criterion: the user can approve fixes without rereading the entire tracker.
+   - Completion criterion: the user can approve fixes without rereading the entire backend state.
 
 5. Apply low-risk fixes only after confirmation.
-   - Low-risk fixes may include removing active queue labels from PRD children, removing clearly contradictory duplicate active queue labels, adding `needs-triage` to an obviously unlabeled open issue when the repository uses that entry label, or adding a parent child-coverage note when the relationship is already clear and repository setup requires it.
-   - Do not close issues, change scope, remove blockers, release claims, override active owners, mark work `ready-for-agent`, convert issues into PRD packages, or create child issues without explicit approval.
+   - Low-risk fixes may include removing active queue state from PRD children, removing clearly contradictory duplicate active queue state, adding `needs-triage` to an obviously unstaged open work record when the repository uses that entry state, or adding a parent child-coverage note when the relationship is already clear and repository setup requires it.
+   - Do not close work, change scope, remove blockers, release claims, override active owners, mark work `ready-for-agent`, convert work into PRD packages, or create child records without explicit approval.
    - Completion criterion: applied fixes match the approved list and remaining findings are reported.
 
 ## Report shape

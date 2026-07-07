@@ -1,0 +1,2 @@
+version: 1
+workflow_state_backend: github-native

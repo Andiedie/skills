@@ -22,6 +22,7 @@
       "title": "AI-Native Development",
       "description": "Workflow skills for turning ambiguous signals into verified software changes.",
       "skills": [
+        "ai-native-backend-contract",
         "ask-andie",
         "issue-intake",
         "issue-triage",

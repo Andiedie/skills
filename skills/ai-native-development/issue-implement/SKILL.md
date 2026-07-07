@@ -6,7 +6,15 @@ disable-model-invocation: true
 
 # Issue Implement
 
-Implement a claimed single issue package or PRD package. The tracker package is the source of truth; chat history is only context.
+Implement a claimed single issue package or PRD package. The configured workflow state backend is the source of truth; chat history is only context.
+
+## Backend Rule
+
+Before planning implementation, read `.and/config.yml`, then use `ai-native-backend-contract` for the backend contract and configured backend reference. Use the configured backend reference for reading the claimed delivery unit, child records, relationships, ownership, receipts, and implementation artifacts.
+
+If `ai-native-backend-contract` is unavailable, stop and ask the user to install it; do not infer backend rules.
+
+If setup is missing or the backend value is unsupported, route to `setup-ai-native-development`.
 
 ## Preconditions
 
@@ -20,19 +28,20 @@ If a precondition is missing, stop and route to `issue-claim`, `issue-pick`, `is
 ## Process
 
 1. Resolve the delivery unit.
-   - Read the claim comment, assignee, branch or PR link, parent PRD when present, every child issue, blockers, linked PRs, and all package comments that carry requirements or decisions.
-   - Treat the issue or parent PRD package as the implementation contract.
+   - Read the claim record, backend ownership evidence, linked implementation artifacts, parent PRD when present, every child record, blockers, and all package notes that carry requirements or decisions.
+   - For `markdown-file-based`, derive current ownership from the latest valid claim receipt.
+   - Treat the configured backend package as the implementation contract.
    - Completion criterion: source-of-truth links, claim scope, blockers, and verification expectations are known.
 
 2. Create or enter an isolated worktree.
-   - Inspect current branch, `git status`, existing worktrees, and linked branch or PR evidence.
+   - Inspect current branch, `git status`, existing worktrees, and linked implementation artifact evidence.
    - Use an existing linked worktree only when it matches the claimed delivery unit and has no unrelated changes.
    - Otherwise create a dedicated branch and worktree for the delivery unit.
    - Do not implement on `main`, in a shared dirty worktree, or in a worktree containing unrelated changes.
    - Completion criterion: implementation is happening in one isolated worktree whose branch is tied to the delivery unit.
 
-3. Plan from the tracker contract.
-   - Derive the implementation plan from the Package Contract, child issues, accepted grill decisions, and documented verification strategy.
+3. Plan from the backend contract.
+   - Derive the implementation plan from the Package Contract, child records, accepted grill decisions, and documented verification strategy.
    - For a PRD package, choose child slice order from true blocker relationships; children may be delegated internally, but the parent claim owner remains responsible for integration.
    - If the package is wrong or underspecified, stop and route back instead of privately changing scope.
    - Completion criterion: the plan covers the claimed delivery unit and no unconfirmed scope change is needed.
@@ -51,7 +60,7 @@ If a precondition is missing, stop and route to `issue-claim`, `issue-pick`, `is
 
 6. Commit and report.
    - Commit only the delivery-unit changes on the isolated branch.
-   - Update tracker or PR discussion with a short implementation receipt when the repository workflow expects it.
+   - Record the implementation receipt in the configured backend. Link the branch, commit, PR, CI, or review result as implementation artifacts when available.
    - Do not close issues, release claims, or merge unless repository policy or explicit human approval allows it.
    - Report worktree, branch, commit or PR link, verification run, review result, remaining blockers, and next close or merge step.
    - Completion criterion: the claimed delivery unit is implemented, verified, reviewed, and committed, or it is routed back with the smallest blocker.

@@ -15,7 +15,7 @@ npx --yes skills add Andiedie/skills --list
 Install the AI-native development loop globally for Codex and Claude Code:
 
 ```bash
-npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill ask-andie issue-intake issue-triage issue-grill issue-pack issue-pick issue-claim issue-implement issue-sweep setup-ai-native-development -y
+npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill ai-native-backend-contract ask-andie issue-intake issue-triage issue-grill issue-pack issue-pick issue-claim issue-implement issue-sweep setup-ai-native-development -y
 ```
 
 Install the repository interactively:
@@ -30,6 +30,12 @@ Install one skill explicitly:
 npx --yes skills add Andiedie/skills --skill <skill-name>
 ```
 
+AI-native workflow skills depend on `ai-native-backend-contract`. When installing one explicitly, include the reference skill in the same command:
+
+```bash
+npx --yes skills add Andiedie/skills --skill ai-native-backend-contract issue-pack
+```
+
 ## Skill Packages
 
 ### AI-native development
@@ -38,6 +44,7 @@ npx --yes skills add Andiedie/skills --skill <skill-name>
 
 It includes:
 
+- `ai-native-backend-contract`
 - `ask-andie`
 - `issue-intake`
 - `issue-triage`
@@ -80,11 +87,11 @@ For the AI-native development loop, keep these Matt skills installed:
 - `ask-matt`
 - `setup-matt-pocock-skills`
 
-The `issue-grill` skill is a tracker-safe adaptation of Matt's `grill-with-docs`: it keeps the `/grilling` and `/domain-modeling` handfeel, but records decisions and documentation proposals on the issue for `issue-pack` instead of editing local docs during clarification.
+The `issue-grill` skill is a backend-safe adaptation of Matt's `grill-with-docs`: it keeps the `/grilling` and `/domain-modeling` handfeel, but records decisions and documentation proposals in the configured workflow backend for `issue-pack` instead of editing local docs during clarification.
 
-The `issue-pack` skill adapts the PRD and tracer-bullet issue ideas from Matt's `to-prd` and `to-issues` to this repository's `needs-pack`, PRD package, relationship, and claim rules.
+The `issue-pack` skill adapts the PRD and tracer-bullet issue ideas from Matt's `to-prd` and `to-issues` to this repository's `needs-pack`, PRD package, relationship, backend, and claim rules.
 
-The `issue-implement` skill adapts Matt's `implement` for claimed AI-native delivery units by adding tracker source-of-truth and isolated worktree requirements.
+The `issue-implement` skill adapts Matt's `implement` for claimed AI-native delivery units by adding configured-backend source-of-truth and isolated worktree requirements.
 
 ## Current Personal Skills
 
@@ -120,4 +127,5 @@ Snapshot from my local skill environment on 2026-07-03. This records the skills 
 - Skill source files live under `skills/*/SKILL.md` or package directories such as `skills/ai-native-development/*/SKILL.md`.
 - When adding, renaming, or removing a skill, update `skills.sh.json`.
 - When changing the AI-native issue workflow, update [Delivery loop](skills/ai-native-development/docs/delivery-loop.md), [Skills](skills/ai-native-development/docs/skills.md), and the affected workflow `SKILL.md` files together.
+- When changing workflow state storage, update [AI-native backend contract](skills/ai-native-development/ai-native-backend-contract/SKILL.md), its backend reference docs, and the affected workflow `SKILL.md` files together.
 - When updating the personal skill snapshot, check `~/.agents/.skill-lock.json`, `npx --yes skills list -g -a codex --json`, enabled Codex plugins, and enabled Codex system skills.

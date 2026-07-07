@@ -40,7 +40,7 @@ Each stage reduces a different kind of uncertainty:
 | Decide | Is it worth acting on? What is missing? | Close reason, information request, or pack route |
 | Clarify | Which human decision blocks a correct package? | Recorded decision, documentation proposal, or specific unanswered question |
 | Pack | What is the executable delivery unit? | Single issue package or PRD package |
-| Claim | Who owns this delivery unit now? | Assignee, claim comment, branch, or PR link |
+| Claim | Who owns this delivery unit now? | Assignee, claim comment, or claim receipt |
 | Implement | What code change satisfies the package? | Code, tests, verification, PR, or commit |
 | Close/Learn | How does the result close? What should be recorded? | Closed work, docs, follow-up work |
 
@@ -59,19 +59,19 @@ Humans should not be the bottleneck for every step. Agents should not make human
 | --- | --- |
 | Human | Value judgments, business tradeoffs, authorization, external access, acceptance, merge, rejection |
 | Agent | Fact-finding, reproduction, context synthesis, packaging, implementation, tests, consistency audits |
-| Tracker / Docs | Durable state, specs, relationships, decisions, and completion evidence |
+| Workflow state backend / Docs | Durable state, specs, relationships, decisions, and completion evidence |
 
 Principles:
 
 - Humans enter only when judgment, authorization, or acceptance is required.
-- Agents should first look for facts in code, tests, logs, docs, and the tracker.
+- Agents should first look for facts in code, tests, logs, docs, and the configured workflow state backend.
 - Every executable delivery unit should have a clear boundary and verification path.
 - When execution proves the package wrong, do not privately expand the scope; route the work back to Pack or Clarify.
-- Requirements, acceptance, child issues, relationships, and blockers belong in the tracker. Chat output is a receipt, not a second specification.
+- Requirements, acceptance, child slices, relationships, state reasons, and blockers belong in the configured workflow state backend. Chat output is a receipt, not a second specification.
 - Human decisions should be made once at the right stage. Clarification confirms decisions; later stages consume them.
 - A skill should refuse and route back when its preconditions are missing, rather than improvising the missing upstream work.
-- Normal tracker writes are part of the invoked stage. Stop for confirmation only when the write introduces unconfirmed judgment, overrides ownership, closes work, releases a claim, or mutates an ambiguous target.
-- Implementation starts from the tracker source of truth in an isolated branch or worktree.
+- Normal backend writes are part of the invoked stage. Stop for confirmation only when the write introduces unconfirmed judgment, overrides ownership, closes work, releases a claim, or mutates an ambiguous target.
+- Implementation starts from the configured workflow state backend in an isolated branch or worktree.
 
 ## End-To-End Flow
 
@@ -107,7 +107,7 @@ Flow rules:
 1. **Observe / Intake** records the signal without rushing into solution design.
 2. **Decide / Triage** decides whether the work should close, wait for information, or be packed.
 3. **Clarify** contains human input that must be resolved before a correct package can be created. Use `issue-grill` when a structured decision interview is needed.
-4. **Pack** turns worth-doing work into exactly one executable delivery unit. It synthesizes resolved decisions and publishes normal package tracker edits; it does not reopen the clarification interview.
+4. **Pack** turns worth-doing work into exactly one executable delivery unit. It synthesizes resolved decisions and publishes normal package backend edits; it does not reopen the clarification interview.
 5. **Ready** means an implementation agent can begin blocker and claim checks.
 6. **Pick / Claim** identifies the delivery unit and current owner. Pick should do the full evidence check but report a concise recommendation.
 7. **Implement** uses `issue-implement` on the claimed delivery unit in an isolated branch or worktree.
@@ -125,33 +125,56 @@ Before implementation, work must be packed into one delivery unit. The package c
 - the testing seam or verification strategy;
 - acceptance criteria and how completion will be verified.
 
-The package is the implementation contract. The original issue, comments, and discussion are context.
+The package is the implementation contract. Earlier issues, comments, receipts, and discussion are context.
 
 Delivery unit shapes:
 
-- **Single issue package**: one issue with the complete Package Contract and `ready-for-agent`; no child issues are created.
-- **PRD package**: one parent PRD with the complete Package Contract and child issues for internal execution, progress, ordering, delegation, and acceptance tracking.
+- **Single issue package**: one work record with the complete Package Contract and `ready-for-agent`; no child records are created.
+- **PRD package**: one parent PRD with the complete Package Contract and child records for internal execution, progress, ordering, delegation, and acceptance tracking.
 
 Both shapes require the same contract strength. The difference is whether the work needs child slices.
 
 Do not treat file paths and line numbers as the specification itself. They become stale; behavior, interfaces, constraints, and acceptance criteria are more durable.
 
-## Tracker Representation
+## Workflow State Backend
 
-The issue tracker is the default surface for externalizing the delivery loop. Keep four kinds of information separate:
+Each repository chooses one authoritative workflow state backend in `.and/config.yml`:
+
+```yaml
+version: 1
+workflow_state_backend: github-native
+```
+
+or:
+
+```yaml
+version: 1
+workflow_state_backend: markdown-file-based
+```
+
+Keep the first config schema this small. Do not add label mappings, work-root overrides, stale-claim thresholds, branch prefixes, or other fields in the first stage.
+
+Use [AI-native backend contract](../ai-native-backend-contract/SKILL.md) before changing backend behavior. The two first-stage backend references are:
+
+- [GitHub-native backend](../ai-native-backend-contract/backends/github-native.md);
+- [Markdown-file-based backend](../ai-native-backend-contract/backends/markdown-file-based.md).
+
+The backend is the source of truth for delivery-loop state. GitHub-native uses GitHub issues, labels, native relationships, comments, and assignees. Markdown-file-based uses `.and/work` and does not use GitHub issues as a discussion, notification, mirror, or synchronization surface. Branches, commits, pull requests, CI, and reviews are implementation artifacts referenced by workflow state; they do not carry workflow state themselves.
+
+Keep four kinds of information separate in any backend:
 
 | Information | Representation | Purpose |
 | --- | --- | --- |
-| Queue state | State labels | Shows which pre-execution stage a delivery unit is in. |
-| Structural relationship | GitHub parent/sub-issue | Shows how a PRD package is sliced. |
-| Execution dependency | GitHub blocked-by/blocking | Shows execution order between work items. |
-| Ownership | Assignee, claim comment, branch, PR | Shows who is working on which delivery unit. |
+| Stage state | Backend stage-state representation | Shows which pre-execution stage a delivery unit is in. |
+| Containment relationship | Backend containment representation | Shows how a PRD package is sliced. |
+| Dependency relationship | Backend dependency representation | Shows execution order between work records. |
+| Ownership | Backend ownership representation | Shows who is working on which delivery unit. |
 
-Use each tracker mechanism for one purpose: queue labels for pre-execution routing, parent/sub-issue links for PRD package structure, blocked-by/blocking links for execution order, and ownership signals for active work.
+Use each backend mechanism for one purpose. Do not maintain parallel GitHub issue state and markdown-file workflow state.
 
-## State Labels
+## Stage State
 
-Each top-level issue or parent PRD should have at most one queue state label. PRD child issues inherit the parent PRD's queue state and are not picked independently.
+Each delivery unit should have at most one public stage state. PRD child slices inherit the parent PRD delivery unit's stage state and are not picked independently.
 
 | State | Stage | Meaning |
 | --- | --- | --- |
@@ -160,50 +183,51 @@ Each top-level issue or parent PRD should have at most one queue state label. PR
 | `needs-pack` | Pack | The work is worth doing but is not yet packaged as an executable delivery unit. |
 | `ready-for-agent` | Ready | The single issue package or PRD package has an executable package and can be picked after blocker and claim checks. |
 
-Closed work uses the tracker lifecycle state, not a queue label. Use the closing comment, and close-reason labels only when the repository already has that convention.
+Closed work uses a lifecycle outcome, not an active stage state. The backend reference defines how completion evidence is recorded.
 
-Keep this queue small. Add another active queue label only when the repository has a real queue with a clear owner, entry condition, and exit condition.
+Keep this queue small. Add another public stage state only when the repository has a real queue with a clear owner, entry condition, and exit condition.
 
-### Needs-Info Blocker
+### State Reason
 
-`needs-info` is one queue with a structured reason. Do not split it into separate state labels until the repository has separate real queues with different owners.
+`needs-info` is one stage state with a structured State Reason. Do not split it into separate stage states until the repository has separate real queues with different owners.
 
-Every current `needs-info` route should include a latest Blocker block:
+Every current `needs-info` route should include a latest State Reason:
 
 ```markdown
-## Blocker
+## State Reason
 
+State: needs-info
 Cause: <missing-facts, decision-needed, access-needed, external-state, or acceptance-needed>
 Owner: <reporter, maintainer, human, agent, or external-system>
 Question: <one specific question, decision, permission, external event, or acceptance gate>
 Resume with: <issue-triage, issue-grill, or issue-pack>
-Exit criteria: <what must be true before this issue can leave needs-info>
+Exit criteria: <what must be true before this delivery unit can leave needs-info>
 ```
 
-Use `Cause` to describe why the issue is waiting, `Owner` to show who can unblock it, `Question` to make the next action concrete, `Resume with` to name the workflow skill to run after the owner supplies input, and `Exit criteria` to prevent partial answers from looking complete.
+Use `Cause` to describe why the delivery unit is waiting, `Owner` to show who can unblock it, `Question` to make the next action concrete, `Resume with` to name the workflow skill to run after the owner supplies input, and `Exit criteria` to prevent partial answers from looking complete.
 
-Blockers are append-only. When the blocker materially changes, append a new Blocker instead of editing or deleting the old one. The latest Blocker supersedes earlier Blockers.
+State Reason history is append-only. When the reason materially changes, append a new comment or receipt instead of deleting the old one. A backend may also keep the latest State Reason in queryable metadata; the latest State Reason supersedes earlier State Reasons.
 
 ## Pack And Dependencies
 
-Large work should be expressed as a PRD package: one parent PRD plus child issues that track vertical slices. The PRD package is the delivery unit.
+Large work should be expressed as a PRD package: one parent PRD plus child records that track vertical slices. The PRD package is the delivery unit.
 
 Pack rules:
 
 - `issue-pack` is the only workflow skill that creates `ready-for-agent` delivery units.
-- Use `parent-prd` as the structural label for the parent issue.
+- Use the configured backend's parent PRD marker for the parent work record.
 - A parent PRD can carry `ready-for-agent`; that means the whole PRD package is ready to pick, claim, and implement.
-- Child issues are independently-grabbable tracer-bullet slices inside the PRD package. A claiming agent may delegate them to subagents while keeping one owner for the package.
+- Child records are independently-grabbable tracer-bullet slices inside the PRD package. A claiming agent may delegate them to subagents while keeping one owner for the package.
 - Do not mark PRD children `ready-for-agent`; they are not independent pick targets.
 - If a slice should be independently picked by another agent, make it a standalone issue rather than a PRD child.
-- Do not duplicate the same sub-issues with a Markdown task list.
+- Do not duplicate the configured containment relationship with a second representation.
 
 Dependency rules:
 
-- A blocker expresses execution order only.
+- A dependency relationship expresses execution order only.
 - If child B must wait for child A inside the same PRD package, set B as blocked by A. That internal order does not block picking the parent PRD package.
 - Do not make a parent PRD the blocker for its children merely because it is the parent.
-- Cross-PRD dependencies use blocked-by, not fake parent/sub-issue links.
+- Cross-PRD dependencies use the configured dependency relationship, not fake containment links.
 - A delivery unit with an open external blocker is not pickable.
 
 ## Claim Rules
@@ -211,19 +235,21 @@ Dependency rules:
 The claim unit must equal the delivery unit.
 
 - A single issue package with `ready-for-agent` can be claimed.
-- A `parent-prd` with `ready-for-agent` is claimed as the whole PRD package: parent plus all children.
-- PRD children cannot be claimed separately through the tracker workflow.
-- The parent PRD owner may use child issues as internal subagent work units, but remains responsible for integration, verification, and closure of the whole package.
+- A parent PRD with `ready-for-agent` is claimed as the whole PRD package: parent plus all children.
+- PRD children cannot be claimed separately through the public workflow backend.
+- The parent PRD owner may use child records as internal subagent work units, but remains responsible for integration, verification, and closure of the whole package.
 - A delivery unit with an open external blocker cannot be claimed.
 - If the delivery unit is unclear, move the work back to `needs-pack`.
 
 Recommended claim signals:
 
-- assignee;
-- claim comment;
-- linked branch or draft PR.
+- backend ownership record;
+- assignee when the backend supports it;
+- claim comment or receipt.
 
-Claims must not quietly change scope. If execution discovers that the package is wrong, route the work back to `needs-pack` or to `needs-info` with a Blocker block.
+Implementation artifact links can be attached after ownership is recorded, but they do not establish ownership by themselves.
+
+Claims must not quietly change scope. If execution discovers that the package is wrong, route the work back to `needs-pack` or to `needs-info` with a State Reason.
 
 ## Roles And Skills
 
@@ -232,23 +258,23 @@ These are workflow roles, not necessarily separate people or separate agents. On
 | Role | Input | Output |
 | --- | --- | --- |
 | Intake | Raw signal | Durable work item, usually entering `needs-triage`. |
-| Triage | `needs-triage`, or `needs-info` with new input | Closed, `needs-info` with a Blocker block, or `needs-pack`. |
-| Clarify | `needs-info` caused by missing decisions | Recorded human decision, documentation proposals, or current Blocker block via `issue-grill`. |
+| Triage | `needs-triage`, or `needs-info` with new input | Lifecycle outcome, `needs-info` with a State Reason, or `needs-pack`. |
+| Clarify | `needs-info` caused by missing decisions | Recorded human decision, documentation proposals, or current State Reason via `issue-grill`. |
 | Pack | `needs-pack`, or clarified work | Single issue package or PRD package. |
 | Pick | `ready-for-agent` delivery units | Recommended single issue package or PRD package. |
 | Claim | Picked delivery unit | Recorded ownership and confirmed claim scope. |
 | Implement | Claimed delivery unit | Implemented, verified, reviewed, and committed in an isolated worktree. |
-| Sweep | Active work set | Stale claims, incorrect labels, incorrect relationships, and parent PRDs needing follow-up. |
+| Sweep | Active work set | Stale claims, incorrect state, incorrect relationships, and parent PRDs needing follow-up. |
 
 Skill directions:
 
 - `issue-intake`: record requests only; do not triage or pack.
 - `issue-triage`: make routing decisions; do not create packages.
-- `issue-grill`: run the decision interview and record tracker-safe packaging input; do not edit local docs.
+- `issue-grill`: run the decision interview and record backend-safe packaging input; do not edit local docs.
 - `issue-pack`: create the executable delivery unit; route to `issue-grill` when human decisions block packaging.
-- `issue-pick`: choose work read-only; do not mutate the tracker.
+- `issue-pick`: choose work read-only; do not mutate the backend.
 - `issue-claim`: perform the ownership side effects and point to `issue-implement`.
-- `issue-implement`: execute the claimed delivery unit in an isolated worktree from the tracker source of truth.
+- `issue-implement`: execute the claimed delivery unit in an isolated worktree from the configured backend source of truth.
 - `issue-sweep`: audit state, claim, and relationship drift.
 - `ask-andie`: recommend the next skill from the current state and context.
 
@@ -259,24 +285,24 @@ All related skills must maintain these invariants:
 - A raw signal cannot jump to implementation unless it has been packed.
 - `issue-triage` does not create `ready-for-agent` work.
 - Missing human judgment, external access, or acceptance input should route to `needs-info`.
-- `needs-info` must carry a current Blocker block.
+- `needs-info` must carry a current State Reason.
 - `needs-pack` means packaging can continue, but implementation should not start.
 - `ready-for-agent` means only blocker and claim checks are needed before implementation.
-- A delivery unit has at most one queue state label.
-- `parent-prd` plus `ready-for-agent` means the PRD package is executable as a whole.
+- A delivery unit has at most one public stage state.
+- Parent PRD plus `ready-for-agent` means the PRD package is executable as a whole.
 - PRD children are not independent pick or claim targets, but may be internal implementation units under the parent PRD owner.
 - An open external blocker makes a delivery unit not pickable.
 - Claim scope must cover the full delivery unit.
 - Implementation must not happen in a shared dirty worktree or from chat summaries.
-- When the package is wrong, route back to `needs-pack` or to `needs-info` with a Blocker block instead of privately changing scope.
+- When the package is wrong, route back to `needs-pack` or to `needs-info` with a State Reason instead of privately changing scope.
 
 ## Update Triggers
 
 Update this document when:
 
 - an issue-related skill is added or changed;
-- the state-label set changes;
+- the stage-state set changes;
 - the claim mechanism changes;
-- GitHub issue relationship capabilities or conventions change;
+- backend capabilities or conventions change;
 - the repository promotes a non-state concept into a state label;
 - the same kind of misrouting, misclaim, or relationship drift happens repeatedly.
