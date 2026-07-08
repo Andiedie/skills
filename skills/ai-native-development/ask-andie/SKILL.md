@@ -6,74 +6,97 @@ disable-model-invocation: true
 
 # Ask Andie
 
-You do not need to remember every issue skill. Ask when you need to know where the work is, what should happen next, or which skill fits the current situation.
+Ask Andie is the teaching router for the AI-native development loop. Use it when you need to know the current loop position, the next skill, or the rule that makes the route obvious.
 
-Do more than route. Teach the rule that made the route obvious, so the user can learn the loop and need this skill less often.
+Do more than route, but only a little. Teach one reusable rule so the user needs this skill less often next time.
 
-## Main Loop
+## Relationship To Ask Matt
 
-The usual route for issue work:
+This follows Matt `ask-matt` as a user-invoked router: the user should not need to remember every skill.
 
-1. **`issue-intake`** records a raw signal as a durable work record.
-2. **`issue-triage`** decides whether recorded work should close, wait for information, or move to pack.
-3. **`issue-grill`** resolves blocking human decisions and records backend-safe packaging input.
-4. **`issue-pack`** creates one executable delivery unit: a single issue package or a PRD package.
-5. **`issue-pick`** chooses one unblocked, unclaimed delivery unit from ready work. It is read-only.
-6. **`issue-claim`** records ownership for the complete delivery unit without changing its scope.
-7. **`issue-implement`** implements the claimed work in an isolated worktree.
-8. **Close or learn** when the work is merged, rejected, duplicated, already done, or needs follow-up documentation.
+AND adapts that idea to a workflow-state-backed loop. Routing is based on backend state, ownership, blockers, and delivery-unit shape.
 
-## Context Hygiene
+## Backend Contract
 
-Keep clarification and packaging in one context until the package is published. After a PRD package is claimed, the owner may use child records as fresh subagent work units, each grounded in the parent PRD plus its child record.
+When routing workflow-backed work, read `.and/config.yml`, then use `ai-native-backend-contract` for the configured backend.
 
-## On-Ramps
+If setup is missing, invalid, unsupported, or the backend contract is unavailable, route to `setup-ai-native-development`.
 
-Pick the route from the current surface:
+## Route Map
 
-- **Raw request, idea, bug report, screenshot, or note not yet tracked** -> `issue-intake`.
-- **Existing work with unclear state** -> `issue-triage`.
-- **Existing work marked `needs-info` with new reporter or maintainer activity** -> `issue-triage`.
-- **Existing work marked `needs-info` with `Resume with: issue-grill` or `Cause: decision-needed` in the latest State Reason** -> `issue-grill`.
-- **Existing work marked `needs-info` with missing reporter facts, access, external state, or acceptance input** -> route the State Reason question to the owner; run the `Resume with` skill after new information arrives.
-- **Existing work marked `needs-pack`** -> `issue-pack`.
-- **Ready single issue package or PRD package slate and no specific delivery unit chosen** -> `issue-pick`.
-- **Specific ready single issue package or PRD package already chosen** -> `issue-claim`.
-- **Claimed single issue package or PRD package** -> `issue-implement`.
-- **Backend state drift, stale claim, blocked ready work, PRD child picked independently, or parent PRD cleanup** -> `issue-sweep`.
-- **New repository with no workflow setup** -> `setup-ai-native-development`.
+Main loop: `issue-intake` -> `issue-triage` -> `issue-grill` when needed -> `issue-pack` -> `issue-pick` -> `issue-claim` -> `issue-implement` -> close/learn.
 
-## Precondition
+Keep clarification and packaging in one context until the package is published. After a PRD package is claimed, its owner may use child records as subagent work units grounded in the parent PRD plus the child record.
 
-Run `setup-ai-native-development` before relying on the workflow in a new repository. The setup should create `.and/config.yml`, choose one workflow state backend, and define stage state, relationship rules, claim policy, implementation isolation, and agent-facing docs.
+| Surface / evidence | Route |
+| --- | --- |
+| New repo, missing `.and/config.yml`, invalid backend, or missing backend contract | `setup-ai-native-development` |
+| Raw idea, bug report, screenshot, feedback, or note not yet tracked | `issue-intake` |
+| Existing work with unclear state, new activity, duplicate or closure question, or missing State Reason | `issue-triage` |
+| `needs-info` with `Resume with: issue-grill` or `Cause: decision-needed` | `issue-grill` |
+| `needs-info` waiting for facts, access, external state, or acceptance | Route the State Reason question to its owner; resume with the recorded skill |
+| `needs-pack` | `issue-pack` |
+| Ready work slate with no chosen delivery unit | `issue-pick` |
+| Specific ready single issue package or parent PRD package | `issue-claim` |
+| Claimed delivery unit | `issue-implement` |
+| Stale claim, partial PRD claim, relationship drift, contradictory state, or blocked ready work | `issue-sweep` |
+| Local branch or diff tied to claimed work | `issue-implement` or the repository review/finish route |
+| Local branch or diff not tied to workflow state | Ask whether to intake/triage it or treat it outside AND |
+
+## Evidence Budget
+
+Read only enough evidence to route:
+
+- setup/config;
+- stage and lifecycle;
+- latest State Reason;
+- ownership or claim evidence;
+- blocker state;
+- parent/child identity;
+- linked implementation artifacts;
+- current branch or diff when relevant.
+
+Do not perform full triage, pick ranking, package validation, implementation planning, or sweep audit.
 
 ## When Invoked
 
-1. Identify the current surface: request, work record, PR, branch, local diff, or backend audit.
-2. Read `.and/config.yml`, then use `ai-native-backend-contract` for the backend contract and configured backend reference. If `ai-native-backend-contract` is unavailable, stop and ask the user to install it; do not infer backend rules. If setup is missing or the backend value is unsupported, route to `setup-ai-native-development`.
-3. Read only the evidence needed to route: lifecycle state, stage state, latest State Reason, comments or receipts, blockers, ownership, linked implementation artifacts, containment, dependency relationships, and current branch or diff when relevant.
-4. Name the current loop position, the next skill, and the general rule the user can remember next time.
-5. If a `needs-info` work record lacks a current State Reason, route to `issue-triage` to restore the reason before choosing another skill.
-6. If the route is uncertain, choose the smallest clarifying route: `issue-triage` for unclear backend state, `issue-grill` for missing product or business decisions, `setup-ai-native-development` for missing repository rules, or one direct question when the user must decide.
-7. Report the route compactly using the user's language. Keep skill names, labels, issue numbers, work IDs, commands, and code identifiers literal. Omit optional lines when they would only say `none`.
+1. Identify the current surface: raw request, existing work, ready slate, specific delivery unit, claimed work, local branch/diff, backend drift, setup gap, or outside-AND work.
+2. Check setup when workflow-backed routing is needed. If setup is missing or unsupported, route to `setup-ai-native-development`.
+3. Read minimal routing evidence. The route should be justifiable with one or two facts.
+4. Choose exactly one next skill, one owner question, or one setup/install route. Do not run the next workflow skill inside `ask-andie`.
+5. Report the route and one teaching rule using the user's language. Keep skill names, labels, issue numbers, work IDs, commands, and code identifiers literal.
+
+If the route is uncertain, choose the smallest clarifying route: `issue-triage` for unclear backend state, `issue-grill` for missing product or business decisions, `setup-ai-native-development` for missing repository rules, or one direct question when the user must decide.
+
+## Output Shape
+
+Use this compact route card:
 
 ```markdown
 Current position: <stage or surface>
-Evidence: <facts used to route>
 Next skill: <skill>
-Why: <one or two sentences>
-Rule to learn: <general routing rule>
-Skip ask next time when: <recognizable condition>
-Human input needed: <none / exact State Reason question>
-Watch-outs: <blocker, claim, parent PRD, stale state, or none>
+Why: <one sentence>
+Rule to learn: <one sentence>
 ```
 
-Completion criterion: the user can run one named skill next, or can answer one concrete question that will make the next skill clear.
+Add optional lines only when useful:
+
+```markdown
+Evidence: <routing facts>
+Watch-out: <real blocker, claim, PRD child, stale state, or setup issue>
+Human input needed: <one exact question>
+Skip ask next time: <recognizable condition>
+```
+
+Do not print empty optional sections. Do not include full issue bodies, full State Reasons, candidate lists, Package Contracts, child records, or implementation plans.
+
+Completion criterion: the user can run one named skill next, or answer one concrete question that will make the next skill clear.
 
 ## Boundaries
 
 - Do not edit workflow backend state.
-- Do not synthesize full requirements, rank ready work, or repair backend drift.
-- Do not claim work.
-- Do not implement work.
-- Do not decide product priority unless the user supplied the priority rule.
+- Do not run the next workflow skill from inside `ask-andie`; name it and stop.
+- Do not synthesize requirements, package work, rank ready candidates, repair drift, claim, implement, close, merge, or release ownership.
+- Do not decide product priority or business tradeoffs.
+- Do not duplicate Package Contracts, issue bodies, child records, or full State Reasons in chat.
+- Do not use `ask-andie` to bypass stage preconditions; route to the stage that owns the missing work.

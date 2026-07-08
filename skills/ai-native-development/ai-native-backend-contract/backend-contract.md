@@ -1,8 +1,14 @@
 # Workflow State Backend Contract
 
-The AI-native delivery loop reads and writes one authoritative workflow state backend per repository. The backend is not an issue tracker adapter. It is the source of truth for delivery-loop state.
+The AND delivery loop uses one authoritative workflow state backend per repository.
 
-Every workflow skill must read `.and/config.yml` before backend-specific work:
+This contract defines the shared vocabulary and backend-neutral operations every workflow skill must use before applying the configured backend representation. The backend is the delivery-loop source of truth, not an issue tracker adapter or a mirror target.
+
+## Config Contract
+
+Every workflow skill must read `.and/config.yml` before backend-specific work.
+
+Version 1 config is exactly:
 
 ```yaml
 version: 1
@@ -16,7 +22,12 @@ version: 1
 workflow_state_backend: markdown-file-based
 ```
 
-The first config schema contains only `version` and `workflow_state_backend`.
+Rules:
+
+- `version` must be `1`.
+- `workflow_state_backend` must be `github-native` or `markdown-file-based`.
+- Version 1 has no other fields.
+- Missing, malformed, unsupported, or extended config routes to `setup-ai-native-development`.
 
 ## Backend Values
 
@@ -25,33 +36,55 @@ The first config schema contains only `version` and `workflow_state_backend`.
 | `github-native` | GitHub issues, labels, native relationships, comments, and assignees. |
 | `markdown-file-based` | Markdown files under `.and/work`. |
 
-Use exactly one backend at a time. Do not maintain GitHub issue state and markdown-file workflow state as parallel sources of truth.
+The configured backend is exclusive. A repository may reference implementation artifacts from tools outside the backend, but those artifacts do not become workflow state. Do not maintain GitHub issue state and markdown-file workflow state as parallel sources of truth.
 
 ## Core Concepts
 
 | Concept | Meaning |
 | --- | --- |
-| Work record | A durable record of work, such as a raw request, single package, parent PRD, or child slice. |
-| Delivery unit | The public unit that can be picked, claimed, implemented, and completed. |
-| Stage state | The public queue state of a delivery unit. |
-| State Reason | The structured explanation for why a delivery unit is in its current stage state. |
-| Package Contract | The behavior, scope, acceptance, and verification contract used for implementation. |
-| Containment relationship | Parent PRD to child slice structure. |
-| Dependency relationship | Execution ordering between work records. |
+| Work record | A durable record in the configured backend. It may be raw, triaged, packaged, a parent PRD, or a child slice. |
+| Delivery unit | The public unit that can be picked, claimed, implemented, and completed: a single package or parent PRD package. |
+| Stage state | The active queue state of a delivery unit before terminal lifecycle outcome. |
+| State Reason | The current structured reason a delivery unit is waiting in `needs-info`. |
+| Package Contract | The implementation source of truth published by `issue-pack`. |
+| Containment relationship | Parent PRD contains child slices. |
+| Dependency relationship | Work record A must wait for work record B. |
 | External blocker | A blocker outside the work record graph. |
-| Ownership | The current actor responsible for a delivery unit. |
+| Ownership | The current owner of the full delivery unit. |
 | Receipt | Append-only evidence from a workflow stage. |
 | Lifecycle outcome | A terminal result such as completed, rejected, duplicate, or superseded. |
-| Completion evidence | The receipt or linked proof that explains why a lifecycle outcome is valid. |
-| Implementation artifact | A branch, commit, PR, CI result, or review result produced during implementation. |
+| Completion evidence | A receipt or linked proof that justifies a lifecycle outcome. |
+| Implementation artifact | A branch, commit, PR, CI result, or review result referenced from workflow state. |
 
-## Backend Operations
+## Relationship Vocabulary
+
+Keep four waiting and relationship concepts separate:
+
+| Concept | Used for | Not used for |
+| --- | --- | --- |
+| Containment relationship | PRD parent and child slice structure. | Execution order or blocking. |
+| Dependency relationship | Work-record execution order. | Parent/child structure. |
+| External blocker | Missing access, third-party state, manual acceptance, or another wait outside the work graph. | Work-record dependency. |
+| State Reason | Current reason a delivery unit is in `needs-info`. | Permanent blocker log or execution graph. |
+
+Rules:
+
+- A parent PRD is not a blocker for its children merely because it is the parent.
+- A dependency relationship should never express containment.
+- External blockers can make a delivery unit unpickable, but they are not dependency relationships.
+- State Reason explains the current `needs-info` route and names the skill to resume with.
+
+## Backend-Neutral Operations
 
 Workflow skills should express their work in these backend-neutral operations, then follow the configured backend reference for representation.
 
 ### Locate Work
 
-Find raw requests, triage candidates, work waiting for information, work ready to pack, ready delivery units, claimed delivery units, and drift candidates.
+Find candidate work records by stage, lifecycle, ownership, relationship, or drift condition using the configured backend.
+
+### Read Work Record
+
+Read one work record enough for the calling stage: body, stage, lifecycle, latest State Reason when present, receipts, relationships, and source evidence.
 
 ### Read Delivery Unit
 
@@ -67,6 +100,8 @@ Read the complete implementation source of truth for one delivery unit:
 - implementation artifacts;
 - lifecycle outcome and completion evidence.
 
+For PRD packages, reading the delivery unit means reading the parent PRD plus all child slices and relevant dependency relationships.
+
 ### Write Stage State
 
 Set one public stage state for a delivery unit:
@@ -76,23 +111,11 @@ Set one public stage state for a delivery unit:
 - `needs-pack`;
 - `ready-for-agent`.
 
-When the stage state is `needs-info`, write a State Reason with:
+Each delivery unit has at most one active stage state. PRD children do not carry public stage state. Closed, completed, rejected, duplicate, and superseded are lifecycle outcomes, not active stage states.
 
-- `Cause`;
-- `Owner`;
-- `Question`;
-- `Resume with`;
-- `Exit criteria`.
+### Write State Reason
 
-Closed, completed, rejected, duplicate, and superseded are lifecycle outcomes, not active stage states.
-
-### Write Relationships
-
-Write containment and dependency relationships without mixing their meanings.
-
-- Containment: parent PRD contains child slices.
-- Dependency: one work record is blocked by another work record.
-- External blocker: missing access, external state, or human acceptance outside the work record graph.
+When the stage state is `needs-info`, write the latest State Reason through the configured backend. Material State Reason changes must also leave append-only evidence.
 
 ### Publish Package
 
@@ -101,7 +124,15 @@ Turn raw or triaged work into one delivery unit:
 - single package; or
 - PRD package with child slices.
 
-Publishing a package writes the Package Contract, relationships, verification expectations, and `ready-for-agent` stage state.
+Publishing a package writes the Package Contract, relationships, verification expectations, and `ready-for-agent` stage state. Package Contract content is owned by `issue-pack`; this contract defines where it lives.
+
+### Write Relationships
+
+Write containment and dependency relationships without mixing their meanings.
+
+- Containment: parent PRD contains child slices.
+- Dependency: one work record is blocked by another work record.
+- External blocker: missing access, external state, or human acceptance outside the work record graph.
 
 ### Record Ownership
 
@@ -113,17 +144,48 @@ Backends may represent current ownership directly or derive it from append-only 
 
 Append evidence from a workflow stage: grill decisions, pack publication, claim, implementation, review, verification, completion, rejection, or follow-up.
 
+Receipt content is owned by the calling workflow skill. Receipt location and append rules are owned by the configured backend reference.
+
+### Record Lifecycle Outcome
+
+Record a terminal outcome such as completed, rejected, duplicate, or superseded. Terminal outcomes are lifecycle state, not active stage state. Completion evidence must be recorded as a receipt or linked proof.
+
+### Reference Implementation Artifact
+
+Attach branch, commit, PR, CI, or review evidence as an implementation artifact reference. Implementation artifacts do not establish ownership and do not replace the Package Contract.
+
 ### Audit Invariants
 
 Check state, relationship, ownership, receipt, and lifecycle consistency for the configured backend.
 
-## State Reason
+## Cross-Backend Invariants
 
-Use `State Reason` for stage-state explanation.
+- Use exactly one configured backend.
+- Do not maintain parallel GitHub and markdown workflow state.
+- A delivery unit has at most one active stage state.
+- PRD children do not carry public stage state.
+- The claim unit equals the delivery unit.
+- Parent PRD plus `ready-for-agent` means the whole PRD package is ready.
+- Containment is not dependency.
+- External blockers are not dependency relationships.
+- Implementation artifacts are references, not workflow state.
+- Lifecycle outcomes are terminal and not active stage states.
 
-State Reason explains why a delivery unit is waiting in `needs-info`. Dependency relationships explain execution order. These are different concepts.
+## State Reason Contract
 
-Backends may keep the latest State Reason in queryable metadata, but material State Reason changes must also leave append-only evidence through the backend's receipt or comment mechanism.
+State Reason is required when a delivery unit is in `needs-info`.
+
+Required fields:
+
+- `Cause`
+- `Owner`
+- `Question`
+- `Resume with`
+- `Exit criteria`
+
+Allowed `Resume with` values should be workflow skills that can continue the work, usually `issue-triage`, `issue-grill`, or `issue-pack`.
+
+The latest State Reason is queryable according to the backend reference. Material State Reason changes must leave append-only evidence.
 
 ```markdown
 ## State Reason
@@ -135,6 +197,26 @@ Question: <one specific question, decision, permission, external event, or accep
 Resume with: <issue-triage, issue-grill, or issue-pack>
 Exit criteria: <what must be true before this delivery unit can leave needs-info>
 ```
+
+## Receipt Contract
+
+Receipts are append-only evidence from workflow stages.
+
+The backend reference defines where receipts live. The calling workflow skill defines what the receipt says.
+
+Use receipts for turning points:
+
+- State Reason changes;
+- issue-grill decisions;
+- package publication;
+- claim;
+- implementation;
+- review;
+- verification;
+- lifecycle outcome;
+- follow-up work.
+
+Receipts should not become a duplicate Package Contract unless the calling stage is `issue-pack`.
 
 ## References
 

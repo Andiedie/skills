@@ -6,106 +6,165 @@ disable-model-invocation: true
 
 # Setup AI-Native Development
 
-Set up a repository so the AI-native workflow can run with one configured workflow state backend, shared state rules, relationship conventions, claim policy, implementation isolation, domain references, and agent-facing docs.
+Set up a repository to run the AND delivery loop with exactly one configured workflow state backend.
 
-This is a prompt-driven setup skill. Explore first, present findings, walk the user through one decision at a time, then write only after confirmation.
+This is a repository bootstrap skill, not a workflow handbook. Discover the repository, choose or verify the backend, write the minimal configuration, update the existing agent entrypoint, check external skill readiness, and report the next workflow skill.
+
+Use the delivery-loop docs and `ai-native-backend-contract` as the source of truth for workflow and backend rules. Do not copy those rules into each target repository unless they are real repository-specific facts.
+
+## Relationship To Matt Setup
+
+Keep Matt `setup-matt-pocock-skills`' setup shape: explore first, present findings, confirm durable choices, then write.
+
+The configured object is different. AND setup centers on one workflow state backend and minimal repository integration, not a standalone triage-label documentation set.
+
+## Setup Contract
+
+Setup is complete when:
+
+- `.and/config.yml` exists with only `version: 1` and `workflow_state_backend`.
+- The selected backend has the minimum representation needed by `ai-native-backend-contract`.
+- The existing agent entrypoint tells agents to use the AND loop and `ask-andie`.
+- External skill readiness has been checked and reported.
+- The final receipt names the next workflow skill.
 
 ## Process
 
 1. Explore the repository.
-   - Inspect `.and/config.yml`, `git remote -v`, `.git/config`, root `AGENTS.md` / `CLAUDE.md`, `docs/agents/`, current issue-tracker docs, label docs, claim docs, branch or worktree docs, domain docs, ADRs, glossary, out-of-scope records, and existing workflow conventions.
-   - If GitHub is the likely tracker and `gh` is available, inspect existing labels and issue relationship support.
-   - Note whether external PRs are treated as request surfaces.
-   - Completion criterion: you can state the current workflow state backend, tracker when any, labels or stage representation, relationship conventions, claim signals, implementation branch or worktree conventions, domain and ADR layout, agent-doc layout, out-of-scope convention, and gaps.
+   - Inspect `.and/config.yml`, git remotes, root `AGENTS.md` / `CLAUDE.md`, existing agent docs, existing workflow conventions, existing `.and/work`, and enough domain or ADR docs to preserve established repository conventions.
+   - If GitHub is the likely backend and `gh` is available, inspect repository identity, issues, labels, and native relationship support.
+   - Check current skill availability from the session list when visible. If needed, use the repository's documented skill-list command or `npx --yes skills list -a codex --json`.
+   - Completion criterion: you can say whether the repo is already configured, which backend is likely, which entrypoint to edit, what writes are needed, and what is blocking setup.
 
-2. Verify external skill dependencies.
-   - Required Matt skills: `grilling`, `domain-modeling`, `tdd`, and `code-review`.
-   - Inspect the current session's available skills when visible. If needed, run `npx --yes skills list -a codex --json` and `npx --yes skills list -g -a codex --json`, or the repository's documented skill-list command for each configured agent scope.
-   - If any required skill is missing, stop setup with a blocker naming the missing skills and this command: `npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill <missing-skill...> -y`.
-   - Do not report the AI-native workflow ready while required Matt skills are missing.
-   - Completion criterion: required external skills are present, or setup has stopped with exact missing skill names.
+2. Choose or verify the backend.
+   - If `.and/config.yml` exists and is valid, verify it instead of re-deciding.
+   - If no config exists, choose exactly one backend: `github-native` or `markdown-file-based`.
+   - Recommend `github-native` when the repository already uses GitHub issues and native parent/sub-issue plus blocked-by/blocking relationships are available.
+   - Recommend `markdown-file-based` when workflow state should live in repository files, when no GitHub remote is available, or when GitHub-native relationship capabilities are unavailable.
+   - Ask only when there is no config, the config is invalid, repository signals conflict, or the user wants to switch backends.
+   - Prepare `.and/config.yml` with only `version: 1` and `workflow_state_backend`.
 
-3. Present setup decisions one at a time.
-   - Start each section with a short explainer: what the decision controls, why the workflow needs it, and what changes if the user picks differently.
-   - Recommend a default from repository facts, then ask for confirmation.
-   - Do not ask the next setup question until the current one is answered or safely inferred.
-   - Completion criterion: every setup decision is confirmed or explicitly inferred from existing repository convention.
+3. Check backend readiness.
+   - For `github-native`, confirm repository identity, issues availability, label read/write capability when labels are missing, native parent/sub-issue support, native blocked-by/blocking support, and whether external PRs enter intake or triage.
+   - For `github-native`, prepare creation only for missing fixed labels: `needs-triage`, `needs-info`, `needs-pack`, `ready-for-agent`, and `parent-prd`.
+   - For `markdown-file-based`, ensure `.and/work` can exist and no GitHub issue mirror is being configured.
+   - Do not emulate unavailable GitHub-native relationships with markdown task lists, labels, or comments.
 
-4. Decide the workflow state backend.
-   - Choose exactly one backend: `github-native` or `markdown-file-based`.
-   - Recommend `github-native` when the repository already uses GitHub issues as workflow state and native relationships are available.
-   - Recommend `markdown-file-based` when repository markdown files should be the authoritative workflow state and GitHub issues should not be used as a discussion, notification, mirror, or synchronization surface.
-   - Prepare `.and/config.yml` with only:
+4. Check external skill readiness.
+   - Check `grilling`, `domain-modeling`, `tdd`, and `code-review`.
+   - Missing external skills are environment readiness gaps, not repository setup failures.
+   - Do not install external skills unless the user explicitly asks.
+   - Do not block repository setup for missing external skills unless the user asked for full-ready setup or the missing skill blocks the setup itself.
+   - Report missing skills with an install command such as `npx --yes skills add mattpocock/skills -g --agent codex --skill <missing-skill...> -y`, adjusted to the known agent scope when appropriate.
 
-     ```yaml
-     version: 1
-     workflow_state_backend: <github-native or markdown-file-based>
-     ```
+5. Prepare the setup plan.
+   - Present a concise plan containing the backend, files to create or update, GitHub labels to create or reuse when relevant, the agent entrypoint target, the external PR setting when relevant, missing external skills, and unresolved decisions.
+   - Do not output the full workflow state table, full State Reason schema, claim policy, or backend representation.
 
-   - Do not add label mappings, work-root overrides, stale-claim thresholds, branch prefixes, or other fields in the first schema version.
-   - Completion criterion: the repository has one confirmed authoritative workflow state backend and the minimal config content is known.
+6. Confirm risky writes.
+   - Confirm backend choice when new or changing.
+   - Confirm creating or overwriting `.and/config.yml`.
+   - Confirm GitHub label creation.
+   - Confirm editing `AGENTS.md` / `CLAUDE.md`, creating `.and/work`, creating project-specific docs, treating external PRs as request surfaces, or migrating existing work.
+   - Do not ask the user to re-confirm fixed AND invariants such as the small active stage set or one-backend rule after the setup plan is approved.
 
-5. Decide the GitHub issue surface when the backend is `github-native`.
-   - Recommend GitHub when a remote points to GitHub.
-   - For GitHub, ask whether external PRs are a request surface.
-   - Record repository location, read/write command or API, PR-as-request setting, how to resolve bare issue references such as `#123`, and how to read parent/sub-issues and blockers when available.
-   - Completion criterion: the workflow knows where to read and write issues, how to resolve issue identities, and whether PRs enter triage.
-
-6. Decide stage state and lifecycle rules.
-   - Public stage states: `needs-triage`, `needs-info`, `needs-pack`, `ready-for-agent`.
-   - For `github-native`, use labels for active stage state and GitHub closed state for lifecycle outcomes.
-   - For `github-native`, define active state labels as `needs-triage`, `needs-info`, `needs-pack`, and `ready-for-agent`.
-   - For `github-native`, define `parent-prd` as the structural parent PRD label.
-   - For `github-native`, map optional category labels such as `bug` and `enhancement` only when the repository actually uses category labels.
-   - For `markdown-file-based`, use package frontmatter for `stage` and `lifecycle`.
-   - For `markdown-file-based`, do not create or map GitHub labels for workflow state.
-   - Closure convention: lifecycle outcome plus completion evidence; close-reason labels only when the repository already uses them.
-   - Stage invariant: each delivery unit has at most one public stage state, and PRD children do not carry public stage state.
-   - `needs-info` convention: every current `needs-info` route carries a State Reason with `Cause`, `Owner`, `Question`, `Resume with`, and `Exit criteria`; `Resume with` must name a workflow skill, State Reason history is append-only, and the latest State Reason supersedes earlier State Reasons.
-   - Completion criterion: stage state, lifecycle outcome, and State Reason representation are clear for the configured backend.
-
-7. Decide relationships and claims.
-   - For `github-native`, parent/sub-issue links express PRD package structure and blocked-by/blocking links express execution order.
-   - For `markdown-file-based`, parent `children` and child `parent` frontmatter express containment, and `blocked_by` on the blocked work record expresses execution order.
-   - Parent PRDs are not blockers for their children merely because they are parents.
-   - A `parent-prd` with `ready-for-agent` is picked and claimed as the whole PRD package.
-   - PRD children are independently-grabbable internal execution slices, not public pick or claim targets.
-   - Claim policy chooses assignee, claim comment or receipt, stale-claim threshold, who can release or override claims, where PRD package claims are recorded, and whether child coverage comments are required.
-   - Claim policy may define how a parent PRD owner records internal subagent delegation without creating separate public ownership.
-   - Decide implementation isolation: branch naming, worktree root or convention, base branch, how linked branches or PRs are recorded, and what counts as an unsafe dirty worktree.
-   - Completion criterion: the repository has one backend-specific rule for containment, one rule for execution dependencies, one rule for ownership, and one rule for isolated implementation work.
-
-8. Decide domain, decision, and rejection sources.
-   - Locate or create the repository's domain glossary, ADR directory, and agent-facing domain reference.
-   - Decide whether the repository has one domain context or multiple contexts.
-   - Decide whether prior rejections and out-of-scope requests are recorded, where they live, and how `issue-triage` should consult them.
-   - Do not create a heavy docs system when the repository only needs a lightweight `docs/agents/domain.md`.
-   - Completion criterion: later triage and pack runs know where to find domain language, architectural decisions, and prior rejection evidence.
-
-9. Draft the changes for review.
-   - Prepare an agent entrypoint block for the existing `AGENTS.md` or `CLAUDE.md`.
-   - Prepare `.and/config.yml`.
-   - Prepare project docs such as `docs/agents/ai-native-development.md`, `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`, `docs/agents/claim-rules.md`, `docs/agents/implementation-rules.md`, and `docs/agents/domain.md`.
-   - For `github-native`, prepare label creations only when labels do not already exist and the user approved them.
-   - Completion criterion: the user can review exact file edits and backend changes before anything durable is written.
-
-10. Write after confirmation.
-   - Create or update `.and/config.yml`.
+7. Write minimal setup.
+   - Write `.and/config.yml`.
+   - Write the backend minimum: GitHub labels for `github-native` when approved, or `.and/work` for `markdown-file-based`.
    - Update the existing agent entrypoint instead of creating a duplicate.
-   - Preserve project-specific rules when replacing old docs.
-   - For `github-native`, create labels only when the user confirmed and backend permissions are available.
-   - Completion criterion: docs, configured backend state, and backend assumptions match the confirmed setup.
+   - Create or update project-specific docs only when they record real repository-specific facts.
+   - Completion criterion: future agents can discover the AND loop from repository state without rereading the setup conversation.
 
-11. Report.
-   - List files changed, backend choice, `.and/config.yml`, required Matt skill status, labels created or mapped, backend assumptions, PR-as-request setting when relevant, relationship rules, claim rules, implementation isolation rules, domain and ADR locations, out-of-scope convention, and skills now ready to use.
-   - Completion criterion: a future agent can run `issue-intake`, `issue-triage`, or `ask-andie` without rediscovering setup decisions.
+8. Report the receipt.
+   - Report what was configured, which backend was selected, which files or backend labels changed, which external skills are missing when any, how to install missing skills, and the next workflow skill.
+   - Keep the receipt short. It is not a setup log or copied PRD.
+
+## Backend-Specific Setup
+
+### GitHub-Native
+
+Use GitHub-native when GitHub issues are the workflow state source and native relationships are available.
+
+- Create or reuse only these AND labels: `needs-triage`, `needs-info`, `needs-pack`, `ready-for-agent`, `parent-prd`.
+- Do not create `closed`, `in-progress`, `in-review`, `ready-for-human`, or backend duplicate labels.
+- Do not create `wontfix` unless the repository already uses close-reason labels and the user wants to preserve that convention.
+- If native parent/sub-issue or blocked-by/blocking support is unavailable, recommend resolving GitHub capability or using `markdown-file-based`; do not silently degrade.
+
+### Markdown-File-Based
+
+Use markdown-file-based when repository files are the workflow state source.
+
+- Write `.and/config.yml` with `workflow_state_backend: markdown-file-based`.
+- Create `.and/work/` and use `.and/work/.gitkeep` only when needed to keep the directory in version control.
+- Do not create sample work records.
+- Do not create GitHub labels or a GitHub issue mirror.
+- Treat GitHub PRs, when present, as implementation artifacts only.
+
+## Agent Entrypoint
+
+Update the existing agent entrypoint.
+
+- If `AGENTS.md` exists, prefer it.
+- If no `AGENTS.md` exists but `CLAUDE.md` exists, update `CLAUDE.md`.
+- If both exist, update `AGENTS.md` and do not delete `CLAUDE.md`.
+- If neither exists, ask which one to create.
+
+Keep the entrypoint short:
+
+```markdown
+## AI-native development
+
+This repository uses the AND delivery loop.
+
+- Read `.and/config.yml` before workflow-state work.
+- Use the configured backend as the source of truth.
+- Use `ask-andie` when the next workflow skill is unclear.
+- Do not maintain parallel GitHub and markdown workflow state.
+- For workflow rules, use the installed `ai-native-development` skills and backend contract.
+```
+
+## Project-Specific Docs
+
+Do not create a heavy project documentation set by default.
+
+Create or update a project-specific doc only when it records facts that cannot be inferred from the AND skills or backend contract, such as existing domain docs, ADR locations, external PR policy, repository-specific implementation isolation, or GitHub capability limits.
+
+Prefer one file, such as `docs/agents/ai-native-development.md`, when project-specific notes are needed. Do not default to separate tracker, label, claim, implementation, and domain docs.
+
+## Output Shape
+
+Before writing, use an exploration summary with the likely backend, entrypoint target, planned file or label changes, missing external skills, and unresolved decisions.
+
+When blocked, state the blocker, the decision needed, and your recommendation.
+
+After writing, use a short receipt:
+
+```markdown
+AND setup is configured.
+
+Backend: markdown-file-based
+Files changed:
+- .and/config.yml
+- .and/work/.gitkeep
+- AGENTS.md
+
+External skills: missing `tdd`.
+Install: npx --yes skills add mattpocock/skills -g --agent codex --skill tdd -y
+
+Next: use `issue-intake` for new requests, or `ask-andie` if you are unsure where existing work belongs.
+```
+
+Avoid long `none` sections, full workflow tables, copied backend schemas, and setup-process logs.
 
 ## Boundaries
 
 - Do not change product requirements or implementation code.
-- Do not migrate existing issues unless the user explicitly asks.
-- Do not invent backend automation beyond the confirmed setup.
-- Do not create additional backend support beyond `github-native` and `markdown-file-based` unless the repository needs it and the user confirms it.
-- Do not release claims or repair backend drift.
-- Do not add public stage states beyond the confirmed small set.
-- Do not create both `AGENTS.md` and `CLAUDE.md`; update the existing entrypoint or ask which one to create.
+- Do not migrate existing issues or work records unless the user explicitly asks.
+- Do not configure more than one workflow state backend.
+- Do not create GitHub and markdown workflow state in parallel.
+- Do not add fields beyond the first `.and/config.yml` schema.
+- Do not invent public stage states beyond the AND active stage set.
+- Do not create duplicate agent entrypoints.
+- Do not create project-specific docs unless they record real repository-specific facts.
+- Do not release claims, override ownership, close work, or repair backend drift.
+- Do not install external skills unless the user explicitly asks.

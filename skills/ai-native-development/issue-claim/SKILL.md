@@ -6,79 +6,105 @@ disable-model-invocation: true
 
 # Issue Claim
 
-Claim records ownership for work that has already been picked. The claim unit must match the delivery unit: one single issue package, or one PRD package.
+Claim records ownership for one executable delivery unit. It does not change scope: the claim unit must be one single issue package, or one parent PRD package plus all children.
 
-## Backend Rule
+Treat invocation as authorization for an ordinary safe claim after validation.
 
-Before claiming, read `.and/config.yml`, then use `ai-native-backend-contract` for the backend contract and configured backend reference. Use the configured backend reference for ownership evidence, claim records, implementation artifact links, receipts, and stale-claim checks.
+## Backend Contract
 
-If `ai-native-backend-contract` is unavailable, stop and ask the user to install it; do not infer backend rules.
+Before claiming, read `.and/config.yml`, then use `ai-native-backend-contract`.
 
-If setup is missing or the backend value is unsupported, route to `setup-ai-native-development`.
+Use the configured backend reference for reading ownership evidence, recording claims, and linking implementation artifacts. If setup is missing, unsupported, or the backend contract is unavailable, stop and route to `setup-ai-native-development` or ask the user to install the missing skill.
 
-## Claimable work
+Do not infer backend assignees, comments, receipts, ownership fields, labels, or artifact links inside this skill.
 
-Work can be claimed only when it is:
+## Claim Unit
 
-- a single issue package with `ready-for-agent`, or a parent PRD package with `ready-for-agent`
-- open
-- `ready-for-agent`
-- not carrying `needs-info` or `needs-pack`
-- unblocked by open external work
-- unclaimed
-- specified enough to implement
+A claim unit is either:
 
-For a PRD package, claiming the parent PRD claims all of its children. PRD children cannot be claimed separately through the workflow backend, though the parent owner may use them as internal subagent work units.
+- a single issue package; or
+- a parent PRD package plus all children.
+
+PRD children are internal execution slices, not public claim targets. If the user points at a child, resolve the parent PRD package and validate the whole package.
+
+## Claimability
+
+### Hard Gates
+
+Do not claim unless the delivery unit is:
+
+- open;
+- `ready-for-agent`;
+- a public delivery unit;
+- free of contradictory waiting state;
+- free of open external blockers;
+- unclaimed;
+- free of active implementation evidence that creates duplicate-work risk.
+
+### Quality Gates
+
+Route instead of claiming when:
+
+- scope or Package Contract is weak;
+- verification strategy is missing;
+- PRD child structure is broken;
+- ownership evidence is stale or contradictory;
+- the requested claim would change scope.
+
+Use `issue-pack` for broken package shape or verification, `issue-triage` for missing human or external input, `issue-sweep` for stale or contradictory ownership and relationship drift, and `issue-pick` when a different target is needed.
+
+## Confirmation Gates
+
+Apply an ordinary claim without confirmation when the target, claimant, delivery-unit boundary, and ownership state are clear.
+
+Ask or route before applying ownership changes when:
+
+- the target is ambiguous;
+- the claimant is ambiguous;
+- the delivery-unit boundary is unclear;
+- existing ownership exists;
+- stale ownership must be released or overridden;
+- an active branch, draft PR, or PR creates duplicate-work risk;
+- backend permission or access is unclear;
+- applying the claim would overwrite unrelated maintainer text.
+
+Hard blockers cannot be made safe by confirmation. Open external blockers, PRD child claims, unready work, and scope-changing claims must route back.
 
 ## Process
 
-1. Resolve the claim unit.
-   - Identify whether the claim is a single issue package or a PRD package.
-   - For a single issue package, read stage state, comments or receipts, ownership, blockers, linked implementation artifacts, active branches, and related work.
-   - For a PRD package, read the parent PRD, every child record, child ordering blockers, external blockers, ownership, claim records, and linked implementation artifacts.
-   - If this follows `issue-pick`, compare the claim target with the pick report.
-   - Completion criterion: the complete delivery unit is named and no child, sibling, or parent scope is hidden.
+1. Resolve claim unit.
+   - Identify whether the target is a single issue package or PRD package.
+   - If following `issue-pick`, compare the claim target to the pick report.
+   - If the user points at a PRD child, resolve the parent PRD package.
+   - Read parent and children for PRD packages.
+   - Read stage, lifecycle, ownership, blockers, relationships, and linked artifacts.
+   - Completion criterion: the complete delivery unit is named, and no child, parent, sibling, or related scope is hidden.
 
 2. Validate claimability.
-   - Reject PRD children claimed without their parent PRD.
-   - Reject delivery units that are not `ready-for-agent`, or that still carry `needs-info` or `needs-pack`.
-   - Reject delivery units with open external blockers.
-   - Reject work already claimed by assignee, claim comment, claim receipt, or backend ownership record. For a PRD package, any claimed child means the package is already partly claimed.
-   - Treat an active branch, draft PR, or active PR without ownership evidence as duplicate-work risk; route to `issue-sweep` or ask before claiming instead of treating the artifact as ownership.
-   - Absence of ownership evidence satisfies `unclaimed`.
-   - If existing ownership evidence looks old or inactive, report it as possibly stale; do not release or override it without explicit approval or an `issue-sweep` route.
-   - Route unclear scope, weak package contract, missing verification, or broken PRD child structure to `issue-pack`.
-   - Reject or route hard blockers here; do not move them into confirmation gates. Open external blockers, unclaimable targets, PRD child claims, and scope-changing claims cannot be made safe by confirmation.
-   - Completion criterion: the claim is valid, or the report names the correct route back to `issue-pick`, `issue-pack`, `issue-sweep`, or `issue-triage` for a `needs-info` State Reason.
+   - Apply hard gates.
+   - Apply quality gates.
+   - Inspect ownership evidence and active implementation artifacts.
+   - Treat branches and PRs as implementation artifact evidence or duplicate-work risk, not as ownership source of truth.
+   - Route broken state to the right skill.
+   - Completion criterion: the claim is valid, or the report names the smallest route back to `issue-pick`, `issue-pack`, `issue-sweep`, or `issue-triage`.
 
-3. Prepare side effects and check confirmation gates.
-   - State claimant, work affected, claim record, assignee changes, and any implementation artifact links.
-   - For a PRD package, state that the parent and all children will be covered by one claim.
-   - If known, record any internal subagent split as delegation under the parent owner, not as separate ownership.
-   - Treat invocation as authorization to claim the resolved delivery unit after claimability validation.
-   - Ask before applying ownership changes only when the claim target is ambiguous, the claimant is ambiguous, the delivery-unit boundary is unclear, existing ownership or active work exists, stale ownership must be released or overridden, or backend permissions/access are unclear.
-   - Completion criterion: the claim side effects are safe to apply, or one exact confirmation question is asked with the ownership risk named.
-
-4. Apply the claim.
-   - For `github-native`, prefer assignee plus claim comment.
-   - For `markdown-file-based`, write a claim receipt; the latest valid claim receipt is the current owner source of truth. Do not add ownership frontmatter fields.
-   - For a PRD package, apply ownership to the parent PRD and include the full child list in the claim record.
-   - Add child coverage comments or receipts only when repository setup explicitly requires them.
-   - Reference an existing branch or draft PR as implementation artifact evidence when relevant.
-   - Add ownership labels only when the repository setup explicitly defines them.
-   - Use the claim template below.
+3. Record claim.
+   - Record ownership through the configured backend reference.
+   - For a PRD package, the claim covers the parent and every child.
+   - Record child coverage in the claim record.
+   - Record internal delegation only as parent-owner delegation, not separate public ownership.
+   - Link existing branch or draft PR only as implementation artifact evidence.
+   - Do not invent backend fields or ownership labels outside the configured backend reference.
    - Completion criterion: the configured backend shows one clear owner for the whole delivery unit.
 
-5. Report.
-   - Keep the user-facing report as a short receipt; the claim comment is the durable structured record.
-   - Include claim links, owner, delivery unit, material dependency or ownership risks, and the `issue-implement` handoff.
-   - Do not repeat the Package Contract or child record bodies in chat.
-   - Omit empty risk sections.
-   - Completion criterion: an implementation agent can start `issue-implement` from the claim.
+4. Report a receipt.
+   - Include claim link or work ID, owner, claim unit, source of truth, material ownership or blocker risk when any, and next skill: `issue-implement`.
+   - Do not copy the full Package Contract, child record bodies, full claim record, implementation plan, or empty risk sections into chat.
+   - Completion criterion: an implementation agent can start `issue-implement` from the claim and backend source of truth.
 
-## Claim comment
+## Claim Record
 
-Use this as a GitHub comment or markdown-file claim receipt, depending on the configured backend.
+Use this claim record through the configured backend reference:
 
 ```markdown
 ## Claim
@@ -91,13 +117,15 @@ External blockers checked: <none or list>
 Existing ownership checked: <assignee, claim comment, claim receipt, or backend ownership record>
 Implementation artifacts checked: <branch, draft PR, active PR, or none>
 Internal delegation: <none or child slices delegated under this claim>
-Expected next step: <run issue-implement, branch, draft PR, or implementation update>
+Expected next step: <issue-implement>
 ```
+
+Implementation artifacts are evidence, not owner records.
 
 ## Boundaries
 
-- Do not change scope during claim.
-- Do not claim PRD children independently.
-- Do not claim around unresolved external blockers.
-- Do not claim work with stale ownership evidence unless release or override has been explicitly approved.
-- Do not release or override another owner without explicit approval.
+- Do not change package scope during claim.
+- Do not claim PRD children independently or partially claim a PRD package.
+- Do not claim unready, blocked, already claimed, ambiguous, or scope-changing work.
+- Do not release or override ownership without explicit approval.
+- Do not treat branches or PRs as ownership source of truth; treat them as implementation artifact evidence or duplicate-work risk.

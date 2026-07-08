@@ -1,8 +1,12 @@
 # Markdown-File-Based Backend
 
+## Use When
+
 Use this backend when markdown files under `.and/work` are the authoritative workflow state.
 
-GitHub issues are not used as discussion, notification, mirror, or synchronization surfaces in this backend. Git branches, commits, pull requests, CI, and reviews may be referenced as implementation artifacts, but they do not carry workflow state.
+## Source Of Truth
+
+`.and/work` is the only workflow state source for this backend. GitHub issues are not request surfaces, mirrors, notification threads, or synchronization targets. Git branches, commits, pull requests, CI, and reviews may be referenced as implementation artifacts, but they do not carry workflow state.
 
 ## Config
 
@@ -11,7 +15,7 @@ version: 1
 workflow_state_backend: markdown-file-based
 ```
 
-The first config schema has no other fields.
+Version 1 config has exactly `version` and `workflow_state_backend`. Any additional workflow backend fields are invalid for v1.
 
 ## Storage
 
@@ -32,6 +36,8 @@ The first config schema has no other fields.
 
 The delivery-unit directory is the boundary for a delivery unit. A single package can still use a directory so receipts and future evidence have a stable home.
 
+`package.md` is the delivery-unit record. `children/` exists only for PRD packages. `receipts/` stores append-only evidence. Setup may create `.and/work`, but should not create sample work records.
+
 ## ID Rules
 
 Delivery-unit IDs use stable repo-local IDs:
@@ -45,6 +51,8 @@ Child slice IDs derive from the parent:
 - `AND-0006-02`.
 
 Allocate a new delivery-unit ID by scanning `.and/work/AND-*`, taking the highest numeric ID, and adding one. Confirm the target directory does not already exist before writing. If it exists, rescan and pick the next ID.
+
+Allocate child IDs within the parent by taking the next numeric suffix. Never renumber IDs after creation. IDs are stable even when titles change.
 
 Do not use GitHub `#6` as the file-based work record ID.
 
@@ -118,7 +126,27 @@ external_blockers:
 
 Package frontmatter stores routing, lifecycle, and relationship metadata. The Package Contract belongs in the markdown body.
 
-`state_reason` stores the latest queryable State Reason only. Each material State Reason change must also be recorded as an append-only receipt so the history is not overwritten.
+Required delivery-unit fields:
+
+- `id`;
+- `kind`;
+- `shape`;
+- `stage` when lifecycle is open;
+- `lifecycle`.
+
+Delivery-unit `shape` values are:
+
+- `raw`;
+- `single`;
+- `prd-package`.
+
+Optional package frontmatter fields:
+
+- `state_reason`;
+- `external_blockers`;
+- `children`.
+
+Do not add ownership fields, implementation artifact fields, GitHub issue mirror fields, branch fields, or PR fields to package frontmatter.
 
 ## Child Slice Frontmatter
 
@@ -134,7 +162,7 @@ blocked_by: []
 
 Child slices do not carry public queue stage state. They can carry lifecycle and dependency metadata.
 
-## Relationships
+## Relationship Representation
 
 ### Containment
 
@@ -160,6 +188,22 @@ Use `external_blockers` for missing access, third-party state, manual acceptance
 - `exit_criteria`.
 
 External blockers are not dependency relationships.
+
+## State Reason
+
+`state_reason` stores the latest queryable State Reason only. Each material State Reason change must also be recorded as an append-only receipt so the history is not overwritten.
+
+If `stage` is no longer `needs-info`, remove `state_reason` from frontmatter. The history remains in receipts.
+
+## External Blockers
+
+External blockers apply to a delivery unit. Each current blocker requires:
+
+- `owner`;
+- `description`;
+- `exit_criteria`.
+
+Resolved external blockers should be removed from current frontmatter and preserved in receipts when materially relevant. Current frontmatter is query state, not append-only history.
 
 ## Body Sections
 
@@ -189,6 +233,15 @@ Do not keep long raw request history in the main Package Contract after pack. Pr
 
 Receipts are append-only files under `receipts/`.
 
+Use deterministic receipt filenames:
+
+```text
+receipts/<operation>-YYYY-MM-DD.md
+receipts/<operation>-YYYY-MM-DD-2.md
+```
+
+Use the stage or operation name, such as `triage`, `grill`, `pack`, `claim`, `implementation`, `review`, `verification`, `completion`, `rejection`, or `state-reason`. If the target filename exists, append `-2`, then `-3`, and so on. Do not overwrite existing receipts.
+
 Use receipts for:
 
 - State Reason changes;
@@ -202,11 +255,17 @@ Use receipts for:
 
 Implementation receipts may reference branches, commits, PRs, CI, and review results as implementation artifacts.
 
+Receipt body shape is owned by the calling workflow skill.
+
 ## Ownership
 
 Ownership is receipt-only in this backend. Record claims as append-only receipts under `receipts/`.
 
-The current owner is derived from the latest valid claim receipt. Release and override receipt schemas are out of scope for the first stage. Do not add ownership frontmatter fields to `package.md` or child slice files.
+The current owner is derived from the latest valid claim receipt. Release and override receipts are not part of the first-stage backend contract unless the claiming or sweep skill adds them later. Do not add ownership frontmatter fields to `package.md` or child slice files.
+
+## Implementation Artifacts
+
+Implementation artifacts are referenced in receipts. Do not add branch, commit, PR, CI, or review fields to package or child frontmatter.
 
 ## Lifecycle Outcome
 
@@ -219,6 +278,8 @@ Terminal outcomes are lifecycle values, not active stage states:
 
 Record completion evidence in a receipt.
 
+When lifecycle is terminal, active `stage` should not be present. Child lifecycle can complete before the parent, but the parent remains open until package integration closes.
+
 ## Sweep Checks
 
 Check for:
@@ -226,12 +287,17 @@ Check for:
 - missing `.and/config.yml`;
 - unsupported backend value;
 - invalid frontmatter schema;
+- open lifecycle missing `stage`;
+- terminal lifecycle still carrying active `stage`;
 - delivery-unit ID collisions;
+- receipt filename collision pattern not followed;
+- delivery-unit directory missing `receipts/`;
 - child IDs that do not match their parent;
 - parent `children` and child `parent` drift;
 - `blocked_by` references to missing work records;
 - child slices with public stage state;
 - `needs-info` without `state_reason`;
+- non-`needs-info` work still carrying `state_reason`;
 - malformed external blockers;
 - stale external blockers whose exit criteria appears satisfied;
 - claimed delivery units with no claim receipt;

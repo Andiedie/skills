@@ -101,7 +101,7 @@ All workflow skills use `ai-native-backend-contract` when they need backend-neut
 ### `setup-ai-native-development`
 
 - Use when: a repository needs this loop configured.
-- Produces: `.and/config.yml`, backend choice, state mapping, relationship rules, claim policy, and agent-facing workflow docs.
+- Produces: `.and/config.yml`, backend readiness checks, a minimal agent entrypoint, missing external skill report, and project-specific notes only when needed.
 - Must not: change product requirements, implementation code, or existing issues unless explicitly asked.
 - Usually next: `issue-intake` or `issue-triage`.
 
@@ -116,7 +116,9 @@ The workflow expects these Matt skills to be installed:
 | `tdd` | Implementation work uses test-first practice when the change benefits from it. |
 | `code-review` | Implementation work uses a review pass before finalizing. |
 
-`setup-ai-native-development` must verify these skills before reporting the workflow ready. If any are missing, install them with:
+`setup-ai-native-development` must check and report these skills before reporting the skill environment ready. Missing skills are environment readiness gaps, not repository setup failures. Setup should report the install command and should not install them unless explicitly asked.
+
+Install missing skills with:
 
 ```sh
 npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill <missing-skill...> -y

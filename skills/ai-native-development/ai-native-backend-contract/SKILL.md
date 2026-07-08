@@ -1,35 +1,46 @@
 ---
 name: ai-native-backend-contract
-description: Use when an AI-native workflow skill needs the workflow backend contract or the configured `github-native` / `markdown-file-based` backend reference.
+description: Use when an AI-native workflow skill needs to read or write workflow state through the configured `.and/config.yml` backend, or needs the `github-native` / `markdown-file-based` representation rules.
 ---
 
 # AI-Native Backend Contract
 
-This is a reference skill for AI-native workflow state backends. It does not intake, triage, grill, pack, pick, claim, implement, sweep, or mutate workflow state.
+Reference skill for loading the configured workflow state backend contract.
 
-Use it whenever an AI-native workflow skill needs to know where authoritative delivery-loop state lives and how to read or write that state.
+Use it before an AI-native workflow skill reads, writes, validates, or reasons about workflow state. This skill loads the contract; it does not perform the workflow operation.
 
 ## Process
 
-1. Read the repository's `.and/config.yml`.
-   - If it is missing, route to `setup-ai-native-development`.
-   - If `workflow_state_backend` is not `github-native` or `markdown-file-based`, route to `setup-ai-native-development`.
-   - Completion criterion: the configured backend value is known and supported.
+1. Read and validate the repository's `.and/config.yml`.
+   - It must be a YAML mapping with `version: 1`.
+   - It must contain only `version` and `workflow_state_backend`.
+   - `workflow_state_backend` must be `github-native` or `markdown-file-based`.
+   - If missing, malformed, unsupported, extended, or ambiguous, route to `setup-ai-native-development`.
+   - Completion criterion: one supported backend is known.
 
 2. Read [backend-contract.md](backend-contract.md).
-   - Use it for backend-neutral concepts: work record, delivery unit, stage state, State Reason, Package Contract, containment, dependency, external blocker, ownership, receipt, lifecycle outcome, completion evidence, and implementation artifact.
-   - Completion criterion: the workflow operation is framed in backend-neutral terms before any backend-specific mutation.
+   - Use it for backend-neutral concepts, operations, relationship vocabulary, State Reason, receipt, lifecycle, and invariant rules.
+   - Completion criterion: the calling skill's operation is expressed in backend-neutral terms.
 
-3. Read exactly one backend reference:
+3. Read exactly one backend reference.
    - For `github-native`, read [backends/github-native.md](backends/github-native.md).
    - For `markdown-file-based`, read [backends/markdown-file-based.md](backends/markdown-file-based.md).
-   - Completion criterion: the skill knows the configured representation for stage state, State Reason, Package Contract, containment, dependency, external blockers, ownership, receipts, implementation artifacts, and lifecycle outcomes.
+   - Do not read the other backend unless doing setup, migration design, sweep validation, or an explicit comparison.
+   - Completion criterion: the calling skill knows the configured representation for the operation it is about to perform.
 
-4. Read [workflow-examples.md](workflow-examples.md) only when doing setup, sweep, validation, review, or an end-to-end dry run.
+4. Return to the calling workflow skill.
+   - Do not perform the operation here.
+   - Do not produce a separate user-facing receipt unless the user directly asked about backend rules.
+   - Completion criterion: the caller can continue with one backend-specific read, write, or validation plan.
+
+5. Read [workflow-examples.md](workflow-examples.md) only when doing setup, sweep, validation, review, or an end-to-end dry run.
 
 ## Boundaries
 
-- Do not choose a backend for the repository; `setup-ai-native-development` owns setup.
-- Do not mutate issues, files, labels, relationships, ownership, claims, branches, or PRs.
+- Do not choose or switch the repository backend; `setup-ai-native-development` owns that.
+- Do not mutate issues, files, labels, relationships, ownership, claims, branches, PRs, or lifecycle state.
+- Do not run the calling workflow stage.
 - Do not duplicate backend reference rules into the calling workflow skill.
-- Do not invent fields outside the configured backend reference.
+- Do not invent fields outside `.and/config.yml` v1 or the configured backend reference.
+- Do not maintain GitHub and markdown workflow state in parallel.
+- Do not treat implementation artifacts as workflow state.

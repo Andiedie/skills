@@ -6,86 +6,88 @@ disable-model-invocation: true
 
 # Issue Triage
 
-Triage runs the Decide stage for recorded work. It determines whether an issue should close, wait for information, or move to `needs-pack`.
+Triage decides the next route for recorded work: close it, wait for information, or move it to `needs-pack`.
 
 Triage produces an evidence-backed routing decision. It does not make work executable.
 
-## Backend Rule
+## Backend Contract
 
-Before reading or writing workflow state, read `.and/config.yml`, then use `ai-native-backend-contract` for the backend contract and configured backend reference. Use the configured backend reference for stage state, State Reason, lifecycle outcome, relationship, receipt, and ownership evidence representation.
+Before reading or writing workflow state, read `.and/config.yml`, then use `ai-native-backend-contract`.
 
-If `ai-native-backend-contract` is unavailable, stop and ask the user to install it; do not infer backend rules.
+Use the configured backend reference for all reads and writes. If setup is missing, unsupported, or the backend contract is unavailable, stop and route to `setup-ai-native-development` or ask the user to install the missing skill.
 
-If setup is missing or the backend value is unsupported, route to `setup-ai-native-development`.
+Do not infer backend labels, frontmatter, State Reason placement, lifecycle representation, or receipt placement inside this skill.
 
 ## Outcomes
 
 Triage may produce only one outcome:
 
-- `closed`: the lifecycle outcome is complete, duplicate, rejected, not actionable, or no longer relevant
-- `needs-info`: the stage state is waiting on human, reporter, maintainer, permission, external access, acceptance input, or a decision interview
-- `needs-pack`: the stage state is worth doing and should be packed into an executable delivery unit
+- `closed`: no further workflow action is needed because the work is complete, duplicate, rejected, not actionable, already implemented, or no longer relevant.
+- `needs-info`: safe packaging is blocked by one specific missing fact, human decision, permission, external state, or acceptance input.
+- `needs-pack`: the work is worth doing and has enough confirmed input for `issue-pack`.
 
-Every open triaged delivery unit should have at most one public stage state.
+Open work must not carry contradictory public stage state.
 
-Every `needs-info` route must include a current State Reason. The latest State Reason is the source of truth for why the work is waiting, who owns the answer, what question must be answered, which skill should resume after the answer arrives, and what condition clears the wait.
+Every `needs-info` route must include a current State Reason with `Cause`, `Owner`, `Question`, `Resume with`, and `Exit criteria`. Representation belongs to the configured backend reference.
 
-State Reason history is append-only. Do not edit or delete earlier State Reason comments or receipts during normal workflow; append a new State Reason when the reason materially changes. A backend may also update latest-reason metadata for queries. The latest State Reason supersedes earlier State Reasons.
+## Confirmation Gates
 
-## Invocation
+Apply ordinary `needs-info` and `needs-pack` routes without confirmation when the target is clear and evidence supports the route. The user invoked triage, so do not ask them to approve routine Decide-stage updates.
 
-Use this skill in two ways:
+Ask before editing only when:
 
-- **Attention list**: no work record is named. Show untriaged work, `needs-triage`, and `needs-info` with new activity.
-- **Specific target**: a work ID, issue number, path, URL, or PR is named. Treat an external PR as a request with attached code only when repository setup uses PRs as a request surface.
+- the target is ambiguous;
+- the route is uncertain;
+- the route depends on unrecorded human judgment;
+- closure is needed without explicit closure authority;
+- the duplicate or rejection target is unclear;
+- the edit would overwrite maintainer conclusions;
+- existing ownership, linked PRs, containment, dependencies, or State Reasons make the side effect unsafe.
 
 ## Process
 
-1. Build the attention list when no target is named.
-   - Query the configured backend with explicit limits or pagination.
-   - Show counts and a one-line summary for each item.
-   - Include external PRs only when the repository setup says they are triage work.
-   - Completion criterion: one work record or request surface is selected, or the report says there is no triage work in scope.
+1. Resolve target or attention list.
+   - Use the specific target when the user names a work ID, issue number, path, URL, or PR.
+   - When no target is named, list untriaged work, `needs-triage`, and `needs-info` with new activity.
+   - Include external PRs only when repository setup treats PRs as request surfaces.
+   - Do not batch-update by default.
+   - Completion criterion: one target is selected, or the report says no triage work is in scope.
 
-2. Collect target context.
-   - Read title, body, stage state, lifecycle state, State Reasons, comments or receipts, ownership, linked implementation artifacts, attachments, containment, dependency relationships, and prior triage notes.
-   - Inspect related code, tests, docs, domain glossary, architectural decision records, and current behavior only when they materially affect the route.
-   - Classify the request as `bug`, `enhancement`, or another repository-defined category when that affects verification. This category does not need to become a label.
-   - Check redundancy by concept, not wording: is the requested behavior already implemented?
+2. Collect route evidence.
+   - Read title, body, current stage, lifecycle, latest State Reason, comments or receipts, ownership, linked implementation artifacts, attachments, containment, dependency relationships, and prior triage notes.
+   - Inspect code, tests, docs, domain notes, and architecture decisions only when the route depends on them.
+   - Check duplicates by concept, not wording.
+   - Check whether the requested behavior is already implemented.
    - Check prior rejection or out-of-scope records when the repository has them.
    - For bugs, make a proportionate reproduction attempt from reporter steps.
-   - For PRs, inspect the diff and relevant checks.
-   - Completion criterion: the recommendation can name category, established facts, verified behavior, assumptions, unknowns, blockers, reproduction or PR verification result, redundancy result, and prior rejection result.
+   - For PR request surfaces, inspect the diff and checks enough to route.
+   - Completion criterion: the route decision can name established facts, verified behavior, unknowns, blockers, duplicate or prior-rejection result, and any reproduction or PR verification result that materially affected the route.
 
-3. Decide the route and identify confirmation gates.
-   - Apply ordinary `needs-info` and `needs-pack` routing directly when the target is clear and the evidence supports one route.
-   - If a maintainer explicitly requests one of the triage outcomes above, treat that as authorization for ordinary routing side effects and use that outcome without reopening the judgment.
-   - Choose `closed` for duplicate, already implemented, rejected, not actionable, or no-longer-relevant work.
-   - Choose `needs-info` when a specific missing fact, human decision, permission, external dependency, or acceptance gate blocks safe packing.
-   - For `needs-info`, classify the State Reason cause as `missing-facts`, `decision-needed`, `access-needed`, `external-state`, or `acceptance-needed`.
-   - Set the State Reason owner to the smallest accountable owner: `reporter`, `maintainer`, `human`, `agent`, or `external-system`.
-   - Recommend `issue-grill` when the missing input is a product, domain, architecture, naming, or testing decision that needs a structured interview.
-   - Choose `needs-pack` when the work is worth doing and ready to be packaged as a single issue package or PRD package.
-   - Ask before editing only when the target is ambiguous, the route is uncertain, the route depends on a human judgment not already recorded, closure is needed without explicit closure authorization, the duplicate target is unclear, the edit would overwrite a maintainer conclusion, or existing ownership, linked PRs, containment, dependency relationships, or State Reasons make the routing side effect unsafe.
-   - Completion criterion: the route is safe to apply, or one exact confirmation question is asked with the evidence and risk named.
+3. Decide the route.
+   - Choose `closed` when the work has a verified terminal reason and closure authority exists or confirmation is obtained.
+   - Choose `needs-info` when one specific missing input blocks safe packaging.
+   - Choose `needs-pack` when the work is worth doing and packageable.
+   - Use `issue-grill` as the resume path for structured product, domain, architecture, naming, or testing decisions.
+   - Use the smallest accountable owner for missing facts, access, external state, or acceptance input.
+   - Treat package-shape recommendations as hints only; final package shape belongs to `issue-pack`.
+   - Completion criterion: exactly one route is selected, or one confirmation question is asked with the evidence and risk named.
 
 4. Apply the route when safe or confirmed.
-   - Unless the user explicitly asks for batch work, update one work record or request surface at a time.
-   - Remove conflicting active queue state.
-   - For `needs-info`, record the needs-info template below with a State Reason.
-   - For `needs-pack`, record backend notes with category, established facts, package inputs, likely package shape, verification clues, evidence links, and non-blocking unknowns.
-   - For `closed`, record the reason and close the work only after explicit closure authorization or confirmation. Use close-reason labels only when the repository already has that convention.
-   - Completion criterion: backend stage state, lifecycle state, notes, and relationships express one route without contradictory public stage state.
+   - Update one work record at a time unless the user explicitly requests batch work.
+   - Remove contradictory public stage state through the configured backend.
+   - For `needs-info`, write triage notes and a current State Reason.
+   - For `needs-pack`, write triage notes and package inputs.
+   - For `closed`, write close reason and completion evidence, then close only with authority.
+   - Completion criterion: the backend expresses exactly one route without contradictory public stage state, and any waiting state has a current State Reason.
 
-5. Report.
-   - Keep the user-facing report short; backend notes may use the structured templates.
-   - Include the issue link or work ID, outcome, state changes, material facts verified, unresolved questions, and next skill.
-   - Omit empty sections.
-   - Completion criterion: the next actor can continue without rereading the whole triage session.
+5. Report a receipt.
+   - Include the work link or ID, outcome, state or lifecycle change, material facts verified, exact unresolved question when any, and next skill.
+   - Do not repeat full issue bodies, full triage notes, full State Reason markdown, long reproduction logs, or empty sections.
+   - Completion criterion: the next actor can continue with `issue-grill`, `issue-pack`, or closure follow-up without rereading the whole triage session.
 
-## Templates
+## Backend Notes
 
-### Needs Info
+### Needs Info Notes
 
 ```markdown
 ## Triage Notes
@@ -93,30 +95,20 @@ Use this skill in two ways:
 Category: <bug, enhancement, or repository category>
 
 Established facts:
-
 - <fact>
 
 Verified behavior:
-
 - <reproduction, PR check, current behavior check, or not applicable>
 
-Needed from <person, role, or skill>:
-
-- <specific question or decision>
-
-## State Reason
-
-State: needs-info
-Cause: <missing-facts, decision-needed, access-needed, external-state, or acceptance-needed>
-Owner: <reporter, maintainer, human, agent, or external-system>
-Question: <one specific question, decision, permission, external event, or acceptance gate>
-Resume with: <issue-triage, issue-grill, or issue-pack>
-Exit criteria: <what must be true before this delivery unit can leave needs-info>
-
-Recommended next skill: <issue-grill, issue-triage, issue-pack, or none>
+Needed input:
+- Cause: <missing-facts, decision-needed, access-needed, external-state, or acceptance-needed>
+- Owner: <reporter, maintainer, human, agent, or external-system>
+- Question: <one specific question, decision, permission, external event, or acceptance gate>
+- Resume with: <issue-triage, issue-grill, or issue-pack>
+- Exit criteria: <what must be true before this work can leave needs-info>
 ```
 
-### Needs Pack
+### Needs Pack Notes
 
 ```markdown
 ## Triage Notes
@@ -124,11 +116,9 @@ Recommended next skill: <issue-grill, issue-triage, issue-pack, or none>
 Category: <bug, enhancement, or repository category>
 
 Established facts:
-
 - <fact>
 
 Package inputs:
-
 - Current behavior:
 - Desired behavior:
 - Known constraints:
@@ -137,15 +127,27 @@ Package inputs:
 - Evidence links:
 - Non-blocking unknowns:
 
-Recommended package shape: <single issue package or PRD package>
+Package shape hint: <single issue package, PRD package, or unknown>
+```
+
+### Close Notes
+
+```markdown
+## Triage Notes
+
+Closure reason: <duplicate, already implemented, rejected, not actionable, no longer relevant, or complete>
+
+Evidence:
+- <fact, duplicate link, implementation evidence, maintainer decision, or prior rejection record>
+
+Authority:
+- <explicit user request, maintainer comment, prior decision, or confirmation>
 ```
 
 ## Boundaries
 
-- Do not write a PRD or create child records; use `issue-pack`.
-- Do not mark work `ready-for-agent`.
-- Do not claim or implement work.
-- Do not ask broad questions when a specific missing fact can be named.
-- Do not run a full product interview; route structured decisions to `issue-grill`.
-- Do not deep-dive code unless the route depends on that evidence.
-- Do not mark PRD children with public stage state.
+- Do not write a Package Contract, create child records, or mark work `ready-for-agent`; route packageable work to `issue-pack`.
+- Do not claim, implement, review, merge, or release ownership.
+- Do not close work without explicit authority or confirmation.
+- Do not ask broad questions when a specific State Reason can be written.
+- Do not run a structured decision interview; route those decisions to `issue-grill`.

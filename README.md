@@ -87,7 +87,7 @@ To install or repair the required Matt skills:
 npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill grilling domain-modeling tdd code-review -y
 ```
 
-`setup-ai-native-development` should verify those skills before declaring the loop ready. If any are missing, setup must report the missing skill names and the install command.
+`setup-ai-native-development` should check and report those skills before declaring the skill environment ready. If any are missing, setup must report the missing skill names and the install command; it should not install them unless explicitly asked.
 
 Other Matt skills are useful references or adjacent tools, but not required for this loop: `diagnosing-bugs`, `codebase-design`, `ask-matt`, `setup-matt-pocock-skills`, `grill-with-docs`, `implement`, `to-prd`, and `to-issues`.
 
@@ -108,7 +108,7 @@ Snapshot from my local skill environment on 2026-07-03. This records the skills 
 | [Andiedie/cd2-skills](https://github.com/Andiedie/cd2-skills) | `cd2` |
 | [Andiedie/loopmark](https://github.com/Andiedie/loopmark) | `loopmark` |
 | [Andiedie/openlist-skills](https://github.com/Andiedie/openlist-skills) | `openlist` |
-| [Andiedie/skills](https://github.com/Andiedie/skills) | `ask-andie`, `codex-pr-review-loop`, `documentation-maintenance`, `documentation-reseed`, `install-skills`, `issue-claim`, `issue-grill`, `issue-intake`, `issue-pack`, `issue-pick`, `issue-sweeper`, `issue-triage`, `normalize-agent-instructions`, `setup-ai-native-development` |
+| [Andiedie/skills](https://github.com/Andiedie/skills) | `ai-native-backend-contract`, `ask-andie`, `codex-pr-review-loop`, `documentation-maintenance`, `documentation-reseed`, `install-skills`, `issue-claim`, `issue-grill`, `issue-implement`, `issue-intake`, `issue-pack`, `issue-pick`, `issue-sweep`, `issue-triage`, `normalize-agent-instructions`, `setup-ai-native-development` |
 | [anthropics/skills](https://github.com/anthropics/skills) | `docx`, `pdf`, `pptx`, `xlsx` |
 | [mattpocock/skills](https://github.com/mattpocock/skills) | `ask-matt`, `code-review`, `codebase-design`, `diagnosing-bugs`, `domain-modeling`, `grill-with-docs`, `grilling`, `handoff`, `implement`, `improve-codebase-architecture`, `prototype`, `scaffold-exercises`, `setup-matt-pocock-skills`, `tdd`, `teach`, `to-issues`, `to-prd`, `writing-great-skills` |
 | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | `web-design-guidelines`, `writing-guidelines` |
