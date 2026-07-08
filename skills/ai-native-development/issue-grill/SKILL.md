@@ -14,6 +14,12 @@ Use this when a triaged issue is `needs-info` because a correct package depends 
 
 Begin from the work record's latest State Reason when one exists. `issue-grill` is the right route when `Resume with` is `issue-grill`, or when the State Reason cause is `decision-needed` and a structured interview can resolve it. If the latest State Reason is only missing reporter facts, access, external state, or acceptance input that does not need an interview, report the question and route to its owner instead of grilling.
 
+## External Skill Preflight
+
+`grilling` and `domain-modeling` are required runtime skills. Before starting the interview, verify that both are available in the current session or installed skill list.
+
+If either required skill is missing, stop and route to `setup-ai-native-development` with the exact missing skill name. Do not simulate `/grilling` or silently continue without the domain-modeling lens.
+
 ## Backend Rule
 
 Before writing decisions, read `.and/config.yml`, then use `ai-native-backend-contract` for the backend contract and configured backend reference. Use the configured backend reference for decision notes, State Reasons, receipts, and stage-state changes.

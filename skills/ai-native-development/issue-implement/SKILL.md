@@ -16,6 +16,14 @@ If `ai-native-backend-contract` is unavailable, stop and ask the user to install
 
 If setup is missing or the backend value is unsupported, route to `setup-ai-native-development`.
 
+## External Skill Preflight
+
+`tdd` and `code-review` are required implementation skills. Before resolving implementation scope, verify that both are available in the current session or installed skill list.
+
+If either required skill is missing, stop and route to `setup-ai-native-development` with the exact missing skill name.
+
+Do not simulate Matt `tdd` or `code-review`, and do not silently continue without the required implementation skill.
+
 ## Preconditions
 
 - The delivery unit is claimed.
@@ -47,13 +55,14 @@ If a precondition is missing, stop and route to `issue-claim`, `issue-pick`, `is
    - Completion criterion: the plan covers the claimed delivery unit and no unconfirmed scope change is needed.
 
 4. Implement and verify incrementally.
-   - Prefer test-first changes at the package's agreed seam when practical.
+   - Use Matt `tdd` for substantial behavior changes when test-first work is practical at the package's agreed seam.
    - Run focused tests regularly, typechecking regularly when available, and the full relevant suite before finishing.
    - Keep changes inside the claimed scope, including required documentation or domain updates from the package.
    - Completion criterion: code, docs, and tests satisfy the Package Contract, or the blocker is named with evidence.
 
 5. Review before finalizing.
-   - Run the repository's review flow when defined. Use Matt `code-review` when available and appropriate for the diff.
+   - Run the repository's review flow when defined, including Matt `code-review` for the implementation diff.
+   - Do not claim that Matt `code-review` ran unless it actually ran.
    - Fix actionable findings that are within scope.
    - Route scope or spec problems back to `issue-pack` or `issue-grill`.
    - Completion criterion: review is clean, or remaining findings are explicitly outside the implementation scope or require human judgment.

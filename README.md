@@ -74,18 +74,22 @@ It includes:
 
 Several workflows in this repository intentionally compose with skills from [Matt Pocock's skills repository](https://github.com/mattpocock/skills).
 
-For the AI-native development loop, keep these Matt skills installed:
+The AI-native development loop expects these Matt skills to be installed:
 
-- `grill-with-docs`
 - `grilling`
-- `implement`
-- `code-review`
-- `tdd`
-- `diagnosing-bugs`
 - `domain-modeling`
-- `codebase-design`
-- `ask-matt`
-- `setup-matt-pocock-skills`
+- `tdd`
+- `code-review`
+
+To install or repair the required Matt skills:
+
+```sh
+npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill grilling domain-modeling tdd code-review -y
+```
+
+`setup-ai-native-development` should verify those skills before declaring the loop ready. If any are missing, setup must report the missing skill names and the install command.
+
+Other Matt skills are useful references or adjacent tools, but not required for this loop: `diagnosing-bugs`, `codebase-design`, `ask-matt`, `setup-matt-pocock-skills`, `grill-with-docs`, `implement`, `to-prd`, and `to-issues`.
 
 The `issue-grill` skill is a backend-safe adaptation of Matt's `grill-with-docs`: it keeps the `/grilling` and `/domain-modeling` handfeel, but records decisions and documentation proposals in the configured workflow backend for `issue-pack` instead of editing local docs during clarification.
 

@@ -107,18 +107,37 @@ All workflow skills use `ai-native-backend-contract` when they need backend-neut
 
 ## External Matt Skills
 
-These Matt skills are used directly or adapted by this workflow.
+The workflow expects these Matt skills to be installed:
+
+| Skill | Used for |
+| --- | --- |
+| `grilling` | `issue-grill` runs the interview. |
+| `domain-modeling` | `issue-grill` uses domain vocabulary and ADR judgment without writing local docs. |
+| `tdd` | Implementation work uses test-first practice when the change benefits from it. |
+| `code-review` | Implementation work uses a review pass before finalizing. |
+
+`setup-ai-native-development` must verify these skills before reporting the workflow ready. If any are missing, install them with:
+
+```sh
+npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill <missing-skill...> -y
+```
+
+Matt skills used as references or adjacent tools:
 
 | Skill | Use when |
 | --- | --- |
-| `grilling` | `issue-grill` needs a relentless one-question-at-a-time interview. |
-| `domain-modeling` | `issue-grill` needs domain vocabulary and ADR judgment without writing local docs. |
-| `implement` | General implementation reference; `issue-implement` adapts it for claimed AI-native delivery units. |
-| `code-review` | `issue-implement` needs a review pass over the implementation diff. |
+| `diagnosing-bugs` | Investigate hard bugs before packaging or implementing a fix. |
+| `codebase-design` | Sharpen module boundaries and architecture vocabulary. |
+| `ask-matt` | Route general Matt-style engineering skill questions. |
+| `setup-matt-pocock-skills` | Configure Matt's skill set in a repository that wants it. |
 
-`issue-grill` adapts Matt `grill-with-docs` for this issue workflow. It keeps the `/grilling` and `/domain-modeling` handfeel, but records decisions and documentation proposals in the configured backend so `issue-pack` can make them part of the delivery unit.
+Adapted reference skills:
 
-`issue-pack` adapts the PRD and tracer-bullet issue ideas from Matt `to-prd` and `to-issues`, but the published backend state follows this package's `needs-pack`, PRD package, relationship, and claim rules.
+| Matt skill | Adapted here as |
+| --- | --- |
+| `grill-with-docs` | `issue-grill`, which records backend-safe packaging input instead of local doc edits. |
+| `implement` | `issue-implement`, which adds claimed delivery units, backend source of truth, and isolated worktrees. |
+| `to-prd` and `to-issues` | `issue-pack`, which publishes this workflow's PRD package, relationship, backend, and claim model. |
 
 ## Maintain These Skills
 
