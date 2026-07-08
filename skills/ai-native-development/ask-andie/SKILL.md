@@ -10,12 +10,6 @@ Ask Andie is the teaching router for the AI-native development loop. Use it when
 
 Do more than route, but only a little. Teach one reusable rule so the user needs this skill less often next time.
 
-## Relationship To Ask Matt
-
-This follows Matt `ask-matt` as a user-invoked router: the user should not need to remember every skill.
-
-AND adapts that idea to a workflow-state-backed loop. Routing is based on backend state, ownership, blockers, and delivery-unit shape.
-
 ## Backend Contract
 
 When routing workflow-backed work, read `.and/config.yml`, then use `ai-native-backend-contract` for the configured backend.

@@ -73,7 +73,7 @@ Reuse an existing worktree only when it is linked to the same delivery unit and 
 
 5. Review.
    - Run the repository review flow when defined.
-   - Run Matt `code-review` for the implementation diff.
+   - Run `code-review` for the implementation diff.
    - Do not claim review ran unless it actually ran.
    - Fix actionable findings that are within scope.
    - Route spec or scope issues back to `issue-pack` or `issue-grill`.

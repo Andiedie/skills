@@ -105,9 +105,9 @@ All workflow skills use `ai-native-backend-contract` when they need backend-neut
 - Must not: change product requirements, implementation code, or existing issues unless explicitly asked.
 - Usually next: `issue-intake` or `issue-triage`.
 
-## External Matt Skills
+## External Runtime Skills
 
-The workflow expects these Matt skills to be installed:
+The workflow expects these external skills to be installed:
 
 | Skill | Used for |
 | --- | --- |
@@ -124,15 +124,6 @@ Install missing skills with:
 npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill <missing-skill...> -y
 ```
 
-Matt skills used as references or adjacent tools:
-
-| Skill | Use when |
-| --- | --- |
-| `diagnosing-bugs` | Investigate hard bugs before packaging or implementing a fix. |
-| `codebase-design` | Sharpen module boundaries and architecture vocabulary. |
-| `ask-matt` | Route general Matt-style engineering skill questions. |
-| `setup-matt-pocock-skills` | Configure Matt's skill set in a repository that wants it. |
-
 ## Maintain These Skills
 
 - Change loop rules in [delivery loop](delivery-loop.md), then update any affected `SKILL.md` files.
@@ -141,7 +132,3 @@ Matt skills used as references or adjacent tools:
 - Put runtime rules in the relevant `SKILL.md`; package docs explain the workflow and shared vocabulary.
 - Keep the workflow skills together in this package.
 - Update the root `README.md` and `skills.sh.json` when skill names, descriptions, or groups change.
-
-## Acknowledgements
-
-This workflow builds on [Matt Pocock's skills repository](https://github.com/mattpocock/skills). AND expresses the relevant grill interview, implementation, PRD, and tracer-bullet issue practices through its delivery loop, backend model, and ownership rules.

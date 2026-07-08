@@ -12,11 +12,11 @@ This is a repository bootstrap skill, not a workflow handbook. Discover the repo
 
 Use the delivery-loop docs and `ai-native-backend-contract` as the source of truth for workflow and backend rules. Do not copy those rules into each target repository unless they are real repository-specific facts.
 
-## Relationship To Matt Setup
+## Setup Approach
 
-Keep Matt `setup-matt-pocock-skills`' setup shape: explore first, present findings, confirm durable choices, then write.
+Explore first, present findings, confirm durable choices, then write.
 
-The configured object is different. AND setup centers on one workflow state backend and minimal repository integration, not a standalone triage-label documentation set.
+AND setup centers on one workflow state backend and minimal repository integration.
 
 ## Setup Contract
 

@@ -8,11 +8,11 @@ disable-model-invocation: true
 
 Issue Grill runs a relentless decision interview for `needs-info` work that cannot be packaged until human product, domain, architecture, naming, testing, access, or acceptance decisions are resolved.
 
-It keeps Matt `grilling` / `domain-modeling` behavior, but records backend-safe package input instead of editing local docs.
+It uses `grilling` and `domain-modeling` behavior, but records backend-safe package input instead of editing local docs.
 
-## Relationship To Matt Skills
+## External Skill Behavior
 
-Run `grilling` with the `domain-modeling` lens. Keep the Matt behavior:
+Run `grilling` with the `domain-modeling` lens:
 
 - ask one question at a time;
 - include a recommended answer for each question;
