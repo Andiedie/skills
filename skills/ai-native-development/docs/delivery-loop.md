@@ -75,7 +75,7 @@ Principles:
 
 ## Design Balances
 
-Use these balances when changing a workflow skill, backend rule, stage state, confirmation point, or user-visible output. The goal is not to maximize either side. The goal is to keep the delivery loop effective without making it rigid, noisy, or unsafe.
+Use these balances when changing workflow behavior, skill instructions, backend rules, stage states, confirmation points, or user-visible output. The goal is not to maximize either side. The goal is to keep the delivery loop effective without making it rigid, noisy, unsafe, or over-specified.
 
 ### Result Correctness vs Delivery Throughput
 
@@ -106,6 +106,12 @@ Use these balances when changing a workflow skill, backend rule, stage state, co
 - **Hard invariants**: keep one workflow backend, claim only delivery units, preserve claim scope, keep PRD children out of public claim queues, and implement from the backend source of truth.
 - **Soft strategies**: output length, explanation depth, candidate ranking, and lightweight package shape can adapt to the work.
 - **Routable exceptions**: small fixes, existing PRs, urgent work, and incomplete inputs should route to the right stage instead of forcing the current skill to complete.
+
+### Skill Economy vs Behavioral Predictability
+
+- **Behavior-changing text**: keep rules that change agent behavior; remove no-ops, duplicated explanations, stale sediment, and defensive prose that does not affect execution.
+- **Visible safety constraints**: keep completion criteria, source-of-truth rules, blocked routes, claim scope, and other safety constraints visible in `SKILL.md` when hiding them would make agents drift.
+- **Progressive disclosure**: keep always-used process in the skill body; move backend mechanics, long templates, and branch-specific reference to the backend contract or sibling references.
 
 ### Ownership Integrity vs Parallel Execution
 
