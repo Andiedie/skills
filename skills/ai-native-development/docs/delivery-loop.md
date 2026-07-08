@@ -73,6 +73,52 @@ Principles:
 - Normal backend writes are part of the invoked stage. Stop for confirmation only when the write introduces unconfirmed judgment, overrides ownership, closes work, releases a claim, or mutates an ambiguous target.
 - Implementation starts from the configured workflow state backend in an isolated branch or worktree.
 
+## Design Balances
+
+Use these balances when changing a workflow skill, backend rule, stage state, confirmation point, or user-visible output. The goal is not to maximize either side. The goal is to keep the delivery loop effective without making it rigid, noisy, or unsafe.
+
+### Result Correctness vs Delivery Throughput
+
+- **Problem value**: make sure the work is worth doing, not duplicated, and pointed in the right direction.
+- **Delivery boundary**: make sure the delivery unit is neither too large, too small, incorrectly split, nor mixed with unrelated work.
+- **Completion standard**: make sure acceptance criteria, verification path, and completion evidence are clear enough to prevent "looks done" implementations.
+
+### Agent Initiative vs Human Authority
+
+- **Agent-owned facts**: agents should verify code, tests, logs, docs, existing work records, and backend state before asking a human.
+- **Human-owned judgment**: product tradeoffs, authorization, rejection, acceptance, merge, and risk acceptance require human authority.
+- **Confirmation boundary**: normal stage writes do not need repeated approval; confirmation is reserved for unconfirmed judgments, ownership overrides, closing work, releasing claims, or ambiguous mutation targets.
+
+### Source of Truth Sufficiency vs Attention Cost
+
+- **Complete backend specification**: requirements, acceptance, relationships, blockers, child slices, and the Package Contract belong in the configured workflow state backend.
+- **Short human receipts**: chat output should say what changed, where the work is now, and what happens next, not copy the full specification.
+- **Single authoritative expression**: maintain one source for each durable rule or fact, then link to it instead of repeating it across docs, skills, and backend references.
+
+### Recoverability / Auditability vs State Noise
+
+- **Evidence for turning points**: triage, grill decisions, package publication, claim, implementation, review, verification, and closure need durable evidence.
+- **Current-state recovery**: the backend should make the current stage, blocker, owner, and next skill recoverable without reading the whole chat.
+- **No durable scratchpad**: temporary reasoning, guesses, drafts, and question-by-question interview notes should not be persisted unless they become decisions, blockers, or completion evidence.
+
+### System Invariants vs Scenario Flexibility
+
+- **Hard invariants**: keep one workflow backend, claim only delivery units, preserve claim scope, keep PRD children out of public claim queues, and implement from the backend source of truth.
+- **Soft strategies**: output length, explanation depth, candidate ranking, and lightweight package shape can adapt to the work.
+- **Routable exceptions**: small fixes, existing PRs, urgent work, and incomplete inputs should route to the right stage instead of forcing the current skill to complete.
+
+### Ownership Integrity vs Parallel Execution
+
+- **Complete public claim unit**: claim a single issue package as itself, or claim a PRD package as the parent plus all children.
+- **Internal execution slices**: child slices should be clear enough for the package owner to delegate or parallelize internally.
+- **Undivided integration responsibility**: even when child slices run in parallel, the package owner remains responsible for integration, verification, and closure.
+
+### Unified Abstraction vs Native Backend Experience
+
+- **Shared concepts**: work record, delivery unit, stage state, State Reason, Package Contract, relationships, ownership, receipts, and lifecycle outcomes mean the same thing across backends.
+- **Native representation**: GitHub-native should use issues, labels, native relationships, comments, and assignees; markdown-file-based should use `.and/work`, frontmatter, and receipt files.
+- **No dual-track state**: the selected backend is the only workflow state source. Do not create markdown shadow state for GitHub-native or GitHub mirrors for markdown-file-based.
+
 ## End-To-End Flow
 
 ```mermaid

@@ -142,6 +142,7 @@ Adapted reference skills:
 ## Maintain These Skills
 
 - Change loop rules in [delivery loop](delivery-loop.md), then update any affected `SKILL.md` files.
+- Before adding or tightening workflow rules, check [Design Balances](delivery-loop.md#design-balances) so invariants stay hard and strategies stay adaptable.
 - Change backend storage rules in [AI-native backend contract](../ai-native-backend-contract/SKILL.md) and its backend references, then update affected `SKILL.md` files.
 - Put runtime rules in the relevant `SKILL.md`; package docs explain the workflow and shared vocabulary.
 - Keep the workflow skills together in this package.
