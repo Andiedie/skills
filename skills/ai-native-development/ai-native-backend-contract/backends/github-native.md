@@ -75,7 +75,7 @@ PRD child issues do not carry active queue labels. They inherit the parent PRD d
 
 Closed work uses GitHub closed state, not a `closed` label.
 
-Do not create `closed`, `in-progress`, `in-review`, or `ready-for-human` as AND active stage labels.
+No other label is an AND active stage label.
 
 ## State Reason
 

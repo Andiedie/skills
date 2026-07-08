@@ -80,5 +80,5 @@ Validation:
 - `CONTEXT.md`, ADRs, backend contract, backend references, workflow docs, and skill instructions use the same terminology.
 - Every workflow skill reads `.and/config.yml` before backend-specific state operations.
 - Backend references explain where to read and write stage state, State Reason, Package Contract, containment, dependencies, external blockers, ownership, receipts, implementation artifacts, and lifecycle outcomes.
-- GitHub-native examples preserve current GitHub issue behavior.
+- GitHub-native examples follow the GitHub-native backend reference.
 - Markdown-file-based examples can run from intake through sweep without inventing storage rules.

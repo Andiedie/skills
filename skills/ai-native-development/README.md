@@ -35,4 +35,4 @@ Install `ai-native-backend-contract` with any individually installed AI-native w
 
 ## Acknowledgements
 
-This workflow builds on [Matt Pocock's skills repository](https://github.com/mattpocock/skills), especially `grill-with-docs`, `implement`, `to-prd`, and `to-issues`. The AI-native loop adapts `grill-with-docs` into `issue-grill` so clarification records backend-safe packaging input instead of local doc edits, adapts `implement` into `issue-implement` for claimed worktree-isolated execution, and adapts the PRD and tracer-bullet issue ideas to this repository's backend model, PRD package model, and claim/relationship rules.
+This workflow builds on [Matt Pocock's skills repository](https://github.com/mattpocock/skills), especially its grill interview, implementation, PRD, and tracer-bullet issue practices. AND expresses those practices through its backend contract, package model, and ownership rules.

@@ -261,7 +261,7 @@ Receipt body shape is owned by the calling workflow skill.
 
 Ownership is receipt-only in this backend. Record claims as append-only receipts under `receipts/`.
 
-The current owner is derived from the latest valid claim receipt. Release and override receipts are not part of the first-stage backend contract unless the claiming or sweep skill adds them later. Do not add ownership frontmatter fields to `package.md` or child slice files.
+The current owner is derived from ownership receipts. The latest valid ownership receipt determines ownership: claim sets the owner, release clears the owner, and override replaces the owner. Do not add ownership frontmatter fields to `package.md` or child slice files.
 
 ## Implementation Artifacts
 

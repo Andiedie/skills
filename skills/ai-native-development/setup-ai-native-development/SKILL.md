@@ -73,7 +73,7 @@ Setup is complete when:
    - Write the backend minimum: GitHub labels for `github-native` when approved, or `.and/work` for `markdown-file-based`.
    - Update the existing agent entrypoint instead of creating a duplicate.
    - Create or update project-specific docs only when they record real repository-specific facts.
-   - Completion criterion: future agents can discover the AND loop from repository state without rereading the setup conversation.
+   - Completion criterion: future agents can discover the AND loop from repository state alone.
 
 8. Report the receipt.
    - Report what was configured, which backend was selected, which files or backend labels changed, which external skills are missing when any, how to install missing skills, and the next workflow skill.
@@ -86,8 +86,7 @@ Setup is complete when:
 Use GitHub-native when GitHub issues are the workflow state source and native relationships are available.
 
 - Create or reuse only these AND labels: `needs-triage`, `needs-info`, `needs-pack`, `ready-for-agent`, `parent-prd`.
-- Do not create `closed`, `in-progress`, `in-review`, `ready-for-human`, or backend duplicate labels.
-- Do not create `wontfix` unless the repository already uses close-reason labels and the user wants to preserve that convention.
+- Close-reason labels are repository policy and outside the required AND label set; do not create or modify them during AND setup.
 - If native parent/sub-issue or blocked-by/blocking support is unavailable, recommend resolving GitHub capability or using `markdown-file-based`; do not silently degrade.
 
 ### Markdown-File-Based
@@ -162,7 +161,7 @@ Avoid long `none` sections, full workflow tables, copied backend schemas, and se
 - Do not migrate existing issues or work records unless the user explicitly asks.
 - Do not configure more than one workflow state backend.
 - Do not create GitHub and markdown workflow state in parallel.
-- Do not add fields beyond the first `.and/config.yml` schema.
+- Keep `.and/config.yml` within the v1 schema: `version` and `workflow_state_backend` only.
 - Do not invent public stage states beyond the AND active stage set.
 - Do not create duplicate agent entrypoints.
 - Do not create project-specific docs unless they record real repository-specific facts.

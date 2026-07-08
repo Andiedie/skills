@@ -133,14 +133,6 @@ Matt skills used as references or adjacent tools:
 | `ask-matt` | Route general Matt-style engineering skill questions. |
 | `setup-matt-pocock-skills` | Configure Matt's skill set in a repository that wants it. |
 
-Adapted reference skills:
-
-| Matt skill | Adapted here as |
-| --- | --- |
-| `grill-with-docs` | `issue-grill`, which records backend-safe packaging input instead of local doc edits. |
-| `implement` | `issue-implement`, which adds claimed delivery units, backend source of truth, and isolated worktrees. |
-| `to-prd` and `to-issues` | `issue-pack`, which publishes this workflow's PRD package, relationship, backend, and claim model. |
-
 ## Maintain These Skills
 
 - Change loop rules in [delivery loop](delivery-loop.md), then update any affected `SKILL.md` files.
@@ -152,4 +144,4 @@ Adapted reference skills:
 
 ## Acknowledgements
 
-This workflow builds on [Matt Pocock's skills repository](https://github.com/mattpocock/skills). It adapts `grill-with-docs` into `issue-grill`, adapts `implement` into `issue-implement`, and adapts the PRD and tracer-bullet issue patterns from `to-prd` and `to-issues` to this repository's delivery loop, backend model, and ownership rules.
+This workflow builds on [Matt Pocock's skills repository](https://github.com/mattpocock/skills). AND expresses the relevant grill interview, implementation, PRD, and tracer-bullet issue practices through its delivery loop, backend model, and ownership rules.

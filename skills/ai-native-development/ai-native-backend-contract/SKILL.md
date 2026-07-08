@@ -25,7 +25,7 @@ Use it before an AI-native workflow skill reads, writes, validates, or reasons a
 3. Read exactly one backend reference.
    - For `github-native`, read [backends/github-native.md](backends/github-native.md).
    - For `markdown-file-based`, read [backends/markdown-file-based.md](backends/markdown-file-based.md).
-   - Do not read the other backend unless doing setup, migration design, sweep validation, or an explicit comparison.
+   - Do not read the other backend unless doing setup, backend change design, sweep validation, or an explicit comparison.
    - Completion criterion: the calling skill knows the configured representation for the operation it is about to perform.
 
 4. Return to the calling workflow skill.

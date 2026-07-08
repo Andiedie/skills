@@ -204,9 +204,9 @@ version: 1
 workflow_state_backend: markdown-file-based
 ```
 
-Keep the first config schema this small. Do not add label mappings, work-root overrides, stale-claim thresholds, branch prefixes, or other fields in the first stage.
+Version 1 config has exactly `version` and `workflow_state_backend`. Backend policy, label names, claim rules, branch conventions, and storage details belong in the backend contract, backend references, or workflow skills.
 
-Use [AI-native backend contract](../ai-native-backend-contract/SKILL.md) before changing backend behavior. The two first-stage backend references are:
+Use [AI-native backend contract](../ai-native-backend-contract/SKILL.md) before changing backend behavior. The supported backend references are:
 
 - [GitHub-native backend](../ai-native-backend-contract/backends/github-native.md);
 - [Markdown-file-based backend](../ai-native-backend-contract/backends/markdown-file-based.md).
