@@ -81,7 +81,7 @@ After backup, check whether the cleared repo already has the Matt Pocock setup o
 
 If any are missing and the user wants Matt Pocock engineering skills, prepare a setup evidence summary before stopping. Read only setup-relevant evidence from the cleared repo, `ledger.md`, and `moved-docs/`: prior or current Agent skills blocks, context layout files, ADR locations, `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`, `docs/agents/domain.md`, and `.scratch/` issue-tracker clues.
 
-Treat the cleared repo as the target baseline. Treat backed-up setup files as evidence for the manual setup conversation, not authority to restore old structure. Do not inspect live issue tracker labels, choose label vocabulary, restore old setup docs, or reproduce that skill's product-governance questions here.
+Treat the cleared repo as the target baseline. Treat backed-up setup files as evidence for the setup evidence summary, not authority to restore old structure. Do not inspect live issue tracker labels, choose label vocabulary, restore old setup docs, or reproduce that skill's product-governance questions here.
 
 Stop and tell the user to manually run `setup-matt-pocock-skills`, passing the setup evidence summary, then resume this reseed.
 
