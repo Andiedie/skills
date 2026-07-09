@@ -51,7 +51,7 @@ Setup is complete when:
    - Do not emulate unavailable GitHub-native relationships with markdown task lists, labels, or comments.
 
 4. Check external skill readiness.
-   - Check `grilling`, `domain-modeling`, `tdd`, and `code-review`.
+   - Check `grilling`, `tdd`, and `code-review`.
    - Missing external skills are environment readiness gaps, not repository setup failures.
    - Do not install external skills unless the user explicitly asks.
    - Do not block repository setup for missing external skills unless the user asked for full-ready setup or the missing skill blocks the setup itself.

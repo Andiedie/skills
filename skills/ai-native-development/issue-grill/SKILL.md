@@ -8,20 +8,17 @@ disable-model-invocation: true
 
 Issue Grill runs a relentless decision interview for `needs-info` work that cannot be packaged until human product, domain, architecture, naming, testing, access, or acceptance decisions are resolved.
 
-It uses `grilling` and `domain-modeling` behavior, but records backend-safe package input instead of editing local docs.
+It uses `grilling` for interview behavior and [backend-safe domain modeling](backend-safe-domain-modeling.md) for domain, naming, glossary, and ADR judgment.
 
 ## External Skill Behavior
 
-Run `grilling` with the `domain-modeling` lens:
+Run `grilling` for interview mechanics:
 
 - ask one question at a time;
 - include a recommended answer for each question;
 - explore code and docs before asking verifiable questions;
-- challenge glossary conflicts and fuzzy terms;
-- probe concrete scenarios;
-- identify ADR candidates when a decision is hard to reverse, surprising without context, and a real tradeoff.
 
-Workflow override: when `domain-modeling` would update `CONTEXT.md`, an ADR, glossary, or another local doc, record the proposed glossary, ADR, or documentation change in the workflow backend as package input.
+When domain, naming, glossary, or ADR judgment affects package correctness, read [backend-safe-domain-modeling.md](backend-safe-domain-modeling.md). Its outputs belong in Issue Grill Notes as package input, not in local docs.
 
 ## Backend Contract
 
@@ -53,9 +50,9 @@ When this is not a grill case, report the existing State Reason question, route 
 
 ## External Skills
 
-`grilling` and `domain-modeling` are required runtime skills. Verify both are available before the interview.
+`grilling` is the only required external runtime skill. Verify it is available before the interview.
 
-If either is missing, stop with the exact missing skill and route to setup or installation. Do not simulate them.
+If it is missing, stop with the exact missing skill and route to setup or installation. Do not simulate it.
 
 ## Session Rules
 
@@ -82,7 +79,8 @@ If either is missing, stop with the exact missing skill and route to setup or in
    - Completion criterion: the interview target, current blocker, owner, and decision scope are explicit, or the work is routed to the accountable owner without grilling.
 
 2. Run the interview.
-   - Use `grilling` with the `domain-modeling` lens.
+   - Use `grilling` for interview mechanics.
+   - Read and apply [backend-safe-domain-modeling.md](backend-safe-domain-modeling.md) when domain, naming, glossary, or ADR judgment affects package correctness.
    - Ask one decision question, recommend an answer, wait for the user, then continue.
    - Explore code, tests, docs, and existing workflow state before asking facts the repository can answer.
    - Walk decision dependencies one by one; probe scenarios and challenge terms when they affect package correctness.

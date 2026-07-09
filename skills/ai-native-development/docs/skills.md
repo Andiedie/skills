@@ -112,7 +112,6 @@ The workflow expects these external skills to be installed:
 | Skill | Used for |
 | --- | --- |
 | `grilling` | `issue-grill` runs the interview. |
-| `domain-modeling` | `issue-grill` uses domain vocabulary and ADR judgment without writing local docs. |
 | `tdd` | Implementation work uses test-first practice when the change benefits from it. |
 | `code-review` | Implementation work uses a review pass before finalizing. |
 
