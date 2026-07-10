@@ -24,7 +24,9 @@ Do not infer backend ownership, receipt, child, relationship, or implementation 
 
 If one is missing, stop with the exact missing skill and route to `setup-ai-native-development` or the documented install command. Do not simulate missing skills.
 
-Use `tdd` where practical at the package's agreed seam. Run `code-review` before finalizing the implementation diff.
+Invoke `tdd` where test-first work is practical, supplying the testing seam already confirmed in the Package Contract. Invoke `code-review` before finalizing the implementation diff, supplying both the implementation fixed point and the complete Package Contract as its explicit Spec source.
+
+Do not copy either skill's testing, smell, or review rules into this skill. AND has already supplied the tracker and Spec context; do not run external setup or tracker discovery for these invocations.
 
 ## Preconditions
 
@@ -44,25 +46,27 @@ Reuse an existing worktree only when it is linked to the same delivery unit and 
 ## Process
 
 1. Resolve claimed delivery unit.
-   - Read the claim record, ownership evidence, Package Contract, accepted `issue-grill` decisions, blockers, linked implementation artifacts, and verification expectations.
+   - Read the claim record, ownership evidence, Package Contract, accepted `issue-grill` decisions, blockers, linked implementation artifacts, agreed testing seam, and verification expectations.
    - For a PRD package, read the parent PRD and every child record.
    - Treat the configured backend package as the implementation contract.
-   - Completion criterion: source-of-truth links, claim scope, blockers, child coverage, and verification expectations are known.
+   - If the Package Contract does not state the expected behavior, or does not state an agreed testing seam or explicit non-test verification strategy, stop before tests or implementation changes. Route a packaging omission to `issue-pack`; route a missing human testing decision to `issue-grill`. Do not make or reconfirm that decision during implementation.
+   - Completion criterion: source-of-truth links, claim scope, blockers, child coverage, expected behavior, agreed seam or verification strategy, and verification expectations are known.
 
 2. Enter isolated worktree.
    - Inspect current branch, `git status`, existing worktrees, and linked implementation artifact evidence.
    - Reuse only a safe linked worktree.
    - Otherwise create a dedicated branch/worktree using repository convention.
-   - Completion criterion: implementation is happening in one isolated worktree whose branch is tied to the claimed delivery unit and contains no unrelated changes.
+   - Before changing tests, code, or docs, resolve and retain the full commit SHA from which the delivery-unit diff must be reviewed. For a new worktree, use its branch creation point. For a reused worktree, verify the fixed point predates all changes for this delivery unit.
+   - Completion criterion: implementation is happening in one isolated worktree whose branch is tied to the claimed delivery unit and contains no unrelated changes, and the review fixed point resolves to the intended base commit.
 
 3. Plan from Package Contract.
-   - Derive the plan from the Package Contract, child slices, accepted grill decisions, required documentation or domain updates, true dependency blockers, and documented verification strategy.
+   - Derive the plan from the Package Contract, child slices, accepted grill decisions, required documentation or domain updates, true dependency blockers, agreed testing seam, and documented verification strategy.
    - For a PRD package, use child slice order from true dependency relationships; children may be delegated internally, but the parent claim owner remains responsible for integration.
    - If the package is wrong, verification is unclear, or scope is inconsistent, stop and route back instead of privately changing scope.
    - Completion criterion: the plan covers the full claimed delivery unit and needs no unconfirmed scope change.
 
 4. Implement and verify.
-   - Use `tdd` for substantial behavior changes when test-first work is practical at the package's agreed seam.
+   - When test-first work is practical, invoke `tdd` with the pre-agreed seam as confirmed input. Do not ask the user to confirm the same seam again.
    - Implement incrementally.
    - Run focused tests regularly.
    - Run typechecking regularly when available.
@@ -72,15 +76,17 @@ Reuse an existing worktree only when it is linked to the same delivery unit and 
    - Completion criterion: code, docs, and tests satisfy the Package Contract, or the smallest blocker is named with evidence.
 
 5. Review.
-   - Run the repository review flow when defined.
-   - Run `code-review` for the implementation diff.
+   - Commit the scoped delivery-unit changes as the review candidate. The external review compares committed `HEAD` with the fixed point, so do not invoke it while relevant changes exist only in the working tree.
+   - Verify the retained fixed point still resolves and covers the complete delivery-unit diff.
+   - Invoke `code-review` with that fixed point and the configured-backend Package Contract as the explicit Spec source. Include all child records when they refine a PRD package's acceptance or verification requirements.
+   - Do not make `code-review` rediscover the tracker or Spec.
    - Do not claim review ran unless it actually ran.
-   - Fix actionable findings that are within scope.
-   - Route spec or scope issues back to `issue-pack` or `issue-grill`.
+   - Fix implementation defects that are actionable within the Package Contract, update the scoped commit, then rerun relevant verification and review against the same fixed point.
+   - Route Package Contract or scope defects to `issue-pack`. Route missing human-owned judgments to `issue-grill` or the owner named by the State Reason.
    - Completion criterion: review is clean, or remaining findings are explicitly outside scope or require human judgment.
 
-6. Commit, record evidence, and report.
-   - Commit only delivery-unit changes on the isolated branch.
+6. Record evidence and report.
+   - Verify all delivery-unit changes are contained in scoped commits on the isolated branch and no relevant change remains only in the working tree.
    - Record an implementation receipt through the configured backend.
    - Link branch, commit, PR, CI, or review result when available.
    - Do not close, merge, or release claim unless repository policy or the user authorizes it.
@@ -97,6 +103,7 @@ Use this receipt through the configured backend reference:
 Implemented by: <actor>
 Claim unit: <single issue package or PRD package>
 Branch / worktree: <branch and path>
+Fixed point: <full base commit SHA>
 Commit / PR: <commit, PR, or none yet>
 Verification:
 - <tests, typecheck, manual verification, CI, or none with reason>

@@ -213,6 +213,8 @@ Use [AI-native backend contract](../ai-native-backend-contract/SKILL.md) before 
 
 The backend is the source of truth for delivery-loop state. GitHub-native uses GitHub issues, labels, native relationships, comments, and assignees. Markdown-file-based uses `.and/work` and does not use GitHub issues as a discussion, notification, mirror, or synchronization surface. Branches, commits, pull requests, CI, and reviews are implementation artifacts referenced by workflow state; they do not carry workflow state themselves.
 
+An explicitly presented external PR enters the loop through one configured-backend work record. Intake records it as evidence; triage may inspect its diff and checks through that work record.
+
 Keep four kinds of information separate in any backend:
 
 | Information | Representation | Purpose |
@@ -262,14 +264,14 @@ State Reason history is append-only. When the reason materially changes, append 
 
 ## Pack And Dependencies
 
-Large work should be expressed as a PRD package: one parent PRD plus child records that track vertical slices. The PRD package is the delivery unit.
+Work that needs internal slices should be expressed as a PRD package: one parent PRD plus child records that track execution. The PRD package is the delivery unit.
 
 Pack rules:
 
 - `issue-pack` is the only workflow skill that creates `ready-for-agent` delivery units.
 - Use the configured backend's parent PRD marker for the parent work record.
 - A parent PRD can carry `ready-for-agent`; that means the whole PRD package is ready to pick, claim, and implement.
-- Child records are independently-grabbable tracer-bullet slices inside the PRD package. A claiming agent may delegate them to subagents while keeping one owner for the package.
+- Child records are normally independently verifiable tracer-bullet slices inside the PRD package. A claiming agent may delegate them to subagents while keeping one owner for the package. A mechanical wide refactor may instead use expand, migrate, and contract slices when its blast radius prevents ordinary vertical slices from landing green.
 - Do not mark PRD children `ready-for-agent`; they are not independent pick targets.
 - If a slice should be independently picked by another agent, make it a standalone issue rather than a PRD child.
 - Do not duplicate the configured containment relationship with a second representation.
@@ -326,7 +328,7 @@ Skill directions:
 - `issue-pack`: create the executable delivery unit; route to `issue-grill` when human decisions block packaging.
 - `issue-pick`: choose work read-only; do not mutate the backend.
 - `issue-claim`: perform the ownership side effects and point to `issue-implement`.
-- `issue-implement`: execute the claimed delivery unit in an isolated worktree from the configured backend source of truth.
+- `issue-implement`: execute the claimed delivery unit in an isolated worktree, use the Package Contract's agreed testing seam, and review the fixed-point diff against that contract as the Spec.
 - `issue-sweep`: audit state, claim, and relationship drift.
 - `ask-andie`: recommend the next skill from the current state and context.
 

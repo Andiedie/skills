@@ -34,7 +34,7 @@ Both shapes require the same contract strength. A single issue package is not a 
 - User stories must be numbered and use `As an <actor>, I want <feature>, so that <benefit>.`
 - Use story counts as coverage guidance, not a word-count target: simple single issue package 1-3, normal single issue package 3-6, PRD package 6-12, larger PRD package more than 12 only when distinct actors, modes, edge cases, or acceptance paths require it.
 - Documentation proposals from `issue-grill` must become package requirements, acceptance criteria, or child slices. Do not apply them locally during pack.
-- Prototype snippets may be included only when they express a confirmed decision more precisely than prose, such as a state machine, reducer shape, schema, type shape, or API payload shape.
+- Decision-rich snippets may be included only when they express a confirmed decision more precisely than prose, such as a state machine, reducer shape, schema, type shape, or API payload shape. Keep only the contract-bearing excerpt.
 
 ## Stop Routes
 
@@ -70,7 +70,9 @@ Do not ask the blocker in chat from inside `issue-pack`; record the blocker and 
 4. Draft the Package Contract.
    - Use the Package Contract template for both single issue packages and PRD parents.
    - For PRD packages, create child slices with the PRD Child Slice template.
-   - Child slices must be tracer-bullet vertical slices: narrow, complete paths through the system that are demoable or verifiable on their own.
+   - By default, child slices must be tracer-bullet vertical slices: narrow, complete paths through the system that are demoable or verifiable on their own.
+   - A wide refactor is possible only when one mechanical change has a blast radius that prevents ordinary vertical slices from landing green. When and only when that trigger is present, read [wide-refactors.md](wide-refactors.md) and use its package shape.
+   - Do not use wide-refactor guidance merely because work is large, cross-cutting, or touches many files.
    - If prefactoring is needed, make it an explicit implementation decision or the first child slice.
    - Child slices may be independently grabbable by subagents working under the parent PRD claim, but the parent PRD remains the public pick and claim target.
    - Completion criterion: an implementation agent can start from the package without replaying the discussion, and every child slice maps to parent stories, acceptance, and verification.
@@ -140,10 +142,6 @@ Summary: <one-line behavior change>
 ### PRD Child Slice
 
 ```markdown
-## Parent
-
-<parent PRD link>
-
 ## What to build
 
 <end-to-end behavior>
@@ -167,10 +165,6 @@ Summary: <one-line behavior change>
 ## Documentation / domain updates
 
 - <glossary, ADR, context, README, runbook, or none>
-
-## Blocked by
-
-<none or true execution dependencies>
 
 ## Out of scope
 ```

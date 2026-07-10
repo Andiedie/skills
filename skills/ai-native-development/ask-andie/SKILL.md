@@ -18,24 +18,23 @@ If setup is missing, invalid, unsupported, or the backend contract is unavailabl
 
 ## Route Map
 
-Main loop: `issue-intake` -> `issue-triage` -> `issue-grill` when needed -> `issue-pack` -> `issue-pick` -> `issue-claim` -> `issue-implement` -> close/learn.
+Main loop: `issue-intake` -> `issue-triage` -> `issue-grill` when needed -> `issue-pack` -> `issue-pick` -> `issue-claim` -> `issue-implement`.
 
 Keep clarification and packaging in one context until the package is published. After a PRD package is claimed, its owner may use child records as subagent work units grounded in the parent PRD plus the child record.
 
 | Surface / evidence | Route |
 | --- | --- |
 | New repo, missing `.and/config.yml`, invalid backend, or missing backend contract | `setup-ai-native-development` |
-| Raw idea, bug report, screenshot, feedback, or note not yet tracked | `issue-intake` |
+| Untracked raw signal, including an external PR or local diff with no work record | `issue-intake` |
 | Existing work with unclear state, new activity, duplicate or closure question, or missing State Reason | `issue-triage` |
 | `needs-info` with `Resume with: issue-grill` or `Cause: decision-needed` | `issue-grill` |
 | `needs-info` waiting for facts, access, external state, or acceptance | Route the State Reason question to its owner; resume with the recorded skill |
 | `needs-pack` | `issue-pack` |
 | Ready work slate with no chosen delivery unit | `issue-pick` |
 | Specific ready single issue package or parent PRD package | `issue-claim` |
-| Claimed delivery unit | `issue-implement` |
+| Claimed delivery unit, or a branch, diff, or linked PR tied to its claim | `issue-implement` |
 | Stale claim, partial PRD claim, relationship drift, contradictory state, or blocked ready work | `issue-sweep` |
-| Local branch or diff tied to claimed work | `issue-implement` or the repository review/finish route |
-| Local branch or diff not tied to workflow state | Ask whether to intake/triage it or treat it outside AND |
+| Completed implementation waiting on merge, closure, or acceptance authority | Ask the accountable owner one concrete question |
 
 ## Evidence Budget
 
@@ -54,7 +53,7 @@ Do not perform full triage, pick ranking, package validation, implementation pla
 
 ## When Invoked
 
-1. Identify the current surface: raw request, existing work, ready slate, specific delivery unit, claimed work, local branch/diff, backend drift, setup gap, or outside-AND work.
+1. Identify the current surface: raw request or external PR, existing work, ready slate, specific delivery unit, claimed work, local branch/diff, backend drift, or setup gap.
 2. Check setup when workflow-backed routing is needed. If setup is missing or unsupported, route to `setup-ai-native-development`.
 3. Read minimal routing evidence. The route should be justifiable with one or two facts.
 4. Choose exactly one next skill, one owner question, or one setup/install route. Do not run the next workflow skill inside `ask-andie`.
@@ -68,7 +67,7 @@ Use this compact route card:
 
 ```markdown
 Current position: <stage or surface>
-Next skill: <skill>
+Next: <skill or accountable owner action>
 Why: <one sentence>
 Rule to learn: <one sentence>
 ```
@@ -79,7 +78,6 @@ Add optional lines only when useful:
 Evidence: <routing facts>
 Watch-out: <real blocker, claim, PRD child, stale state, or setup issue>
 Human input needed: <one exact question>
-Skip ask next time: <recognizable condition>
 ```
 
 Do not print empty optional sections. Do not include full issue bodies, full State Reasons, candidate lists, Package Contracts, child records, or implementation plans.
