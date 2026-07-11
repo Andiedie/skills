@@ -1,33 +1,58 @@
 # Backend-Safe Domain Modeling
 
-Use this lens inside `and-clarify` when package correctness depends on domain terms, naming, glossary conflicts, architectural decisions, or documentation implications.
+This reference defines the domain-modeling discipline used throughout every `and-clarify` interview.
 
-The goal is to keep the domain-modeling discipline while respecting AND's clarification boundary: record package input in the workflow backend, not local repository docs.
+Produce precise package input without editing repository documentation before the delivery unit is claimed and implemented.
 
-## Behavior
+## Active Discipline
 
-- Challenge glossary conflicts. If repository language defines a term one way and the current discussion uses it another way, surface the conflict and ask which meaning should govern the package.
-- Sharpen fuzzy or overloaded language. Propose precise canonical terms when words such as "account", "record", "sync", "state", or "done" could mean several things.
-- Discuss concrete scenarios. Use edge cases and specific examples to force clear boundaries between concepts.
-- Cross-reference with code and docs. Check repository facts before asking questions the codebase can answer, and surface contradictions between stated behavior and existing implementation.
-- Identify ADR candidates when all three are true: the decision is hard to reverse, surprising without context, and the result of a real tradeoff.
+- Read the relevant `CONTEXT.md`, `CONTEXT-MAP.md`, ADRs, code, and tests before asking questions those sources can answer.
+- Challenge conflicts with established language as soon as they appear.
+- Sharpen vague or overloaded words into one canonical term.
+- Test domain boundaries with concrete scenarios and edge cases.
+- Surface contradictions between the proposed model, existing docs, and current behavior.
+- Continue until required terminology and architectural decisions are precise enough to package, or one human-owned decision remains as the blocker.
 
-## Backend-Safe Outputs
+## Choose The Authoritative Home
 
-Capture confirmed results as `and-clarify` package input:
+Put a confirmed result in the place future readers must consult:
 
-- glossary proposals;
-- ADR candidates;
-- documentation updates to include in the package;
-- acceptance implications;
-- unresolved domain questions.
+- Use the Package Contract for delivery-local scope, behavior, acceptance, and reversible implementation choices.
+- Require a `CONTEXT.md` update when a project-specific, implementation-independent term must govern future work. General programming concepts do not belong there.
+- Require an ADR only when the decision is hard to reverse, surprising without context, and the result of a real tradeoff. All three conditions must hold.
+- Require another repository document update when a stable interface, operational rule, or project fact has an established authoritative home outside the Package Contract.
 
-When a decision is not confirmed, record it as a remaining blocker or State Reason instead of a resolved decision.
+If no relevant context or ADR location exists, propose the smallest new artifact. File creation remains lazy and belongs to implementation.
+
+## Artifact-Ready Outputs
+
+Return artifact-ready confirmed content, not merely reminders to update documentation.
+
+For a canonical term, record:
+
+```markdown
+Target: <existing or proposed CONTEXT.md path>
+
+**<Preferred term>**:
+<One or two sentence implementation-independent definition.>
+_Avoid_: <ambiguous or rejected alternatives, when relevant>
+```
+
+For an ADR, record:
+
+```markdown
+Proposed title: <short decision title>
+Target: <existing or proposed ADR directory>
+Draft: <one to three sentences stating the context, decision, and why>
+Relevant options or consequences: <only when they add durable value>
+```
+
+For another documentation update, record the target document and section, the precise content to add or replace, and why that document is authoritative.
 
 ## Boundaries
 
-- Do not update `CONTEXT.md` during clarification.
-- Do not create ADR files during clarification.
-- Do not modify repository docs during clarification.
-- Do not treat guesses, partial answers, or unaccepted recommendations as glossary proposals or ADR candidates.
-- Do not make `and-pack` rerun the domain interview. If package correctness depends on missing domain judgment, route back to `and-clarify`.
+- Preserve exact confirmed meaning without editing repository files during clarification.
+- Keep `CONTEXT.md` entries implementation-independent, project-specific, concise, and opinionated about preferred language.
+- Keep ADRs sparse; easy, obvious, or no-tradeoff decisions remain outside ADRs.
+- Keep delivery-local decisions in the Package Contract instead of manufacturing permanent documentation.
+- Keep unconfirmed language, decisions, and document drafts as blockers rather than resolved outputs.
