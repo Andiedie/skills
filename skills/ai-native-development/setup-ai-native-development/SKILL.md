@@ -10,7 +10,7 @@ Set up a repository to run the AND delivery loop with exactly one configured wor
 
 This is a repository bootstrap skill, not a workflow handbook. Discover the repository, choose or verify the backend, write the minimal configuration, update the existing agent entrypoint, check external skill readiness, and report the next workflow skill.
 
-Use the delivery-loop docs and `ai-native-backend-contract` as the source of truth for workflow and backend rules. Do not copy those rules into each target repository unless they are real repository-specific facts.
+Use the installed workflow skills as the source of truth for runtime behavior and `ai-native-backend-contract` for backend rules. Use the delivery-loop docs to explain the conceptual model. Do not copy package rules into each target repository unless they are real repository-specific facts.
 
 ## Setup Approach
 

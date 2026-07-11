@@ -1,23 +1,19 @@
 # AI-native development
 
-This package defines the AI-native delivery loop and the workflow skills that turn ambiguous signals into packed, claimed, and implemented software changes.
+This package defines the AND delivery loop and the workflow skills that turn ambiguous signals into executable, owned, and verified software changes.
 
-Read this when you need to choose the next issue workflow step, understand the stage-state and relationship rules, or maintain one of the workflow skills.
-
-## Start here
+## Start Here
 
 | Need | Read |
 | --- | --- |
-| Understand the loop, stage state, backend relationships, and claim rules | [Delivery loop](docs/delivery-loop.md) |
-| Understand configured workflow state backends | [AI-native backend contract](ai-native-backend-contract/SKILL.md) |
-| Check GitHub-native or markdown-file-based representation rules | [Backend references](ai-native-backend-contract/backends/) |
-| Dry-run the loop under either backend | [Workflow examples](ai-native-backend-contract/workflow-examples.md) |
-| Choose the right skill for the current work | [Skills](docs/skills.md) |
-| Edit a specific workflow skill | The relevant `skills/ai-native-development/<skill>/SKILL.md` |
+| Understand why AND exists and how work moves through the loop | [Delivery loop](docs/delivery-loop.md) |
+| Choose the right skill for the current work | [Skills guide](docs/skills.md) |
+| Understand backend-neutral workflow state | [Backend contract](ai-native-backend-contract/backend-contract.md) |
+| Apply GitHub-native or markdown-file-based representation rules | [Backend references](ai-native-backend-contract/backends/) |
+| Validate an end-to-end backend flow | [Workflow examples](ai-native-backend-contract/workflow-examples.md) |
+| Maintain this package | [Package instructions](AGENTS.md) |
 
-## Skills
-
-This package contains the AI-native workflow and reference skills:
+## Included Skills
 
 - `ai-native-backend-contract`
 - `ask-andie`
@@ -31,4 +27,4 @@ This package contains the AI-native workflow and reference skills:
 - `issue-sweep`
 - `setup-ai-native-development`
 
-Install `ai-native-backend-contract` with any individually installed AI-native workflow skill; it supplies the configured backend rules.
+See the repository [README](../../README.md) for installation commands. Install `ai-native-backend-contract` with any individually installed AND workflow skill because it supplies the configured backend rules.

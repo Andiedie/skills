@@ -190,4 +190,4 @@ Do not output empty groups, all passed checks, full issue bodies, long raw backe
 - Do not change scope, package shape, dependency intent, blocker status, lifecycle outcome, or ownership without explicit approval.
 - Do not release or override claims unless explicitly approved.
 - Do not apply fixes that were not reported and approved for this run.
-- Do not create new workflow rules inside sweep findings; update workflow docs or backend references separately.
+- Do not create new workflow rules inside sweep findings; route changes to the owning workflow skill, backend contract, or backend reference.
