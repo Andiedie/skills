@@ -67,10 +67,6 @@ It includes:
 
 - `install-skills`: install, update, inspect, and troubleshoot `npx skills` managed skills.
 
-### Code Review
-
-- `codex-pr-review-loop`: run a GitHub PR through `@codex review`, fix agent-solvable feedback, and continue until clean or blocked on user judgment.
-
 ## AND Runtime Dependencies
 
 The AI-native development loop builds on [Matt Pocock's skills repository](https://github.com/mattpocock/skills). Thanks to Matt Pocock and the repository's contributors for the engineering workflows this package composes with.
@@ -100,7 +96,7 @@ Snapshot from my local skill environment on 2026-07-11. This is a factual person
 | [Andiedie/cd2-skills](https://github.com/Andiedie/cd2-skills) | `cd2` |
 | [Andiedie/loopmark](https://github.com/Andiedie/loopmark) | `loopmark` |
 | [Andiedie/openlist-skills](https://github.com/Andiedie/openlist-skills) | `openlist` |
-| [Andiedie/skills](https://github.com/Andiedie/skills) | `and-backend-contract`, `and-claim`, `and-clarify`, `and-implement`, `and-intake`, `and-pack`, `and-pick`, `and-sweep`, `and-triage`, `ask-andie`, `codex-pr-review-loop`, `documentation-maintenance`, `documentation-reseed`, `install-skills`, `normalize-agent-instructions`, `setup-and` |
+| [Andiedie/skills](https://github.com/Andiedie/skills) | `and-backend-contract`, `and-claim`, `and-clarify`, `and-implement`, `and-intake`, `and-pack`, `and-pick`, `and-sweep`, `and-triage`, `ask-andie`, `documentation-maintenance`, `documentation-reseed`, `install-skills`, `normalize-agent-instructions`, `setup-and` |
 | [mattpocock/skills](https://github.com/mattpocock/skills) | `ask-matt`, `code-review`, `codebase-design`, `diagnosing-bugs`, `domain-modeling`, `grill-me`, `grill-with-docs`, `grilling`, `handoff`, `implement`, `improve-codebase-architecture`, `prototype`, `research`, `scaffold-exercises`, `setup-matt-pocock-skills`, `tdd`, `teach`, `to-spec`, `to-tickets`, `triage`, `wayfinder`, `writing-great-skills` |
 | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | `web-design-guidelines`, `writing-guidelines` |
 | [vercel-labs/skills](https://github.com/vercel-labs/skills) | `find-skills` |
