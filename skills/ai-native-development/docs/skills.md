@@ -43,7 +43,7 @@ All workflow skills use `ai-native-backend-contract` when they need backend-neut
 
 ### `issue-intake`
 
-- Use when: a raw signal should become durable backend work.
+- Use when: a raw signal, including an explicitly presented external PR, should become durable backend work.
 - Produces: a clear work record with evidence and open triage questions.
 - Must not: decide value, mark readiness, pack, claim, create relationships, or implement.
 - Usually next: `issue-triage`.
@@ -51,7 +51,7 @@ All workflow skills use `ai-native-backend-contract` when they need backend-neut
 ### `issue-triage`
 
 - Use when: a recorded work item needs a route.
-- Produces: lifecycle outcome with reason, `needs-info` with a State Reason, or `needs-pack`.
+- Produces: lifecycle outcome with reason, `needs-info` with a State Reason, or `needs-pack`. A linked PR may supply verification evidence, but triage reads and mutates the work record; an untracked PR routes to `issue-intake` first.
 - Must not: write a PRD, create child records, mark ready, claim, or implement.
 - Usually next: `issue-grill`, `issue-pack`, or human input.
 
@@ -87,7 +87,7 @@ All workflow skills use `ai-native-backend-contract` when they need backend-neut
 ### `issue-implement`
 
 - Use when: a delivery unit has been claimed and should be implemented.
-- Produces: implementation in an isolated worktree, focused and full verification, review result, and commit or PR evidence.
+- Produces: implementation in an isolated worktree, focused and full verification, review result, and commit or PR evidence. It supplies the Package Contract's agreed seam to `tdd`, and the retained diff fixed point plus Package Contract Spec to `code-review`.
 - Must not: implement unclaimed work, work from chat summaries instead of the configured backend source of truth, use a shared dirty worktree, or silently change scope.
 - Usually next: close, merge, route back to `issue-pack`, or route back to `issue-grill`.
 
@@ -131,3 +131,4 @@ npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill <mis
 - Put runtime rules in the relevant `SKILL.md`; package docs explain the workflow and shared vocabulary.
 - Keep the workflow skills together in this package.
 - Update the root `README.md` and `skills.sh.json` when skill names, descriptions, or groups change.
+- Whenever an AND skill is added, renamed, removed, or changes the loop, recheck every `ask-andie` route.

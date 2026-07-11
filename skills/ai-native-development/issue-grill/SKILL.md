@@ -8,15 +8,16 @@ disable-model-invocation: true
 
 Issue Grill runs a relentless decision interview for `needs-info` work that cannot be packaged until human product, domain, architecture, naming, testing, access, or acceptance decisions are resolved.
 
-It uses `grilling` for interview behavior and [backend-safe domain modeling](backend-safe-domain-modeling.md) for domain, naming, glossary, and ADR judgment.
+It invokes `grilling` as the authority for interview behavior and uses [backend-safe domain modeling](backend-safe-domain-modeling.md) for domain, naming, glossary, and ADR judgment.
 
-## External Skill Behavior
+## Authoritative Interview Behavior
 
-Run `grilling` for interview mechanics:
+Invoke `grilling` and follow it as the single source of truth for the interview. Its rules govern:
 
-- ask one question at a time;
-- include a recommended answer for each question;
-- explore code and docs before asking verifiable questions;
+- how questions and recommendations are presented;
+- how facts are investigated;
+- which choices belong to the human;
+- when shared understanding has been reached.
 
 When domain, naming, glossary, or ADR judgment affects package correctness, read [backend-safe-domain-modeling.md](backend-safe-domain-modeling.md). Its outputs belong in Issue Grill Notes as package input, not in local docs.
 
@@ -54,21 +55,18 @@ When this is not a grill case, report the existing State Reason question, route 
 
 If it is missing, stop with the exact missing skill and route to setup or installation. Do not simulate it.
 
-## Session Rules
+## Evidence And Confirmation
 
-- Ask one question at a time.
-- Provide a recommended answer for each question.
-- Explain why the question blocks packaging.
-- Explore the codebase instead of asking when the answer is verifiable.
-- Keep working notes in chat during the interview.
-- Do not write backend notes after each question, partial answer, or newly resolved decision.
+Keep facts and human-owned decisions distinct:
 
-## Decision Capture
+- A fact may be established from repository code, tests, docs, configured-backend state, or another authoritative source. Investigate it instead of asking the user when practical.
+- A human-owned decision is resolved only by an existing explicit maintainer decision in an authoritative source, a direct user answer, or the user's explicit acceptance of a recommendation.
+- Repository evidence may inform a recommendation or establish a fact. Existing implementation patterns alone do not authorize a product, domain, architecture, naming, testing, or acceptance choice.
+- Guesses, partial answers, ambiguous maintainer text, and unconfirmed recommendations remain blockers.
 
-- A resolved decision must come from repository evidence, a direct user answer, or the user's explicit acceptance of a recommended answer.
-- Record guesses, partial answers, and unconfirmed recommendations as blockers, not decisions.
-- The invocation plus interview confirmation authorizes normal backend recording. Do not ask for a second confirmation before writing confirmed decisions.
-- Ask before writing only when the target work record is ambiguous, the write would overwrite or contradict existing maintainer text, backend access is unclear, or the write would introduce unconfirmed judgment.
+Before recording a resolved session, obtain the final shared-understanding confirmation required by `grilling`. This is approval of the decisions, not a separate approval to write them. Once shared understanding is confirmed, normal backend recording and the `needs-info` to `needs-pack` transition require no second confirmation.
+
+Ask before writing only when the target work record is ambiguous, the write would overwrite or contradict existing maintainer text, backend access is unclear, or the write would introduce unconfirmed judgment. A paused session may record its one remaining blocker without claiming that shared understanding has been reached.
 
 ## Process
 
@@ -79,12 +77,10 @@ If it is missing, stop with the exact missing skill and route to setup or instal
    - Completion criterion: the interview target, current blocker, owner, and decision scope are explicit, or the work is routed to the accountable owner without grilling.
 
 2. Run the interview.
-   - Use `grilling` for interview mechanics.
+   - Invoke `grilling` and follow its interview behavior without replacing or restating it.
    - Read and apply [backend-safe-domain-modeling.md](backend-safe-domain-modeling.md) when domain, naming, glossary, or ADR judgment affects package correctness.
-   - Ask one decision question, recommend an answer, wait for the user, then continue.
-   - Explore code, tests, docs, and existing workflow state before asking facts the repository can answer.
-   - Walk decision dependencies one by one; probe scenarios and challenge terms when they affect package correctness.
-   - Completion criterion: every package-blocking decision is resolved, proven answerable from repository evidence, or captured as one specific remaining blocker.
+   - Apply the fact and human-owned decision evidence rules above as the interview resolves package blockers.
+   - Completion criterion: every package-blocking fact is established, every package-blocking decision has an allowed human source, or one specific remaining blocker is identified.
 
 3. Capture package inputs.
    - List resolved decisions and rationale.
@@ -93,7 +89,8 @@ If it is missing, stop with the exact missing skill and route to setup or instal
    - List documentation updates to include in the package.
    - List acceptance implications.
    - Identify any remaining blocker.
-   - Completion criterion: the package inputs are concise enough for `issue-pack` and do not require replaying the interview.
+   - When no blocker remains, obtain `grilling`'s final shared-understanding confirmation.
+   - Completion criterion: the package inputs are concise enough for `issue-pack` and do not require replaying the interview, and a resolved session has passed the shared-understanding gate.
 
 4. Record the backend note.
    - Write one backend note when the session resolves, pauses, the remaining blocker materially changes, or owner/resume skill/exit criteria materially changes.
@@ -144,6 +141,7 @@ When a blocker remains, write State Reason fields through the configured backend
 - Do not replace `grilling` with a checklist or multi-question form.
 - Do not update local docs, ADRs, glossary, implementation files, branches, or PRs during the grill.
 - Do not record guesses, partial answers, or unconfirmed recommendations as resolved decisions.
+- Do not infer a human-owned decision from repository evidence or implementation precedent.
 - Do not write backend notes after every question; write when the session resolves, pauses, or the blocker materially changes.
 - Do not pack, claim, implement, close, or merge work.
 - Do not use `issue-grill` for simple missing facts, access waits, external state waits, or direct acceptance input that does not need an interview.

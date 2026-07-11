@@ -32,7 +32,3 @@ This package contains the AI-native workflow and reference skills:
 - `setup-ai-native-development`
 
 Install `ai-native-backend-contract` with any individually installed AI-native workflow skill; it supplies the configured backend rules.
-
-## Acknowledgements
-
-This workflow builds on [Matt Pocock's skills repository](https://github.com/mattpocock/skills), especially its grill interview, implementation, PRD, and tracer-bullet issue practices. AND expresses those practices through its backend contract, package model, and ownership rules.

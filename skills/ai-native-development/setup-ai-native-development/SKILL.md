@@ -45,9 +45,11 @@ Setup is complete when:
    - Prepare `.and/config.yml` with only `version: 1` and `workflow_state_backend`.
 
 3. Check backend readiness.
-   - For `github-native`, confirm repository identity, issues availability, label read/write capability when labels are missing, native parent/sub-issue support, native blocked-by/blocking support, and whether external PRs enter intake or triage.
+   - For `github-native`, confirm repository identity, issues availability, native parent/sub-issue support, and native blocked-by/blocking support.
+   - For `github-native`, confirm authenticated write access for issue creation and updates, stage labels, comments or receipts, ownership recording, lifecycle changes, and native containment and dependency relationship mutations.
    - For `github-native`, prepare creation only for missing fixed labels: `needs-triage`, `needs-info`, `needs-pack`, `ready-for-agent`, and `parent-prd`.
-   - For `markdown-file-based`, ensure `.and/work` can exist and no GitHub issue mirror is being configured.
+   - For `markdown-file-based`, ensure `.and/work` can be created and updated in the repository worktree and no GitHub issue mirror is being configured.
+   - If required backend write access cannot be confirmed, report the exact access blocker and do not declare the backend ready.
    - Do not emulate unavailable GitHub-native relationships with markdown task lists, labels, or comments.
 
 4. Check external skill readiness.
@@ -58,18 +60,18 @@ Setup is complete when:
    - Report missing skills with an install command such as `npx --yes skills add mattpocock/skills -g --agent codex --skill <missing-skill...> -y`, adjusted to the known agent scope when appropriate.
 
 5. Prepare the setup plan.
-   - Present a concise plan containing the backend, files to create or update, GitHub labels to create or reuse when relevant, the agent entrypoint target, the external PR setting when relevant, missing external skills, and unresolved decisions.
+   - Present a concise plan containing the backend, files to create or update, GitHub labels to create or reuse when relevant, the agent entrypoint target, missing external skills, and unresolved decisions.
    - Do not output the full workflow state table, full State Reason schema, claim policy, or backend representation.
 
 6. Confirm risky writes.
    - Confirm backend choice when new or changing.
-   - Confirm creating or overwriting `.and/config.yml`.
+   - Confirm creating or changing `.and/config.yml`.
    - Confirm GitHub label creation.
-   - Confirm editing `AGENTS.md` / `CLAUDE.md`, creating `.and/work`, creating project-specific docs, treating external PRs as request surfaces, or migrating existing work.
+   - Confirm editing `AGENTS.md` / `CLAUDE.md`, creating `.and/work`, creating project-specific docs, or migrating existing work.
    - Do not ask the user to re-confirm fixed AND invariants such as the small active stage set or one-backend rule after the setup plan is approved.
 
 7. Write minimal setup.
-   - Write `.and/config.yml`.
+   - Create or change `.and/config.yml` only when needed. Leave an existing valid config unchanged.
    - Write the backend minimum: GitHub labels for `github-native` when approved, or `.and/work` for `markdown-file-based`.
    - Update the existing agent entrypoint instead of creating a duplicate.
    - Create or update project-specific docs only when they record real repository-specific facts.
@@ -97,7 +99,6 @@ Use markdown-file-based when repository files are the workflow state source.
 - Create `.and/work/` and use `.and/work/.gitkeep` only when needed to keep the directory in version control.
 - Do not create sample work records.
 - Do not create GitHub labels or a GitHub issue mirror.
-- Treat GitHub PRs, when present, as implementation artifacts only.
 
 ## Agent Entrypoint
 
@@ -126,7 +127,7 @@ This repository uses the AND delivery loop.
 
 Do not create a heavy project documentation set by default.
 
-Create or update a project-specific doc only when it records facts that cannot be inferred from the AND skills or backend contract, such as existing domain docs, ADR locations, external PR policy, repository-specific implementation isolation, or GitHub capability limits.
+Create or update a project-specific doc only when it records facts that cannot be inferred from the AND skills or backend contract, such as existing domain docs, ADR locations, repository-specific implementation isolation, or GitHub capability limits.
 
 Prefer one file, such as `docs/agents/ai-native-development.md`, when project-specific notes are needed. Do not default to separate tracker, label, claim, implementation, and domain docs.
 

@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Issue Triage
 
-Triage decides the next route for recorded work: close it, wait for information, or move it to `needs-pack`.
+Triage decides the next route for an authoritative configured-backend work record: close it, wait for information, or move it to `needs-pack`.
 
 Triage produces an evidence-backed routing decision. It does not make work executable.
 
@@ -47,9 +47,9 @@ Ask before editing only when:
 ## Process
 
 1. Resolve target or attention list.
-   - Use the specific target when the user names a work ID, issue number, path, URL, or PR.
-   - When no target is named, list untriaged work, `needs-triage`, and `needs-info` with new activity.
-   - Include external PRs only when repository setup treats PRs as request surfaces.
+   - Use the specific work record when the user names a work ID, issue number, path, or work-record URL.
+   - When the user names an external PR, resolve its authoritative configured-backend work record. If none exists, stop and route the PR to `issue-intake`; do not triage or mutate the PR.
+   - When no target is named, query configured-backend work records for untriaged work, `needs-triage`, and `needs-info` with new activity.
    - Do not batch-update by default.
    - Completion criterion: one target is selected, or the report says no triage work is in scope.
 
@@ -60,7 +60,7 @@ Ask before editing only when:
    - Check whether the requested behavior is already implemented.
    - Check prior rejection or out-of-scope records when the repository has them.
    - For bugs, make a proportionate reproduction attempt from reporter steps.
-   - For PR request surfaces, inspect the diff and checks enough to route.
+   - When the selected work record links an external PR, inspect its diff and relevant checks proportionately to verify the request or attached implementation claim. Treat failed checks, an unrelated diff, or insufficient evidence as route evidence rather than silently accepting the PR author's claim.
    - Completion criterion: the route decision can name established facts, verified behavior, unknowns, blockers, duplicate or prior-rejection result, and any reproduction or PR verification result that materially affected the route.
 
 3. Decide the route.
@@ -74,6 +74,7 @@ Ask before editing only when:
 
 4. Apply the route when safe or confirmed.
    - Update one work record at a time unless the user explicitly requests batch work.
+   - Apply every stage-state mutation, State Reason, triage note, and lifecycle outcome to the selected work record, never to a linked PR.
    - Remove contradictory public stage state through the configured backend.
    - For `needs-info`, write triage notes and a current State Reason.
    - For `needs-pack`, write triage notes and package inputs.
@@ -151,3 +152,4 @@ Authority:
 - Do not close work without explicit authority or confirmation.
 - Do not ask broad questions when a specific State Reason can be written.
 - Do not run a structured decision interview; route those decisions to `issue-grill`.
+- Do not apply AND workflow state or lifecycle outcomes to linked external PRs.
