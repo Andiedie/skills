@@ -33,8 +33,6 @@ Use it before an AND workflow skill reads, writes, validates, or reasons about w
    - Do not produce a separate user-facing receipt unless the user directly asked about backend rules.
    - Completion criterion: the caller can continue with one backend-specific read, write, or validation plan.
 
-5. Read [workflow-examples.md](workflow-examples.md) only when doing setup, sweep, validation, review, or an end-to-end dry run.
-
 ## Boundaries
 
 - Do not choose or switch the repository backend; `setup-and` owns that.

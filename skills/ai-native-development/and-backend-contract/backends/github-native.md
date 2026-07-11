@@ -133,6 +133,21 @@ Workflow receipts are issue comments on the delivery unit.
 
 Branches, commits, PRs, CI, and review results may be linked from receipts. They do not replace the Package Contract, ownership, or lifecycle outcome.
 
+## End-To-End Example
+
+This walkthrough validates the representation defined in this reference. It introduces no additional workflow or schema rules.
+
+1. `setup-and` selects the [configuration](#config) and verifies its [capability requirements](#capability-requirements).
+2. `and-intake` creates the issue and applies its initial [stage state](#stage-state).
+3. `and-triage` changes stage or records the current [State Reason](#state-reason), and may produce the terminal outcome defined by the [representation](#representation).
+4. `and-clarify` records confirmed decisions as [receipts](#receipts-and-implementation-artifacts) and advances resolved work.
+5. `and-pack` publishes one of the supported [package shapes](#package-shapes) with the required native [relationships](#relationships).
+6. `and-pick` selects a public ready delivery unit after checking its stage, relationships, and [ownership](#ownership).
+7. `and-claim` records ownership for the complete delivery unit.
+8. `and-implement` references implementation artifacts through the delivery unit's [receipts](#receipts-and-implementation-artifacts).
+9. Completion or rejection records the [lifecycle outcome](#representation) and closes the delivery-unit issue with evidence.
+10. `and-sweep` applies the backend-specific [sweep checks](#sweep-checks).
+
 ## Sweep Checks
 
 Check for:
