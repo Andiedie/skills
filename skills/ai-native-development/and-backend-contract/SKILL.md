@@ -1,13 +1,13 @@
 ---
-name: ai-native-backend-contract
-description: Use when an AI-native workflow skill needs to read or write workflow state through the configured `.and/config.yml` backend, or needs the `github-native` / `markdown-file-based` representation rules.
+name: and-backend-contract
+description: Use when an AND workflow skill needs to read or write workflow state through the configured `.and/config.yml` backend, or needs the `github-native` / `markdown-file-based` representation rules.
 ---
 
-# AI-Native Backend Contract
+# AND Backend Contract
 
 Reference skill for loading the configured workflow state backend contract.
 
-Use it before an AI-native workflow skill reads, writes, validates, or reasons about workflow state. This skill loads the contract; it does not perform the workflow operation.
+Use it before an AND workflow skill reads, writes, validates, or reasons about workflow state. This skill loads the contract; it does not perform the workflow operation.
 
 ## Process
 
@@ -15,7 +15,7 @@ Use it before an AI-native workflow skill reads, writes, validates, or reasons a
    - It must be a YAML mapping with `version: 1`.
    - It must contain only `version` and `workflow_state_backend`.
    - `workflow_state_backend` must be `github-native` or `markdown-file-based`.
-   - If missing, malformed, unsupported, extended, or ambiguous, route to `setup-ai-native-development`.
+   - If missing, malformed, unsupported, extended, or ambiguous, route to `setup-and`.
    - Completion criterion: one supported backend is known.
 
 2. Read [backend-contract.md](backend-contract.md).
@@ -37,7 +37,7 @@ Use it before an AI-native workflow skill reads, writes, validates, or reasons a
 
 ## Boundaries
 
-- Do not choose or switch the repository backend; `setup-ai-native-development` owns that.
+- Do not choose or switch the repository backend; `setup-and` owns that.
 - Do not mutate issues, files, labels, relationships, ownership, claims, branches, PRs, or lifecycle state.
 - Do not run the calling workflow stage.
 - Do not duplicate backend reference rules into the calling workflow skill.

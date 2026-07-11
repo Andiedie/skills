@@ -6,25 +6,25 @@ These examples are dry-run checklists, not a third source of truth. If an exampl
 
 ## GitHub-Native Dry Run
 
-1. `setup-ai-native-development` creates `.and/config.yml`:
+1. `setup-and` creates `.and/config.yml`:
 
    ```yaml
    version: 1
    workflow_state_backend: github-native
    ```
 
-2. `issue-intake` records a raw signal as a GitHub issue with `needs-triage`.
-3. `issue-triage` moves it to `needs-info` and appends a `## State Reason` comment when a decision is missing.
-4. `issue-grill` resolves the decision and records issue notes, or appends a new State Reason when still blocked.
-5. `issue-pack` publishes either:
+2. `and-intake` records a raw signal as a GitHub issue with `needs-triage`.
+3. `and-triage` moves it to `needs-info` and appends a `## State Reason` comment when a decision is missing.
+4. `and-clarify` resolves the decision and records issue notes, or appends a new State Reason when still blocked.
+5. `and-pack` publishes either:
    - one issue with a Package Contract and `ready-for-agent`; or
    - one parent PRD with a Package Contract, native sub-issues, native dependency relationships, `parent-prd`, and `ready-for-agent`.
    Native relationships are required; do not emulate package containment or dependency order with task lists, labels, or comments.
-6. `issue-pick` reads ready delivery units, excludes blocked or claimed work, and recommends one claim unit.
-7. `issue-claim` records ownership on the delivery unit.
-8. `issue-implement` works from the GitHub-native Package Contract in an isolated branch or worktree and references implementation artifacts from receipts.
+6. `and-pick` reads ready delivery units, excludes blocked or claimed work, and recommends one claim unit.
+7. `and-claim` records ownership on the delivery unit.
+8. `and-implement` works from the GitHub-native Package Contract in an isolated branch or worktree and references implementation artifacts from receipts.
 9. Close or rejection uses GitHub closed state plus a closing comment or existing close-reason convention.
-10. `issue-sweep` audits labels, State Reasons, native relationships, external blockers, ownership, and lifecycle drift.
+10. `and-sweep` audits labels, State Reasons, native relationships, external blockers, ownership, and lifecycle drift.
 
 Validation:
 
@@ -36,33 +36,33 @@ Validation:
 
 ## Markdown-File-Based Dry Run
 
-1. `setup-ai-native-development` creates `.and/config.yml`:
+1. `setup-and` creates `.and/config.yml`:
 
    ```yaml
    version: 1
    workflow_state_backend: markdown-file-based
    ```
 
-2. `issue-intake` scans `.and/work`, allocates the next `AND-0001` style ID, and creates:
+2. `and-intake` scans `.and/work`, allocates the next `AND-0001` style ID, and creates:
 
    ```text
    .and/work/AND-0001/package.md
    .and/work/AND-0001/receipts/
    ```
 
-3. `issue-triage` updates `package.md` frontmatter to `stage: needs-info` with the latest `state_reason`, or `stage: needs-pack`, or a lifecycle outcome.
-4. `issue-grill` records decisions as receipts and updates the latest `state_reason` when still blocked.
+3. `and-triage` updates `package.md` frontmatter to `stage: needs-info` with the latest `state_reason`, or `stage: needs-pack`, or a lifecycle outcome.
+4. `and-clarify` records decisions as receipts and updates the latest `state_reason` when still blocked.
    Material State Reason changes always leave receipt history.
-5. `issue-pack` transforms the raw work record into:
+5. `and-pack` transforms the raw work record into:
    - `shape: single` with a Package Contract; or
    - `shape: prd-package` with child slice files under `children/`.
-6. `issue-pack` writes containment indexes on parent and child records, and writes `blocked_by` only on blocked child slices.
+6. `and-pack` writes containment indexes on parent and child records, and writes `blocked_by` only on blocked child slices.
 7. External access or third-party waits are recorded in `external_blockers`, not in `blocked_by`.
-8. `issue-pick` reads `.and/work` for `stage: ready-for-agent`, excludes external blockers and claimed delivery units, and recommends one delivery unit.
-9. `issue-claim` records ownership as a receipt for the whole delivery unit.
-10. `issue-implement` records branches, commits, PRs, CI, and review results as implementation artifacts in receipts.
+8. `and-pick` reads `.and/work` for `stage: ready-for-agent`, excludes external blockers and claimed delivery units, and recommends one delivery unit.
+9. `and-claim` records ownership as a receipt for the whole delivery unit.
+10. `and-implement` records branches, commits, PRs, CI, and review results as implementation artifacts in receipts.
 11. Completion or rejection sets a lifecycle outcome, removes active stage state, and records evidence in a receipt.
-12. `issue-sweep` audits frontmatter schema, containment drift, dependency drift, external blockers, claim receipts, and lifecycle outcomes.
+12. `and-sweep` audits frontmatter schema, containment drift, dependency drift, external blockers, claim receipts, and lifecycle outcomes.
 
 Validation:
 

@@ -15,7 +15,7 @@ npx --yes skills add Andiedie/skills --list
 Install the AI-native development loop globally for Codex and Claude Code:
 
 ```bash
-npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill ai-native-backend-contract ask-andie issue-intake issue-triage issue-grill issue-pack issue-pick issue-claim issue-implement issue-sweep setup-ai-native-development -y
+npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill and-backend-contract ask-andie and-intake and-triage and-clarify and-pack and-pick and-claim and-implement and-sweep setup-and -y
 ```
 
 Install the repository interactively:
@@ -30,10 +30,10 @@ Install one skill explicitly:
 npx --yes skills add Andiedie/skills --skill <skill-name>
 ```
 
-AI-native workflow skills depend on `ai-native-backend-contract`. When installing one explicitly, include the reference skill in the same command:
+AND workflow skills depend on `and-backend-contract`. When installing one explicitly, include the reference skill in the same command:
 
 ```bash
-npx --yes skills add Andiedie/skills --skill ai-native-backend-contract issue-pack
+npx --yes skills add Andiedie/skills --skill and-backend-contract and-pack
 ```
 
 ## Skill Packages
@@ -44,17 +44,17 @@ npx --yes skills add Andiedie/skills --skill ai-native-backend-contract issue-pa
 
 It includes:
 
-- `ai-native-backend-contract`
+- `and-backend-contract`
 - `ask-andie`
-- `issue-intake`
-- `issue-triage`
-- `issue-grill`
-- `issue-pack`
-- `issue-pick`
-- `issue-claim`
-- `issue-implement`
-- `issue-sweep`
-- `setup-ai-native-development`
+- `and-intake`
+- `and-triage`
+- `and-clarify`
+- `and-pack`
+- `and-pick`
+- `and-claim`
+- `and-implement`
+- `and-sweep`
+- `setup-and`
 
 ### Documentation
 
@@ -86,11 +86,11 @@ Install or repair them with:
 npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill grilling tdd code-review -y
 ```
 
-`setup-ai-native-development` reports missing dependencies and the install command without installing them unless explicitly asked.
+`setup-and` reports missing dependencies and the install command without installing them unless explicitly asked.
 
 ## Current Personal Skills
 
-Snapshot from my local skill environment on 2026-07-10. This is a factual personal inventory, not an AND requirement or installation recommendation.
+Snapshot from my local skill environment on 2026-07-11. This is a factual personal inventory, not an AND requirement or installation recommendation.
 
 ### Managed by `npx skills`
 
@@ -99,7 +99,7 @@ Snapshot from my local skill environment on 2026-07-10. This is a factual person
 | [Andiedie/cd2-skills](https://github.com/Andiedie/cd2-skills) | `cd2` |
 | [Andiedie/loopmark](https://github.com/Andiedie/loopmark) | `loopmark` |
 | [Andiedie/openlist-skills](https://github.com/Andiedie/openlist-skills) | `openlist` |
-| [Andiedie/skills](https://github.com/Andiedie/skills) | `ai-native-backend-contract`, `ask-andie`, `codex-pr-review-loop`, `documentation-maintenance`, `documentation-reseed`, `install-skills`, `issue-claim`, `issue-grill`, `issue-implement`, `issue-intake`, `issue-pack`, `issue-pick`, `issue-sweep`, `issue-triage`, `normalize-agent-instructions`, `setup-ai-native-development` |
+| [Andiedie/skills](https://github.com/Andiedie/skills) | `and-backend-contract`, `and-claim`, `and-clarify`, `and-implement`, `and-intake`, `and-pack`, `and-pick`, `and-sweep`, `and-triage`, `ask-andie`, `codex-pr-review-loop`, `documentation-maintenance`, `documentation-reseed`, `install-skills`, `normalize-agent-instructions`, `setup-and` |
 | [mattpocock/skills](https://github.com/mattpocock/skills) | `ask-matt`, `code-review`, `codebase-design`, `diagnosing-bugs`, `domain-modeling`, `grill-me`, `grill-with-docs`, `grilling`, `handoff`, `implement`, `improve-codebase-architecture`, `prototype`, `research`, `scaffold-exercises`, `setup-matt-pocock-skills`, `tdd`, `teach`, `to-spec`, `to-tickets`, `triage`, `wayfinder`, `writing-great-skills` |
 | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | `web-design-guidelines`, `writing-guidelines` |
 | [vercel-labs/skills](https://github.com/vercel-labs/skills) | `find-skills` |
@@ -122,6 +122,6 @@ Snapshot from my local skill environment on 2026-07-10. This is a factual person
 
 - Skill source files live under `skills/*/SKILL.md` or package directories such as `skills/ai-native-development/*/SKILL.md`.
 - When adding, renaming, or removing a skill, update `skills.sh.json`.
-- When changing the AI-native issue workflow, update [Delivery loop](skills/ai-native-development/docs/delivery-loop.md), [Skills](skills/ai-native-development/docs/skills.md), and the affected workflow `SKILL.md` files together.
-- When changing workflow state storage, update [AI-native backend contract](skills/ai-native-development/ai-native-backend-contract/SKILL.md), its backend reference docs, and the affected workflow `SKILL.md` files together.
+- When changing the AND workflow, update [Delivery loop](skills/ai-native-development/docs/delivery-loop.md), [Skills](skills/ai-native-development/docs/skills.md), and the affected workflow `SKILL.md` files together.
+- When changing workflow state storage, update [AI-native backend contract](skills/ai-native-development/and-backend-contract/SKILL.md), its backend reference docs, and the affected workflow `SKILL.md` files together.
 - When updating the personal skill snapshot, check `~/.agents/.skill-lock.json`, `npx --yes skills list -g -a codex --json`, enabled Codex plugins, and enabled Codex system skills.

@@ -1,6 +1,6 @@
 # Backend-Safe Domain Modeling
 
-Use this lens inside `issue-grill` when package correctness depends on domain terms, naming, glossary conflicts, architectural decisions, or documentation implications.
+Use this lens inside `and-clarify` when package correctness depends on domain terms, naming, glossary conflicts, architectural decisions, or documentation implications.
 
 The goal is to keep the domain-modeling discipline while respecting AND's clarification boundary: record package input in the workflow backend, not local repository docs.
 
@@ -14,7 +14,7 @@ The goal is to keep the domain-modeling discipline while respecting AND's clarif
 
 ## Backend-Safe Outputs
 
-Capture confirmed results as `issue-grill` package input:
+Capture confirmed results as `and-clarify` package input:
 
 - glossary proposals;
 - ADR candidates;
@@ -30,4 +30,4 @@ When a decision is not confirmed, record it as a remaining blocker or State Reas
 - Do not create ADR files during clarification.
 - Do not modify repository docs during clarification.
 - Do not treat guesses, partial answers, or unaccepted recommendations as glossary proposals or ADR candidates.
-- Do not make `issue-pack` rerun the domain interview. If package correctness depends on missing domain judgment, route back to `issue-grill`.
+- Do not make `and-pack` rerun the domain interview. If package correctness depends on missing domain judgment, route back to `and-clarify`.

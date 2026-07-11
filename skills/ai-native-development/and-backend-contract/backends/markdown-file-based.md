@@ -110,7 +110,7 @@ state_reason:
   cause: decision-needed
   owner: human
   question: Decide whether markdown files should use one file or a delivery-unit directory.
-  resume_with: issue-grill
+  resume_with: and-clarify
   exit_criteria: Delivery-unit storage shape is decided.
 ---
 ```
@@ -225,7 +225,7 @@ Raw request records should use concise source sections:
 - <question, or none>
 ```
 
-Packed delivery units should use the Package Contract body from `issue-pack`.
+Packed delivery units should use the Package Contract body from `and-pack`.
 
 Do not keep long raw request history in the main Package Contract after pack. Preserve source evidence in receipts or a short source section.
 
@@ -245,7 +245,7 @@ Use the stage or operation name, such as `triage`, `grill`, `pack`, `claim`, `im
 Use receipts for:
 
 - State Reason changes;
-- issue-grill decisions;
+- and-clarify decisions;
 - pack publication;
 - claim;
 - implementation;
