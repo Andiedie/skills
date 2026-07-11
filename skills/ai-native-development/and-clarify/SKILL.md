@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 AND Clarify runs a relentless decision interview for `needs-info` work that cannot be packaged until human product, domain, architecture, naming, testing, access, or acceptance decisions are resolved.
 
-It invokes `grilling` as the authority for interview behavior and uses [backend-safe domain modeling](backend-safe-domain-modeling.md) for domain, naming, glossary, and ADR judgment.
+It invokes `grilling` as the authority for interview behavior.
 
 ## Authoritative Interview Behavior
 
@@ -19,8 +19,6 @@ Invoke `grilling` and follow it as the single source of truth for the interview.
 - which choices belong to the human;
 - when shared understanding has been reached.
 
-When domain, naming, glossary, or ADR judgment affects package correctness, read [backend-safe-domain-modeling.md](backend-safe-domain-modeling.md). Its outputs belong in Clarification Notes as package input, not in local docs.
-
 ## Backend Contract
 
 Before reading or writing workflow state, read `.and/config.yml`, then use `and-backend-contract`.
@@ -28,6 +26,35 @@ Before reading or writing workflow state, read `.and/config.yml`, then use `and-
 Use the configured backend reference for reading the target work, writing clarification notes, writing State Reasons, and moving stage state. If setup is missing, unsupported, or the backend contract is unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
 
 Do not infer backend comments, receipts, frontmatter, labels, or State Reason placement inside this skill.
+
+## Recovery Buffer
+
+Use one local recovery buffer to protect confirmed interview results between backend writes. The buffer is disposable runtime state; the configured backend remains authoritative.
+
+- Use the platform's standard per-user temporary directory as `<system-temp>`.
+- For `github-native`, use lowercase `<host>/<owner>/<repo>` from the issue URL as the repository identity and the decimal issue number as the work-record identity.
+- For `markdown-file-based`, use the real path of the repository root containing `.and/config.yml` as the repository identity and the repository-relative work-record path, with `.` and `..` resolved and `/` separators, as the work-record identity.
+- Hash three newline-delimited UTF-8 lines containing `and-clarify:v1`, the repository identity, and the work-record identity. Use the SHA-256 result as `<key>` and locate the buffer at `<system-temp>/and-clarify/<key>.md`.
+- A materially confirmed decision is an explicitly accepted decision that changes package scope, canonical terminology, architecture, acceptance, or required documentation.
+- The checkpoint digest is the SHA-256 hash of the buffer sections from `## Confirmed decisions and rationale` through `## Current unresolved question`, using LF line endings and exactly one final newline.
+- On resume, read the backend first, then the matching buffer and recompute its digest. A Clarification Notes receipt is synchronized only when its `Checkpoint` exactly matches that digest; carry forward confirmed unsynchronized content and surface any conflict with newer backend state before continuing.
+
+Use this compact shape:
+
+```markdown
+# Clarification Recovery Buffer
+
+Repository: <canonical identity>
+Work record: <backend identity>
+Checkpoint: <digest>
+
+## Confirmed decisions and rationale
+## Glossary updates
+## ADR drafts
+## Documentation updates
+## Acceptance implications
+## Current unresolved question
+```
 
 ## When To Use
 
@@ -73,56 +100,59 @@ Ask before writing only when the target work record is ambiguous, the write woul
 1. Resolve target and State Reason.
    - Read the target work and latest State Reason.
    - Verify `and-clarify` is the right resume path.
+   - Read and reconcile a matching recovery buffer after the backend state.
    - Distinguish decision-needed blockers from simple missing facts, access waits, or external state waits.
-   - Completion criterion: the interview target, current blocker, owner, and decision scope are explicit, or the work is routed to the accountable owner without grilling.
+   - Read [backend-safe-domain-modeling.md](backend-safe-domain-modeling.md) and keep its discipline active throughout the interview.
+   - Completion criterion: the interview target, current blocker, owner, confirmed recovered inputs, and decision scope are explicit, or the work is routed to the accountable owner without grilling.
 
 2. Run the interview.
-   - Invoke `grilling` and follow its interview behavior without replacing or restating it.
-   - Read and apply [backend-safe-domain-modeling.md](backend-safe-domain-modeling.md) when domain, naming, glossary, or ADR judgment affects package correctness.
+   - Invoke `grilling` and follow its interview behavior without replacing or restating it, using the backend-safe domain-modeling guidance loaded in step 1.
    - Apply the fact and human-owned decision evidence rules above as the interview resolves package blockers.
-   - Completion criterion: every package-blocking fact is established, every package-blocking decision has an allowed human source, or one specific remaining blocker is identified.
+   - After each materially confirmed decision, create the buffer lazily or rewrite it with the complete cumulative structure, including the decision's rationale and the current unresolved question, then recompute its `Checkpoint`.
+   - Keep partial thoughts, unconfirmed recommendations, ordinary dialogue, and sensitive credentials out of the buffer.
+   - If the recovery buffer cannot be written, stop and report the failure without advancing workflow state.
+   - Completion criterion: every package-blocking fact is established, every package-blocking decision has an allowed human source, or one specific remaining blocker is identified, and every materially confirmed decision is recoverable locally with its rationale and current unresolved question.
 
 3. Capture package inputs.
    - List resolved decisions and rationale.
-   - List glossary proposals.
-   - List ADR candidates.
-   - List documentation updates to include in the package.
+   - Capture artifact-ready glossary updates, ADR drafts, and documentation changes when required.
    - List acceptance implications.
    - Identify any remaining blocker.
    - When no blocker remains, obtain `grilling`'s final shared-understanding confirmation.
-   - Completion criterion: the package inputs are concise enough for `and-pack` and do not require replaying the interview, and a resolved session has passed the shared-understanding gate.
+   - Completion criterion: the package inputs are precise enough for `and-pack` and later implementation without replaying the interview, and a resolved session has passed the shared-understanding gate.
 
-4. Record the backend note.
-   - Write one backend note when the session resolves, pauses, the remaining blocker materially changes, or owner/resume skill/exit criteria materially changes.
-   - If no blocker remains, move the work from `needs-info` to `needs-pack` when backend edits are allowed.
-   - If a blocker remains, keep `needs-info` and write latest State Reason fields: `Cause`, `Owner`, `Question`, `Resume with`, and `Exit criteria`.
-   - Do not edit local docs.
-   - Do not ask for second confirmation for normal recording.
-   - Completion criterion: the backend contains enough confirmed decisions for `and-pack`, or one specific remaining blocker with owner, resume skill, and exit criteria.
+4. Synchronize the backend.
+   - At completion, explicit pause, task switch, or handoff, perform only missing operations. When a buffer exists, append one Clarification Notes receipt only when no receipt has its checkpoint. When no buffer exists because no materially confirmed decision occurred, skip the empty receipt and local cleanup.
+   - When a blocker remains, ensure the latest State Reason contains `Cause`, `Owner`, `Question`, `Resume with`, and `Exit criteria`. When no blocker remains, move the work from `needs-info` to `needs-pack` after any confirmed results are authoritative.
+   - Verify every required backend mutation. If one fails, retain the buffer when present, keep `needs-info`, and report the failure; on resume, retry only the missing operation.
+   - After all required backend mutations succeed, delete the matching recovery buffer when present. Report cleanup failure as a local warning without rolling back or blocking authoritative workflow state.
+   - Completion criterion: the backend contains either a Clarification Notes receipt with the matching checkpoint or no unsynchronized materially confirmed decision, plus either enough input for `and-pack` or one current blocker with owner, resume skill, and exit criteria; local cleanup was attempted when a buffer existed.
 
 5. Report a receipt.
    - Include the issue link or work ID, decisions recorded, stage change when any, remaining blocker when any, and next skill.
-   - Do not paste the full Clarification Notes, full interview transcript, full State Reason markdown, local doc diffs, or package draft back into chat after writing them to the backend.
+   - Do not paste the full Clarification Notes, full interview transcript, full State Reason markdown, recovery-buffer contents, local doc diffs, or package draft back into chat after writing them to the backend.
    - Completion criterion: the user knows what was recorded and whether the next step is `and-pack` or resolving a named blocker.
 
 ## Clarification Note
 
-Use this backend note when the session resolves, pauses, or materially changes the blocker:
+Use this backend note for the synchronization in step 4:
 
 ```markdown
 ## Clarification Notes
 
+Checkpoint: <recovery-buffer digest>
+
 Resolved decisions:
 - <decision and rationale>
 
-Glossary proposals:
-- <term -> meaning, or none>
+Glossary updates:
+- <none, or target CONTEXT.md path plus preferred term, concise definition, and avoided alternatives when relevant>
 
-ADR candidates:
-- <decision, alternatives, why it may deserve an ADR, or none>
+ADR drafts:
+- <none, or proposed title, artifact-ready decision and rationale, and useful options or consequences>
 
-Documentation updates to include in the package:
-- <CONTEXT.md, ADR, README, runbook, or none>
+Documentation updates:
+- <none, or target document and section plus precise content to add or replace>
 
 Acceptance implications:
 - <criteria, edge cases, or manual acceptance>
@@ -138,10 +168,8 @@ When a blocker remains, write State Reason fields through the configured backend
 
 ## Boundaries
 
-- Do not replace `grilling` with a checklist or multi-question form.
-- Do not update local docs, ADRs, glossary, implementation files, branches, or PRs during the grill.
-- Do not record guesses, partial answers, or unconfirmed recommendations as resolved decisions.
-- Do not infer a human-owned decision from repository evidence or implementation precedent.
-- Do not write backend notes after every question; write when the session resolves, pauses, or the blocker materially changes.
-- Do not pack, claim, implement, close, or merge work.
-- Do not use `and-clarify` for simple missing facts, access waits, external state waits, or direct acceptance input that does not need an interview.
+- Keep repository docs, ADRs, glossary files, implementation files, branches, and PRs unchanged during clarification; capture their required content for the package instead.
+- Record only confirmed decisions as resolved; guesses, partial answers, and unaccepted recommendations remain blockers.
+- Use repository evidence to establish facts and inform recommendations, not to invent human-owned decisions.
+- Stop after clarification state is synchronized; packing, claiming, implementation, closure, and merge belong to later stages.
+- Route simple missing facts, access waits, external state waits, and direct acceptance input to the accountable owner without a structured interview.
