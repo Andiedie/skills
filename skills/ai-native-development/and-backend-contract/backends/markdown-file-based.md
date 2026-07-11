@@ -280,6 +280,21 @@ Record completion evidence in a receipt.
 
 When lifecycle is terminal, active `stage` should not be present. Child lifecycle can complete before the parent, but the parent remains open until package integration closes.
 
+## End-To-End Example
+
+This walkthrough validates the representation defined in this reference. It introduces no additional workflow or schema rules.
+
+1. `setup-and` selects the [configuration](#config) and prepares the required [storage](#storage).
+2. `and-intake` follows the [ID rules](#id-rules) and creates a raw delivery-unit record with valid [package frontmatter](#package-frontmatter).
+3. `and-triage` records its result in frontmatter and [receipts](#receipts), including a [State Reason](#state-reason) or [lifecycle outcome](#lifecycle-outcome) when applicable.
+4. `and-clarify` preserves confirmed decisions in receipts and updates the current State Reason until work can advance.
+5. `and-pack` publishes the selected package shape and its [relationship representation](#relationship-representation).
+6. `and-pick` selects a public ready delivery unit after checking its frontmatter, blockers, and receipt-derived [ownership](#ownership).
+7. `and-claim` appends the ownership receipt for the complete delivery unit.
+8. `and-implement` references [implementation artifacts](#implementation-artifacts) only through receipts.
+9. Completion or rejection follows the [lifecycle outcome](#lifecycle-outcome) rules and records evidence.
+10. `and-sweep` applies the backend-specific [sweep checks](#sweep-checks).
+
 ## Sweep Checks
 
 Check for:

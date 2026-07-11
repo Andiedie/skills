@@ -222,4 +222,3 @@ Receipts should not become a duplicate Package Contract unless the calling stage
 
 - [GitHub-native backend](backends/github-native.md)
 - [Markdown-file-based backend](backends/markdown-file-based.md)
-- [Workflow examples](workflow-examples.md)

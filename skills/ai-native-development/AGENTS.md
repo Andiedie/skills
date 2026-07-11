@@ -13,8 +13,7 @@ Keep each surface focused on one audience and purpose.
 | `docs/skills.md` | Someone choosing a skill | Task-oriented routing and skill usage. |
 | `AGENTS.md` | An Agent maintaining this package | Design balances, authority boundaries, and maintenance checks. |
 | `and-backend-contract/backend-contract.md` | A workflow or backend author | Backend-neutral concepts, operations, and invariants. |
-| `and-backend-contract/backends/*.md` | A workflow or backend author | Backend-specific representation and operations. |
-| `and-backend-contract/workflow-examples.md` | A maintainer validating a backend | Non-authoritative end-to-end dry runs. |
+| `and-backend-contract/backends/*.md` | A workflow or backend author | Backend-specific representation, operations, validation, and end-to-end examples. |
 | `<skill>/SKILL.md` | An Agent running that skill | Runtime behavior, preconditions, side effects, stop routes, and output contract. |
 | Skill sibling references | An Agent on a conditional path | Detailed guidance that is needed only for that path. |
 
@@ -73,4 +72,4 @@ For package changes, run the checks relevant to the diff:
 - parse `skills.sh.json`;
 - validate affected relative Markdown links;
 - run `npx --yes skills add . --list` when skill discovery or package structure may be affected;
-- search for stale names or duplicated normative rules when moving responsibilities.
+- search for stale names, terminology drift, or duplicated normative rules when moving responsibilities.

@@ -9,8 +9,7 @@ This package defines the AND delivery loop and the workflow skills that turn amb
 | Understand why AND exists and how work moves through the loop | [Delivery loop](docs/delivery-loop.md) |
 | Choose the right skill for the current work | [Skills guide](docs/skills.md) |
 | Understand backend-neutral workflow state | [Backend contract](and-backend-contract/backend-contract.md) |
-| Apply GitHub-native or markdown-file-based representation rules | [Backend references](and-backend-contract/backends/) |
-| Validate an end-to-end backend flow | [Workflow examples](and-backend-contract/workflow-examples.md) |
+| Apply and validate GitHub-native or markdown-file-based representation | [Backend references](and-backend-contract/backends/) |
 | Maintain this package | [Package instructions](AGENTS.md) |
 
 ## Included Skills
