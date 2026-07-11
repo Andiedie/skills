@@ -8,6 +8,8 @@ Use this backend when markdown files under `.and/work` are the authoritative wor
 
 `.and/work` is the only workflow state source for this backend. GitHub issues are not request surfaces, mirrors, notification threads, or synchronization targets. Git branches, commits, pull requests, CI, and reviews may be referenced as implementation artifacts, but they do not carry workflow state.
 
+During finish, terminal state prepared on a source branch is a proposal. It becomes authoritative only when the authorized target branch receives that proposal through the reviewed implementation pull request.
+
 ## Config
 
 ```yaml
@@ -280,6 +282,22 @@ Record completion evidence in a receipt.
 
 When lifecycle is terminal, active `stage` should not be present. Child lifecycle can complete before the parent, but the parent remains open until package integration closes.
 
+## Finish Delivery
+
+`and-finish` first creates or resolves the GitHub pull request for the reviewed source branch and authorized target. It then prepares the terminal state on that source branch:
+
+1. set the delivery unit's `lifecycle` to `completed` and remove its active `stage`;
+2. append the `and-finish` completion receipt; and
+3. commit and push only that deterministic workflow-state proposal.
+
+Re-evaluate checks, reviews, conflicts, and mergeability on the resulting final pull-request head. Until the pull request merges, the target branch retains the open lifecycle and the source-branch proposal is non-authoritative.
+
+Pending external checks or reviews leave the proposal in place for resume. When final validation requires a route back before merge, `and-finish` reverts only its non-authoritative completion proposal, restores open workflow state on the source branch, and pushes that withdrawal before handing work to the owning stage. Implementation commits remain intact. Removing a proposal that never reached the authoritative target does not alter append-only receipt history; a later finish attempt prepares a fresh proposal from the current reviewed head.
+
+After merge, verify the authorized target contains both the delivered implementation and the exact completion proposal. Do not create a second post-merge completion commit or mirror lifecycle state to GitHub. A failed merge leaves the proposal resumable; a successful merge is never repeated to repair later verification or cleanup.
+
+Source-branch and worktree cleanup begins only after target-branch completion is verified.
+
 ## End-To-End Example
 
 This walkthrough validates the representation defined in this reference. It introduces no additional workflow or schema rules.
@@ -292,7 +310,7 @@ This walkthrough validates the representation defined in this reference. It intr
 6. `and-pick` selects a public ready delivery unit after checking its frontmatter, blockers, and receipt-derived [ownership](#ownership).
 7. `and-claim` appends the ownership receipt for the complete delivery unit.
 8. `and-implement` references [implementation artifacts](#implementation-artifacts) only through receipts.
-9. Completion or rejection follows the [lifecycle outcome](#lifecycle-outcome) rules and records evidence.
+9. `and-finish` follows [finish delivery](#finish-delivery) so implementation and completion become authoritative through one target-branch merge.
 10. `and-sweep` applies the backend-specific [sweep checks](#sweep-checks).
 
 ## Sweep Checks
@@ -318,4 +336,5 @@ Check for:
 - claimed delivery units with no claim receipt;
 - ownership frontmatter fields on package or child slice files;
 - implementation artifacts recorded in frontmatter instead of receipts;
+- terminal lifecycle on the authoritative target without matching completion evidence;
 - markdown-file-based work with GitHub issue mirror references.

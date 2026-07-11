@@ -154,6 +154,17 @@ Record a terminal outcome such as completed, rejected, duplicate, or superseded.
 
 Attach branch, commit, PR, CI, or review evidence as an implementation artifact reference. Implementation artifacts do not establish ownership and do not replace the Package Contract.
 
+### Finish Delivery
+
+Coordinate one reviewed implementation artifact with the delivery unit's terminal lifecycle outcome.
+
+- Prove that the implementation reached the authorized target.
+- Record completion evidence using the calling skill's receipt contract.
+- Make `completed` authoritative only when delivery and backend completion evidence are both authoritative.
+- Begin source-branch and worktree cleanup only after authoritative completion.
+
+The configured backend reference defines when its completion state becomes authoritative and where the receipt is recorded.
+
 ### Audit Invariants
 
 Check state, relationship, ownership, receipt, and lifecycle consistency for the configured backend.
@@ -170,6 +181,8 @@ Check state, relationship, ownership, receipt, and lifecycle consistency for the
 - External blockers are not dependency relationships.
 - Implementation artifacts are references, not workflow state.
 - Lifecycle outcomes are terminal and not active stage states.
+- A completed delivery unit has implementation on its authorized target and completion evidence in the configured backend.
+- Delivery cleanup follows authoritative lifecycle completion.
 
 ## State Reason Contract
 

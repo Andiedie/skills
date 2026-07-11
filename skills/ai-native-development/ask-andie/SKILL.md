@@ -18,7 +18,7 @@ If setup is missing, invalid, unsupported, or the backend contract is unavailabl
 
 ## Route Map
 
-Main loop: `and-intake` -> `and-triage` -> `and-clarify` when needed -> `and-pack` -> `and-pick` -> `and-claim` -> `and-implement`.
+Main loop: `and-intake` -> `and-triage` -> `and-clarify` when needed -> `and-pack` -> `and-pick` -> `and-claim` -> `and-implement` -> `and-finish`.
 
 Keep clarification and packaging in one context until the package is published. After a PRD package is claimed, its owner may use child records as subagent work units grounded in the parent PRD plus the child record.
 
@@ -31,10 +31,11 @@ Keep clarification and packaging in one context until the package is published. 
 | `needs-info` waiting for facts, access, external state, or acceptance | Route the State Reason question to its owner; resume with the recorded skill |
 | `needs-pack` | `and-pack` |
 | Ready work slate with no chosen delivery unit | `and-pick` |
-| Specific ready single issue package or parent PRD package | `and-claim` |
-| Claimed delivery unit, or a branch, diff, or linked PR tied to its claim | `and-implement` |
+| Unclaimed ready single issue package or parent PRD package with no active implementation evidence | `and-claim` |
+| Claimed delivery unit whose implementation or review is incomplete, including its linked branch, diff, or pull request | `and-implement` |
+| Reviewed delivery with no pending acceptance or blocker, including an in-progress finish with a completion proposal, merged pull request, incomplete lifecycle, or incomplete cleanup | `and-finish` |
+| Implementation waiting on required acceptance or another external owner | Route the exact pending input to its accountable owner |
 | Stale claim, partial PRD claim, relationship drift, contradictory state, or blocked ready work | `and-sweep` |
-| Completed implementation waiting on merge, closure, or acceptance authority | Ask the accountable owner one concrete question |
 
 ## Evidence Budget
 
