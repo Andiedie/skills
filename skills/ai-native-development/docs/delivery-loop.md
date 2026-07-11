@@ -105,7 +105,7 @@ A PRD package is still claimed as one unit. Its owner may delegate child slices,
 
 The configured workflow state backend is the source of truth for the loop. It keeps the current work record, State Reason, Package Contract, relationships, owner, and evidence recoverable when sessions or Agents change.
 
-Before implementation, work moves through a small queue: `needs-triage`, `needs-info`, `needs-pack`, and `ready-for-agent`. These states describe where pre-execution uncertainty remains; they are not implementation progress states. The [backend contract](../ai-native-backend-contract/backend-contract.md) defines their backend-neutral meaning and invariants; the configured [backend reference](../ai-native-backend-contract/backends/) defines their representation.
+Before implementation, work moves through a small queue: `needs-triage`, `needs-info`, `needs-pack`, and `ready-for-agent`. These states describe where pre-execution uncertainty remains; they are not implementation progress states. The [backend contract](../and-backend-contract/backend-contract.md) defines their backend-neutral meaning and invariants; the configured [backend reference](../and-backend-contract/backends/) defines their representation.
 
 Branches, commits, pull requests, CI, and reviews are implementation artifacts. They provide evidence about delivery, while the workflow backend continues to hold the package, ownership, and lifecycle outcome.
 
@@ -126,5 +126,5 @@ Closure can produce a new signal: a follow-up requirement, a documentation need,
 ## Continue Reading
 
 - Use the [skills guide](skills.md) to choose the next workflow skill.
-- Use the [backend contract](../ai-native-backend-contract/backend-contract.md) for workflow-state concepts and invariants.
-- Use the configured [backend reference](../ai-native-backend-contract/backends/) for representation and operations.
+- Use the [backend contract](../and-backend-contract/backend-contract.md) for workflow-state concepts and invariants.
+- Use the configured [backend reference](../and-backend-contract/backends/) for representation and operations.

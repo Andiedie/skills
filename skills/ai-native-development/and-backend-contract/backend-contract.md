@@ -27,7 +27,7 @@ Rules:
 - `version` must be `1`.
 - `workflow_state_backend` must be `github-native` or `markdown-file-based`.
 - Version 1 has no other fields.
-- Missing, malformed, unsupported, or extended config routes to `setup-ai-native-development`.
+- Missing, malformed, unsupported, or extended config routes to `setup-and`.
 
 ## Backend Values
 
@@ -46,7 +46,7 @@ The configured backend is exclusive. A repository may reference implementation a
 | Delivery unit | The public unit that can be picked, claimed, implemented, and completed: a single package or parent PRD package. |
 | Stage state | The active queue state of a delivery unit before terminal lifecycle outcome. |
 | State Reason | The current structured reason a delivery unit is waiting in `needs-info`. |
-| Package Contract | The implementation source of truth published by `issue-pack`. |
+| Package Contract | The implementation source of truth published by `and-pack`. |
 | Containment relationship | Parent PRD contains child slices. |
 | Dependency relationship | Work record A must wait for work record B. |
 | External blocker | A blocker outside the work record graph. |
@@ -124,7 +124,7 @@ Turn raw or triaged work into one delivery unit:
 - single package; or
 - PRD package with child slices.
 
-Publishing a package writes the Package Contract, relationships, verification expectations, and `ready-for-agent` stage state. Package Contract content is owned by `issue-pack`; this contract defines where it lives.
+Publishing a package writes the Package Contract, relationships, verification expectations, and `ready-for-agent` stage state. Package Contract content is owned by `and-pack`; this contract defines where it lives.
 
 ### Write Relationships
 
@@ -183,7 +183,7 @@ Required fields:
 - `Resume with`
 - `Exit criteria`
 
-Allowed `Resume with` values should be workflow skills that can continue the work, usually `issue-triage`, `issue-grill`, or `issue-pack`.
+Allowed `Resume with` values should be workflow skills that can continue the work, usually `and-triage`, `and-clarify`, or `and-pack`.
 
 The latest State Reason is queryable according to the backend reference. Material State Reason changes must leave append-only evidence.
 
@@ -194,7 +194,7 @@ State: needs-info
 Cause: <missing-facts, decision-needed, access-needed, external-state, or acceptance-needed>
 Owner: <reporter, maintainer, human, agent, or external-system>
 Question: <one specific question, decision, permission, external event, or acceptance gate>
-Resume with: <issue-triage, issue-grill, or issue-pack>
+Resume with: <and-triage, and-clarify, or and-pack>
 Exit criteria: <what must be true before this delivery unit can leave needs-info>
 ```
 
@@ -207,7 +207,7 @@ The backend reference defines where receipts live. The calling workflow skill de
 Use receipts for turning points:
 
 - State Reason changes;
-- issue-grill decisions;
+- and-clarify decisions;
 - package publication;
 - claim;
 - implementation;
@@ -216,7 +216,7 @@ Use receipts for turning points:
 - lifecycle outcome;
 - follow-up work.
 
-Receipts should not become a duplicate Package Contract unless the calling stage is `issue-pack`.
+Receipts should not become a duplicate Package Contract unless the calling stage is `and-pack`.
 
 ## References
 

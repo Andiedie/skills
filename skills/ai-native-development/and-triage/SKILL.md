@@ -1,10 +1,10 @@
 ---
-name: issue-triage
+name: and-triage
 description: Decide whether recorded work should close, wait for information, or be packed.
 disable-model-invocation: true
 ---
 
-# Issue Triage
+# AND Triage
 
 Triage decides the next route for an authoritative configured-backend work record: close it, wait for information, or move it to `needs-pack`.
 
@@ -12,9 +12,9 @@ Triage produces an evidence-backed routing decision. It does not make work execu
 
 ## Backend Contract
 
-Before reading or writing workflow state, read `.and/config.yml`, then use `ai-native-backend-contract`.
+Before reading or writing workflow state, read `.and/config.yml`, then use `and-backend-contract`.
 
-Use the configured backend reference for all reads and writes. If setup is missing, unsupported, or the backend contract is unavailable, stop and route to `setup-ai-native-development` or ask the user to install the missing skill.
+Use the configured backend reference for all reads and writes. If setup is missing, unsupported, or the backend contract is unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
 
 Do not infer backend labels, frontmatter, State Reason placement, lifecycle representation, or receipt placement inside this skill.
 
@@ -24,7 +24,7 @@ Triage may produce only one outcome:
 
 - `closed`: no further workflow action is needed because the work is complete, duplicate, rejected, not actionable, already implemented, or no longer relevant.
 - `needs-info`: safe packaging is blocked by one specific missing fact, human decision, permission, external state, or acceptance input.
-- `needs-pack`: the work is worth doing and has enough confirmed input for `issue-pack`.
+- `needs-pack`: the work is worth doing and has enough confirmed input for `and-pack`.
 
 Open work must not carry contradictory public stage state.
 
@@ -48,7 +48,7 @@ Ask before editing only when:
 
 1. Resolve target or attention list.
    - Use the specific work record when the user names a work ID, issue number, path, or work-record URL.
-   - When the user names an external PR, resolve its authoritative configured-backend work record. If none exists, stop and route the PR to `issue-intake`; do not triage or mutate the PR.
+   - When the user names an external PR, resolve its authoritative configured-backend work record. If none exists, stop and route the PR to `and-intake`; do not triage or mutate the PR.
    - When no target is named, query configured-backend work records for untriaged work, `needs-triage`, and `needs-info` with new activity.
    - Do not batch-update by default.
    - Completion criterion: one target is selected, or the report says no triage work is in scope.
@@ -67,9 +67,9 @@ Ask before editing only when:
    - Choose `closed` when the work has a verified terminal reason and closure authority exists or confirmation is obtained.
    - Choose `needs-info` when one specific missing input blocks safe packaging.
    - Choose `needs-pack` when the work is worth doing and packageable.
-   - Use `issue-grill` as the resume path for structured product, domain, architecture, naming, or testing decisions.
+   - Use `and-clarify` as the resume path for structured product, domain, architecture, naming, or testing decisions.
    - Use the smallest accountable owner for missing facts, access, external state, or acceptance input.
-   - Treat package-shape recommendations as hints only; final package shape belongs to `issue-pack`.
+   - Treat package-shape recommendations as hints only; final package shape belongs to `and-pack`.
    - Completion criterion: exactly one route is selected, or one confirmation question is asked with the evidence and risk named.
 
 4. Apply the route when safe or confirmed.
@@ -84,7 +84,7 @@ Ask before editing only when:
 5. Report a receipt.
    - Include the work link or ID, outcome, state or lifecycle change, material facts verified, exact unresolved question when any, and next skill.
    - Do not repeat full issue bodies, full triage notes, full State Reason markdown, long reproduction logs, or empty sections.
-   - Completion criterion: the next actor can continue with `issue-grill`, `issue-pack`, or closure follow-up without rereading the whole triage session.
+   - Completion criterion: the next actor can continue with `and-clarify`, `and-pack`, or closure follow-up without rereading the whole triage session.
 
 ## Backend Notes
 
@@ -105,7 +105,7 @@ Needed input:
 - Cause: <missing-facts, decision-needed, access-needed, external-state, or acceptance-needed>
 - Owner: <reporter, maintainer, human, agent, or external-system>
 - Question: <one specific question, decision, permission, external event, or acceptance gate>
-- Resume with: <issue-triage, issue-grill, or issue-pack>
+- Resume with: <and-triage, and-clarify, or and-pack>
 - Exit criteria: <what must be true before this work can leave needs-info>
 ```
 
@@ -147,9 +147,9 @@ Authority:
 
 ## Boundaries
 
-- Do not write a Package Contract, create child records, or mark work `ready-for-agent`; route packageable work to `issue-pack`.
+- Do not write a Package Contract, create child records, or mark work `ready-for-agent`; route packageable work to `and-pack`.
 - Do not claim, implement, review, merge, or release ownership.
 - Do not close work without explicit authority or confirmation.
 - Do not ask broad questions when a specific State Reason can be written.
-- Do not run a structured decision interview; route those decisions to `issue-grill`.
+- Do not run a structured decision interview; route those decisions to `and-clarify`.
 - Do not apply AND workflow state or lifecycle outcomes to linked external PRs.

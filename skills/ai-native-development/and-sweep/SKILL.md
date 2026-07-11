@@ -1,10 +1,10 @@
 ---
-name: issue-sweep
-description: Audit AI-native issue workflow drift and stale work.
+name: and-sweep
+description: Audit AND workflow drift and stale work.
 disable-model-invocation: true
 ---
 
-# Issue Sweep
+# AND Sweep
 
 Sweep audits the configured workflow backend for drift that would make pick, claim, or implementation unsafe. It reports actionable findings and applies only approved low-risk cleanup.
 
@@ -12,9 +12,9 @@ Sweep is not triage, pick, pack, claim, or implementation.
 
 ## Backend Contract
 
-Before auditing, read `.and/config.yml`, then use `ai-native-backend-contract`.
+Before auditing, read `.and/config.yml`, then use `and-backend-contract`.
 
-Use the configured backend reference for locating work, reading workflow state, applying backend-specific sweep checks, and applying approved cleanup. If setup is missing, unsupported, or the backend contract is unavailable, stop and route to `setup-ai-native-development` or ask the user to install the missing skill.
+Use the configured backend reference for locating work, reading workflow state, applying backend-specific sweep checks, and applying approved cleanup. If setup is missing, unsupported, or the backend contract is unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
 
 Do not infer backend labels, frontmatter, relationships, ownership records, receipts, or lifecycle representation inside this skill.
 
@@ -169,7 +169,7 @@ Metadata cleanup:
 
 Candidate follow-up:
 - <work>: <reason>
-  Route: <issue-triage, issue-grill, issue-pack, issue-claim, human approval, wait, or no action>
+  Route: <and-triage, and-clarify, and-pack, and-claim, human approval, wait, or no action>
 ```
 
 When fixes are applied, append:

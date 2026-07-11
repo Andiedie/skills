@@ -23,7 +23,7 @@ GitHub-native requires:
 - comments for receipts;
 - assignees or claim comments for ownership.
 
-If native parent/sub-issue or blocked-by/blocking relationships are unavailable, do not emulate them with markdown task lists, labels, or comments. Route to `setup-ai-native-development` to resolve GitHub capability or choose `markdown-file-based`.
+If native parent/sub-issue or blocked-by/blocking relationships are unavailable, do not emulate them with markdown task lists, labels, or comments. Route to `setup-and` to resolve GitHub capability or choose `markdown-file-based`.
 
 ## Config
 
@@ -88,7 +88,7 @@ State: needs-info
 Cause: <missing-facts, decision-needed, access-needed, external-state, or acceptance-needed>
 Owner: <reporter, maintainer, human, agent, or external-system>
 Question: <one specific question, decision, permission, external event, or acceptance gate>
-Resume with: <issue-triage, issue-grill, or issue-pack>
+Resume with: <and-triage, and-clarify, or and-pack>
 Exit criteria: <what must be true before this delivery unit can leave needs-info>
 ```
 

@@ -1,16 +1,16 @@
 ---
-name: setup-ai-native-development
-description: Configure a repository for the AI-native development loop.
+name: setup-and
+description: Configure a repository for the AND delivery loop.
 disable-model-invocation: true
 ---
 
-# Setup AI-Native Development
+# Setup AND
 
 Set up a repository to run the AND delivery loop with exactly one configured workflow state backend.
 
 This is a repository bootstrap skill, not a workflow handbook. Discover the repository, choose or verify the backend, write the minimal configuration, update the existing agent entrypoint, check external skill readiness, and report the next workflow skill.
 
-Use the installed workflow skills as the source of truth for runtime behavior and `ai-native-backend-contract` for backend rules. Use the delivery-loop docs to explain the conceptual model. Do not copy package rules into each target repository unless they are real repository-specific facts.
+Use the installed workflow skills as the source of truth for runtime behavior and `and-backend-contract` for backend rules. Use the delivery-loop docs to explain the conceptual model. Do not copy package rules into each target repository unless they are real repository-specific facts.
 
 ## Setup Approach
 
@@ -23,7 +23,7 @@ AND setup centers on one workflow state backend and minimal repository integrati
 Setup is complete when:
 
 - `.and/config.yml` exists with only `version: 1` and `workflow_state_backend`.
-- The selected backend has the minimum representation needed by `ai-native-backend-contract`.
+- The selected backend has the minimum representation needed by `and-backend-contract`.
 - The existing agent entrypoint tells agents to use the AND loop and `ask-andie`.
 - External skill readiness has been checked and reported.
 - The final receipt names the next workflow skill.
@@ -151,7 +151,7 @@ Files changed:
 External skills: missing `tdd`.
 Install: npx --yes skills add mattpocock/skills -g --agent codex --skill tdd -y
 
-Next: use `issue-intake` for new requests, or `ask-andie` if you are unsure where existing work belongs.
+Next: use `and-intake` for new requests, or `ask-andie` if you are unsure where existing work belongs.
 ```
 
 Avoid long `none` sections, full workflow tables, copied backend schemas, and setup-process logs.

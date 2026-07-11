@@ -1,10 +1,10 @@
 ---
-name: issue-implement
+name: and-implement
 description: Implement a claimed AI-native delivery unit in an isolated worktree.
 disable-model-invocation: true
 ---
 
-# Issue Implement
+# AND Implement
 
 Implement a claimed single issue package or PRD package. The configured workflow backend is the implementation source of truth; chat history is context only.
 
@@ -12,9 +12,9 @@ Implementation happens in an isolated worktree and finishes with verification, c
 
 ## Backend Contract
 
-Before implementation work, read `.and/config.yml`, then use `ai-native-backend-contract`.
+Before implementation work, read `.and/config.yml`, then use `and-backend-contract`.
 
-Use the configured backend reference for reading the claimed delivery unit and recording implementation evidence. If setup is missing, unsupported, or the backend contract is unavailable, stop and route to `setup-ai-native-development` or ask the user to install the missing skill.
+Use the configured backend reference for reading the claimed delivery unit and recording implementation evidence. If setup is missing, unsupported, or the backend contract is unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
 
 Do not infer backend ownership, receipt, child, relationship, or implementation artifact representation inside this skill.
 
@@ -22,7 +22,7 @@ Do not infer backend ownership, receipt, child, relationship, or implementation 
 
 `tdd` and `code-review` are required implementation skills. Verify they are available before implementation work begins.
 
-If one is missing, stop with the exact missing skill and route to `setup-ai-native-development` or the documented install command. Do not simulate missing skills.
+If one is missing, stop with the exact missing skill and route to `setup-and` or the documented install command. Do not simulate missing skills.
 
 Invoke `tdd` where test-first work is practical, supplying the testing seam already confirmed in the Package Contract. Invoke `code-review` before finalizing the implementation diff, supplying both the implementation fixed point and the complete Package Contract as its explicit Spec source.
 
@@ -35,7 +35,7 @@ Do not copy either skill's testing, smell, or review rules into this skill. AND 
 - The claim unit is one single issue package, or one parent PRD package plus all children.
 - The delivery unit is open, `ready-for-agent`, and free of open external blockers.
 
-If a precondition is missing, route to the smallest upstream skill: `issue-claim`, `issue-pick`, `issue-pack`, `issue-grill`, `issue-triage`, or `issue-sweep`.
+If a precondition is missing, route to the smallest upstream skill: `and-claim`, `and-pick`, `and-pack`, `and-clarify`, `and-triage`, or `and-sweep`.
 
 ## Isolation Rule
 
@@ -46,10 +46,10 @@ Reuse an existing worktree only when it is linked to the same delivery unit and 
 ## Process
 
 1. Resolve claimed delivery unit.
-   - Read the claim record, ownership evidence, Package Contract, accepted `issue-grill` decisions, blockers, linked implementation artifacts, agreed testing seam, and verification expectations.
+   - Read the claim record, ownership evidence, Package Contract, accepted `and-clarify` decisions, blockers, linked implementation artifacts, agreed testing seam, and verification expectations.
    - For a PRD package, read the parent PRD and every child record.
    - Treat the configured backend package as the implementation contract.
-   - If the Package Contract does not state the expected behavior or verification expectations, or does not state an agreed testing seam or explicit non-test verification strategy, stop before tests or implementation changes. Route a packaging omission to `issue-pack`; route a missing human testing decision to `issue-grill`. Do not make or reconfirm that decision during implementation.
+   - If the Package Contract does not state the expected behavior or verification expectations, or does not state an agreed testing seam or explicit non-test verification strategy, stop before tests or implementation changes. Route a packaging omission to `and-pack`; route a missing human testing decision to `and-clarify`. Do not make or reconfirm that decision during implementation.
    - Completion criterion: source-of-truth links, claim scope, blockers, child coverage, expected behavior, agreed seam or verification strategy, and verification expectations are known.
 
 2. Enter isolated worktree.
@@ -82,7 +82,7 @@ Reuse an existing worktree only when it is linked to the same delivery unit and 
    - Do not make `code-review` rediscover the tracker or Spec.
    - Do not claim review ran unless it actually ran.
    - Fix implementation defects that are actionable within the Package Contract, update the scoped commit, then rerun relevant verification and review against the same fixed point.
-   - Route Package Contract or scope defects to `issue-pack`. Route missing human-owned judgments to `issue-grill` or the owner named by the State Reason.
+   - Route Package Contract or scope defects to `and-pack`. Route missing human-owned judgments to `and-clarify` or the owner named by the State Reason.
    - Completion criterion: review is clean, or remaining findings are explicitly outside scope or require human judgment.
 
 6. Record evidence and report.

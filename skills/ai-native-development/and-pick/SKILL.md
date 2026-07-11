@@ -1,10 +1,10 @@
 ---
-name: issue-pick
+name: and-pick
 description: Pick agent-ready delivery units and recommend one claimable unit.
 disable-model-invocation: true
 ---
 
-# Issue Pick
+# AND Pick
 
 Pick is a read-only recommendation step. It chooses one unblocked, unclaimed delivery unit from ready work and stops before claim.
 
@@ -12,9 +12,9 @@ Do the full evidence check, but keep the user-facing output to a compact recomme
 
 ## Backend Contract
 
-Before listing or reading ready work, read `.and/config.yml`, then use `ai-native-backend-contract`.
+Before listing or reading ready work, read `.and/config.yml`, then use `and-backend-contract`.
 
-Use the configured backend reference for locating ready delivery units and reading source-of-truth state. If setup is missing, unsupported, or the backend contract is unavailable, stop and route to `setup-ai-native-development` or ask the user to install the missing skill.
+Use the configured backend reference for locating ready delivery units and reading source-of-truth state. If setup is missing, unsupported, or the backend contract is unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
 
 Do not infer backend labels, ownership receipts, assignees, comments, child relationships, blockers, or implementation artifacts inside this skill.
 
@@ -55,7 +55,7 @@ A pickable delivery unit must also have:
 - out of scope;
 - coherent parent/child structure when it is a PRD package.
 
-If a hard gate fails, do not recommend the candidate. If a quality gate fails, route to `issue-pack`. If missing human or external input blocks readiness, route to `issue-triage`. If state, ownership, or relationship drift blocks readiness, route to `issue-sweep`.
+If a hard gate fails, do not recommend the candidate. If a quality gate fails, route to `and-pack`. If missing human or external input blocks readiness, route to `and-triage`. If state, ownership, or relationship drift blocks readiness, route to `and-sweep`.
 
 ## Ranking
 
@@ -98,14 +98,14 @@ Do not rank by recentness alone, issue number, perceived shortness, unrecorded b
 5. Validate claim readiness.
    - Verify Package Contract completeness, verification strategy, out of scope, PRD parent/child coherence, absence of partial claim, absence of external blocker, and absence of linked active implementation conflict.
    - Route broken candidates instead of fixing them.
-   - Completion criterion: the delivery unit can be safely handed to `issue-claim`, or the smallest route-back blocker is named.
+   - Completion criterion: the delivery unit can be safely handed to `and-claim`, or the smallest route-back blocker is named.
 
 6. Report a recommendation.
    - Output one recommended pick.
    - Include only action-relevant evidence.
    - If no pickable unit exists, name the best candidate and smallest blocker.
    - Stop before claim.
-   - Completion criterion: the user knows the recommended delivery unit and can run `issue-claim`, or knows which skill should repair the best candidate.
+   - Completion criterion: the user knows the recommended delivery unit and can run `and-claim`, or knows which skill should repair the best candidate.
 
 ## Report Shape
 
@@ -118,7 +118,7 @@ Why:
 
 Claim unit: <issue, or parent PRD + all children>
 Source of truth: <link or work ID>
-Next: `issue-claim`
+Next: `and-claim`
 ```
 
 For PRD packages, add only when useful:
@@ -141,7 +141,7 @@ No pickable delivery unit found.
 
 Best candidate: <work>
 Blocker: <smallest blocker>
-Recommended route: <issue-pack, issue-triage, issue-sweep, wait, or human decision>
+Recommended route: <and-pack, and-triage, and-sweep, wait, or human decision>
 ```
 
 Do not output implementation summaries, full Package Contract summaries, every rejected candidate, or empty optional sections. Only compare candidates when the user asks for a slate review.
@@ -151,5 +151,5 @@ Do not output implementation summaries, full Package Contract summaries, every r
 - Do not mutate workflow state: no claims, assignments, labels, comments, edits, branches, PRs, closure, or repairs.
 - Do not pick PRD children independently.
 - Do not pick blocked, claimed, drifted, or under-specified delivery units.
-- Do not rewrite scope or synthesize implementation requirements; route broken packages to `issue-pack`.
+- Do not rewrite scope or synthesize implementation requirements; route broken packages to `and-pack`.
 - Do not invent business priority when backend evidence only supports execution readiness.

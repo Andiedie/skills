@@ -12,9 +12,9 @@ Keep each surface focused on one audience and purpose.
 | `docs/delivery-loop.md` | Someone learning AND | Why the loop exists, how it moves, and how humans and Agents collaborate. |
 | `docs/skills.md` | Someone choosing a skill | Task-oriented routing and skill usage. |
 | `AGENTS.md` | An Agent maintaining this package | Design balances, authority boundaries, and maintenance checks. |
-| `ai-native-backend-contract/backend-contract.md` | A workflow or backend author | Backend-neutral concepts, operations, and invariants. |
-| `ai-native-backend-contract/backends/*.md` | A workflow or backend author | Backend-specific representation and operations. |
-| `ai-native-backend-contract/workflow-examples.md` | A maintainer validating a backend | Non-authoritative end-to-end dry runs. |
+| `and-backend-contract/backend-contract.md` | A workflow or backend author | Backend-neutral concepts, operations, and invariants. |
+| `and-backend-contract/backends/*.md` | A workflow or backend author | Backend-specific representation and operations. |
+| `and-backend-contract/workflow-examples.md` | A maintainer validating a backend | Non-authoritative end-to-end dry runs. |
 | `<skill>/SKILL.md` | An Agent running that skill | Runtime behavior, preconditions, side effects, stop routes, and output contract. |
 | Skill sibling references | An Agent on a conditional path | Detailed guidance that is needed only for that path. |
 

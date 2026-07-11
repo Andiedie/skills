@@ -12,28 +12,28 @@ Do more than route, but only a little. Teach one reusable rule so the user needs
 
 ## Backend Contract
 
-When routing workflow-backed work, read `.and/config.yml`, then use `ai-native-backend-contract` for the configured backend.
+When routing workflow-backed work, read `.and/config.yml`, then use `and-backend-contract` for the configured backend.
 
-If setup is missing, invalid, unsupported, or the backend contract is unavailable, route to `setup-ai-native-development`.
+If setup is missing, invalid, unsupported, or the backend contract is unavailable, route to `setup-and`.
 
 ## Route Map
 
-Main loop: `issue-intake` -> `issue-triage` -> `issue-grill` when needed -> `issue-pack` -> `issue-pick` -> `issue-claim` -> `issue-implement`.
+Main loop: `and-intake` -> `and-triage` -> `and-clarify` when needed -> `and-pack` -> `and-pick` -> `and-claim` -> `and-implement`.
 
 Keep clarification and packaging in one context until the package is published. After a PRD package is claimed, its owner may use child records as subagent work units grounded in the parent PRD plus the child record.
 
 | Surface / evidence | Route |
 | --- | --- |
-| New repo, missing `.and/config.yml`, invalid backend, or missing backend contract | `setup-ai-native-development` |
-| Untracked raw signal, including an external PR or local diff with no work record | `issue-intake` |
-| Existing work with unclear state, new activity, duplicate or closure question, or missing State Reason | `issue-triage` |
-| `needs-info` with `Resume with: issue-grill` or `Cause: decision-needed` | `issue-grill` |
+| New repo, missing `.and/config.yml`, invalid backend, or missing backend contract | `setup-and` |
+| Untracked raw signal, including an external PR or local diff with no work record | `and-intake` |
+| Existing work with unclear state, new activity, duplicate or closure question, or missing State Reason | `and-triage` |
+| `needs-info` with `Resume with: and-clarify` or `Cause: decision-needed` | `and-clarify` |
 | `needs-info` waiting for facts, access, external state, or acceptance | Route the State Reason question to its owner; resume with the recorded skill |
-| `needs-pack` | `issue-pack` |
-| Ready work slate with no chosen delivery unit | `issue-pick` |
-| Specific ready single issue package or parent PRD package | `issue-claim` |
-| Claimed delivery unit, or a branch, diff, or linked PR tied to its claim | `issue-implement` |
-| Stale claim, partial PRD claim, relationship drift, contradictory state, or blocked ready work | `issue-sweep` |
+| `needs-pack` | `and-pack` |
+| Ready work slate with no chosen delivery unit | `and-pick` |
+| Specific ready single issue package or parent PRD package | `and-claim` |
+| Claimed delivery unit, or a branch, diff, or linked PR tied to its claim | `and-implement` |
+| Stale claim, partial PRD claim, relationship drift, contradictory state, or blocked ready work | `and-sweep` |
 | Completed implementation waiting on merge, closure, or acceptance authority | Ask the accountable owner one concrete question |
 
 ## Evidence Budget
@@ -54,12 +54,12 @@ Do not perform full triage, pick ranking, package validation, implementation pla
 ## When Invoked
 
 1. Identify the current surface: raw request or external PR, existing work, ready slate, specific delivery unit, claimed work, local branch/diff, backend drift, or setup gap.
-2. Check setup when workflow-backed routing is needed. If setup is missing or unsupported, route to `setup-ai-native-development`.
+2. Check setup when workflow-backed routing is needed. If setup is missing or unsupported, route to `setup-and`.
 3. Read minimal routing evidence. The route should be justifiable with one or two facts.
 4. Choose exactly one next skill, one owner question, or one setup/install route. Do not run the next workflow skill inside `ask-andie`.
 5. Report the route and one teaching rule using the user's language. Keep skill names, labels, issue numbers, work IDs, commands, and code identifiers literal.
 
-If the route is uncertain, choose the smallest clarifying route: `issue-triage` for unclear backend state, `issue-grill` for missing product or business decisions, `setup-ai-native-development` for missing repository rules, or one direct question when the user must decide.
+If the route is uncertain, choose the smallest clarifying route: `and-triage` for unclear backend state, `and-clarify` for missing product or business decisions, `setup-and` for missing repository rules, or one direct question when the user must decide.
 
 ## Output Shape
 
