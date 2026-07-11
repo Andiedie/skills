@@ -72,7 +72,7 @@ flowchart TD
   Pack["Pack<br/>publish one delivery unit"]
   Claim["Claim<br/>record whole-unit ownership"]
   Implement["Implement<br/>change, verify, and review"]
-  Close["Close / Learn<br/>record outcome and follow-up"]
+  Close["Close / Learn<br/>deliver, complete, and follow up"]
 
   Signal --> Observe
   Observe --> Decide
@@ -120,6 +120,8 @@ The loop preserves correctness by making route-backs explicit:
 - Contradictory or stale workflow state is repaired before claim or implementation.
 - Failed implementation verification returns to Implement unless it exposes a package defect.
 - A completed, duplicate, rejected, or superseded delivery unit receives a terminal lifecycle outcome with evidence.
+
+For a reviewed implementation with no pending acceptance or blocker, `and-finish` is the Close/Learn action. It delivers the implementation through one authorized GitHub pull request, makes completion authoritative in the configured backend, and then cleans proven-safe delivery artifacts. Review remains part of implementation evidence rather than being rerun during finish.
 
 Closure can produce a new signal: a follow-up requirement, a documentation need, a newly discovered bug, or a lesson that changes future packages. That signal starts another loop instead of quietly expanding the completed delivery unit.
 

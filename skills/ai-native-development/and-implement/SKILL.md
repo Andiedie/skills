@@ -37,6 +37,8 @@ Do not copy either skill's testing, smell, or review rules into this skill. AND 
 
 If a precondition is missing, route to the smallest upstream skill: `and-claim`, `and-pick`, `and-pack`, `and-clarify`, `and-triage`, or `and-sweep`.
 
+If the current implementation head already has a clean implementation receipt satisfying the Package Contract and no acceptance or blocker remains, stop and route to `and-finish`. If the linked branch carries a non-authoritative finish proposal, route to `and-finish` to wait or withdraw it before implementation continues.
+
 ## Isolation Rule
 
 Implementation must happen in a dedicated branch/worktree tied to the delivery unit.
@@ -89,8 +91,8 @@ Reuse an existing worktree only when it is linked to the same delivery unit and 
    - Verify all delivery-unit changes are contained in scoped commits on the isolated branch and no relevant change remains only in the working tree.
    - Record an implementation receipt through the configured backend.
    - Link branch, commit, PR, CI, or review result when available.
-   - Do not close, merge, or release claim unless repository policy or the user authorizes it.
-   - Report a short receipt: worktree, branch, commit or PR, verification run, review result, remaining blockers, and next close, merge, or acceptance step.
+   - Leave pull-request delivery, terminal lifecycle completion, and cleanup to `and-finish`.
+   - Report a short receipt: worktree, branch, reviewed implementation head, pull request when any, verification run, review result, remaining blockers, and next `and-finish`, acceptance-owner, or route-back step.
    - Completion criterion: the claimed delivery unit is implemented, verified, reviewed, committed, and recorded, or routed back with the smallest blocker.
 
 ## Implementation Receipt
@@ -104,7 +106,8 @@ Implemented by: <actor>
 Claim unit: <single issue package or PRD package>
 Branch / worktree: <branch and path>
 Fixed point: <full base commit SHA>
-Commit / PR: <commit, PR, or none yet>
+Reviewed implementation head: <full commit SHA>
+Pull request: <URL and number, or none yet>
 Verification:
 - <tests, typecheck, manual verification, CI, or none with reason>
 Review:
@@ -114,7 +117,7 @@ Docs / domain updates:
 Remaining blockers:
 - <none or blocker>
 Next step:
-- <close, merge, PR review, acceptance, or follow-up>
+- <and-finish, acceptance owner, or route back>
 ```
 
 Do not copy full test logs, review findings, diffs, or Package Contracts into the user-facing report.
@@ -125,5 +128,5 @@ Do not copy full test logs, review findings, diffs, or Package Contracts into th
 - Do not use chat summaries, pick reports, or claim receipts as the implementation contract; use the backend Package Contract.
 - Do not implement in a dirty shared worktree, on `main`, or in a worktree with unrelated changes.
 - Do not silently expand, shrink, or rewrite the Package Contract.
-- Do not claim, release, override, close, merge, or split public ownership inside this skill unless explicitly authorized by repository policy or the user.
+- Keep the recorded claim and public ownership unchanged.
 - Do not split PRD children into independent public claims during implementation.

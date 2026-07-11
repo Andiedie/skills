@@ -13,8 +13,9 @@ Use this guide to choose the next skill in the AND delivery loop. If the current
 | Clarify | `needs-info` names a required decision, fact, permission, acceptance input, or external event. | [`and-clarify`](../and-clarify/SKILL.md) for a structured decision; otherwise the accountable owner | Confirmed input or a current State Reason. | The recorded resume skill |
 | Pack | Worth-doing work is not executable yet. | [`and-pack`](../and-pack/SKILL.md) | A `ready-for-agent` single issue package or PRD package. | `and-pick` |
 | Ready | A delivery unit should be recommended for execution. | [`and-pick`](../and-pick/SKILL.md) | One read-only delivery-unit recommendation. | `and-claim` |
-| Claim | A ready delivery unit has been chosen. | [`and-claim`](../and-claim/SKILL.md) | Ownership of the complete delivery unit. | `and-implement` |
-| Implement | The current actor is the claimant or has been explicitly delegated by the claimant. | [`and-implement`](../and-implement/SKILL.md) | Implementation artifacts, verification, review, commit, and implementation receipt. | Merge, acceptance, closure, or a route back |
+| Claim | An unclaimed ready delivery unit with no active implementation evidence has been chosen. | [`and-claim`](../and-claim/SKILL.md) | Ownership of the complete delivery unit. | `and-implement` |
+| Implement | The current actor owns or is delegated a claimed delivery unit whose implementation or review is incomplete. | [`and-implement`](../and-implement/SKILL.md) | Implementation artifacts, verification, review, commit, and implementation receipt. | `and-finish`, an acceptance owner, or a route back |
+| Finish | Reviewed delivery has no pending acceptance or blocker, or an earlier finish needs to resume delivery, lifecycle completion, or cleanup. | [`and-finish`](../and-finish/SKILL.md) | Merged pull request, terminal lifecycle evidence, and safe delivery-artifact cleanup. | A new follow-up signal, or done |
 | Audit | Stage state, State Reasons, relationships, blockers, ownership, implementation artifacts, or lifecycle outcomes may have drifted. | [`and-sweep`](../and-sweep/SKILL.md) | Actionable findings and approved low-risk cleanup. | The skill or owner responsible for the repair |
 
 ## Backend Reference

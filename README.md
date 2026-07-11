@@ -15,7 +15,7 @@ npx --yes skills add Andiedie/skills --list
 Install the AI-native development loop globally for Codex and Claude Code:
 
 ```bash
-npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill and-backend-contract ask-andie and-intake and-triage and-clarify and-pack and-pick and-claim and-implement and-sweep setup-and -y
+npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill and-backend-contract ask-andie and-intake and-triage and-clarify and-pack and-pick and-claim and-implement and-finish and-sweep setup-and -y
 ```
 
 Install the repository interactively:
@@ -40,7 +40,7 @@ npx --yes skills add Andiedie/skills --skill and-backend-contract and-pack
 
 ### AI-native development
 
-[AI-native development](skills/ai-native-development/README.md) defines the delivery loop for turning ambiguous signals into packed, claimed, and implemented software changes.
+[AI-native development](skills/ai-native-development/README.md) defines the delivery loop for turning ambiguous signals into verified and completed software changes.
 
 It includes:
 
@@ -53,6 +53,7 @@ It includes:
 - `and-pick`
 - `and-claim`
 - `and-implement`
+- `and-finish`
 - `and-sweep`
 - `setup-and`
 

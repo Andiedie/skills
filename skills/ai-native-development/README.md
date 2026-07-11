@@ -1,6 +1,6 @@
 # AI-native development
 
-This package defines the AND delivery loop and the workflow skills that turn ambiguous signals into executable, owned, and verified software changes.
+This package defines the AND delivery loop and the workflow skills that turn ambiguous signals into executable, owned, verified, and completed software changes.
 
 ## Start Here
 
@@ -23,6 +23,7 @@ This package defines the AND delivery loop and the workflow skills that turn amb
 - `and-pick`
 - `and-claim`
 - `and-implement`
+- `and-finish`
 - `and-sweep`
 - `setup-and`
 

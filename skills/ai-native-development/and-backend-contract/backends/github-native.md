@@ -59,6 +59,7 @@ workflow_state_backend: github-native
 - Record ownership: set assignee when appropriate and append a claim comment.
 - Record receipt: append an issue comment.
 - Record lifecycle outcome: close the issue with completion evidence, or use an existing close-reason label/comment convention.
+- Finish delivery: merge the reviewed pull request first, then record completion evidence, remove active stage state, and close the delivery-unit issue.
 
 ## Stage State
 
@@ -133,6 +134,20 @@ Workflow receipts are issue comments on the delivery unit.
 
 Branches, commits, PRs, CI, and review results may be linked from receipts. They do not replace the Package Contract, ownership, or lifecycle outcome.
 
+## Finish Delivery
+
+The delivery-unit issue remains open with its active stage until the reviewed pull request reaches the authorized target.
+
+After GitHub records the pull request as merged and the target contains the merge result:
+
+1. append the `and-finish` completion receipt;
+2. remove the active queue label; and
+3. close exactly the completed delivery-unit issue.
+
+Complete a parent PRD only after every child requirement covered by its claim is integrated. Leave merely related work unchanged.
+
+If merge succeeds but receipt or lifecycle mutation fails, resume from the missing backend operation without repeating merge. Source-branch and worktree cleanup begins only after the issue's completion evidence, label removal, and closed state are verified.
+
 ## End-To-End Example
 
 This walkthrough validates the representation defined in this reference. It introduces no additional workflow or schema rules.
@@ -145,7 +160,7 @@ This walkthrough validates the representation defined in this reference. It intr
 6. `and-pick` selects a public ready delivery unit after checking its stage, relationships, and [ownership](#ownership).
 7. `and-claim` records ownership for the complete delivery unit.
 8. `and-implement` references implementation artifacts through the delivery unit's [receipts](#receipts-and-implementation-artifacts).
-9. Completion or rejection records the [lifecycle outcome](#representation) and closes the delivery-unit issue with evidence.
+9. `and-finish` follows [finish delivery](#finish-delivery) to merge, record completion, close the delivery unit, and clean proven-safe artifacts.
 10. `and-sweep` applies the backend-specific [sweep checks](#sweep-checks).
 
 ## Sweep Checks
@@ -163,4 +178,5 @@ Check for:
 - open external blockers on ready work;
 - stale or partial claims;
 - implementation artifacts used as ownership without assignee or claim comment;
+- merged delivery with missing completion evidence, an active stage label, or an open delivery-unit issue;
 - completed children with an open parent PRD.
