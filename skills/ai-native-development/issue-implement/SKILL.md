@@ -49,7 +49,7 @@ Reuse an existing worktree only when it is linked to the same delivery unit and 
    - Read the claim record, ownership evidence, Package Contract, accepted `issue-grill` decisions, blockers, linked implementation artifacts, agreed testing seam, and verification expectations.
    - For a PRD package, read the parent PRD and every child record.
    - Treat the configured backend package as the implementation contract.
-   - If the Package Contract does not state the expected behavior, or does not state an agreed testing seam or explicit non-test verification strategy, stop before tests or implementation changes. Route a packaging omission to `issue-pack`; route a missing human testing decision to `issue-grill`. Do not make or reconfirm that decision during implementation.
+   - If the Package Contract does not state the expected behavior or verification expectations, or does not state an agreed testing seam or explicit non-test verification strategy, stop before tests or implementation changes. Route a packaging omission to `issue-pack`; route a missing human testing decision to `issue-grill`. Do not make or reconfirm that decision during implementation.
    - Completion criterion: source-of-truth links, claim scope, blockers, child coverage, expected behavior, agreed seam or verification strategy, and verification expectations are known.
 
 2. Enter isolated worktree.
