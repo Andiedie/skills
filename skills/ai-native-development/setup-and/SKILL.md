@@ -33,7 +33,6 @@ Setup is complete when:
 1. Explore the repository.
    - Inspect `.and/config.yml`, git remotes, root `AGENTS.md` / `CLAUDE.md`, existing agent docs, existing workflow conventions, existing `.and/work`, and enough domain or ADR docs to preserve established repository conventions.
    - If GitHub is the likely backend and `gh` is available, inspect repository identity, issues, labels, and native relationship support.
-   - Check current skill availability from the session list when visible. If needed, use the repository's documented skill-list command or `npx --yes skills list -a codex --json`.
    - Completion criterion: you can say whether the repo is already configured, which backend is likely, which entrypoint to edit, what writes are needed, and what is blocking setup.
 
 2. Choose or verify the backend.
@@ -53,11 +52,13 @@ Setup is complete when:
    - Do not emulate unavailable GitHub-native relationships with markdown task lists, labels, or comments.
 
 4. Check external skill readiness.
+   - Check current skill availability from the session list when visible. If needed, use the repository's documented skill-list command. When neither source establishes availability, report it as unverified.
    - Check `grilling`, `tdd`, and `code-review`.
    - Missing external skills are environment readiness gaps, not repository setup failures.
    - Do not install external skills unless the user explicitly asks.
    - Do not block repository setup for missing external skills unless the user asked for full-ready setup or the missing skill blocks the setup itself.
-   - Report missing skills with an install command such as `npx --yes skills add mattpocock/skills -g --agent codex --skill <missing-skill...> -y`, adjusted to the known agent scope when appropriate.
+   - Report missing skills with an install command. When the actual agent targets are known, include them explicitly with `--agent <known-target...>`. Otherwise use interactive target selection by omitting `--agent`, for example `npx --yes skills add mattpocock/skills -g --skill <missing-skill...>`.
+   - Completion criterion: each required external skill is available, missing, or unverified, and every missing skill has an install command scoped to known targets or interactive target selection.
 
 5. Prepare the setup plan.
    - Present a concise plan containing the backend, files to create or update, GitHub labels to create or reuse when relevant, the agent entrypoint target, missing external skills, and unresolved decisions.
@@ -149,7 +150,7 @@ Files changed:
 - AGENTS.md
 
 External skills: missing `tdd`.
-Install: npx --yes skills add mattpocock/skills -g --agent codex --skill tdd -y
+Install: <generated install command>
 
 Next: use `and-intake` for new requests, or `ask-andie` if you are unsure where existing work belongs.
 ```

@@ -32,7 +32,7 @@ AND composes with three external runtime skills:
 | `tdd` | `and-implement` when test-first work is practical at the agreed seam. |
 | `code-review` | `and-implement` before finalizing the delivery-unit diff. |
 
-Install missing dependencies with:
+Example for a global Codex and Claude Code environment:
 
 ```sh
 npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill grilling tdd code-review -y
