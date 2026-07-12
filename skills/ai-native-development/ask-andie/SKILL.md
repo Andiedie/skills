@@ -24,7 +24,7 @@ Keep clarification and packaging in one context until the package is published. 
 
 | Surface / evidence | Route |
 | --- | --- |
-| Initial repository setup, missing or invalid setup, or an explicit audit/convergence request for blank, Matt, AND, mixed, incomplete, or outdated config, entrypoint, and setup authority | `setup-and` |
+| Initial repository setup, a current Setup Contract gap, or an explicit request for a setup audit, repair, or full-ready check | `setup-and` |
 | Untracked raw signal, including an external PR or local diff with no work record | `and-intake` |
 | Existing work with unclear state, new activity, duplicate or closure question, or missing State Reason | `and-triage` |
 | `needs-info` with `Resume with: and-clarify` or `Cause: decision-needed` | `and-clarify` |
@@ -54,7 +54,7 @@ Do not perform full triage, pick ranking, package validation, implementation pla
 
 ## When Invoked
 
-1. Identify the current surface: raw request or external PR, existing work, ready slate, specific delivery unit, claimed work, local branch/diff, backend drift, setup gap, or explicit repository setup audit/convergence request.
+1. Identify the current surface: raw request or external PR, existing work, ready slate, specific delivery unit, claimed work, local branch/diff, backend drift, setup gap, or explicit repository setup audit or repair request.
 2. Check setup when workflow-backed routing is needed. If setup is missing or unsupported, route to `setup-and`.
 3. Read minimal routing evidence. The route should be justifiable with one or two facts.
 4. Choose exactly one next skill, one owner question, or one setup/install route. Do not run the next workflow skill inside `ask-andie`.
