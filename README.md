@@ -12,7 +12,7 @@ List the skills exposed by this repository:
 npx --yes skills add Andiedie/skills --list
 ```
 
-Install the AI-native development loop globally for Codex and Claude Code:
+Example: install the AI-native development loop globally for Codex and Claude Code:
 
 ```bash
 npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill and-backend-contract ask-andie and-intake and-triage and-clarify and-pack and-pick and-claim and-implement and-finish and-sweep setup-and -y
@@ -77,7 +77,7 @@ AND requires exactly these external runtime skills:
 - `tdd`
 - `code-review`
 
-Install or repair them with:
+Example for a global Codex and Claude Code environment:
 
 ```sh
 npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill grilling tdd code-review -y
