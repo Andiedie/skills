@@ -14,7 +14,7 @@ Judge only the repository's current evidence and the required results below. Rep
 
 Repository setup is conformant when:
 
-- `.and/config.yml` contains exactly `version: 1` and one supported `workflow_state_backend` value.
+- `.and/config.yml` is a valid v1 config under `and-backend-contract` and selects exactly one supported backend.
 - The configured backend satisfies its minimum storage, capability, and single-source-of-truth requirements in `and-backend-contract`.
 - Every directory containing an Agent instruction file is normalized under the `normalize-agent-instructions` policy: it has an `AGENTS.md` shared source of truth and a sibling `CLAUDE.md` that imports it with `@AGENTS.md` before any Claude-specific rules. Having only one of the two files is a Setup Contract gap.
 - The root `AGENTS.md` contains one effective, concise AND section that directs agents to `.and/config.yml`, the configured backend, `ask-andie`, and the installed AND skills and backend contract.
@@ -33,17 +33,7 @@ Read and validate `.and/config.yml` before selecting a backend reference.
 - Treat instructions that disagree with a valid config as gaps to repair, never as evidence for backend selection.
 - Derive the target from this Setup Contract, the installed AND skills, and `and-backend-contract`. Do not create a repository-local target checklist.
 
-Supported config values are:
-
-```yaml
-version: 1
-workflow_state_backend: github-native
-```
-
-```yaml
-version: 1
-workflow_state_backend: markdown-file-based
-```
+The backend contract owns the supported identifiers and exact v1 schema. When proposing a config write, copy the exact config from the selected backend reference into the write envelope.
 
 Completion criterion: one current or proposed backend target is known, or one genuine user decision is identified.
 
@@ -52,7 +42,7 @@ Completion criterion: one current or proposed backend target is known, or one ge
 Complete the assessment before proposing any write.
 
 - Inspect the config, git remotes, configured backend state, root and nested `AGENTS.md` / `CLAUDE.md` files, and effective instructions that govern workflow behavior.
-- Use `normalize-agent-instructions` as the policy authority for scanning, classifying, and verifying Agent instruction files. Identify symlinks before editing. Evaluate every discovered directory against the explicit cases in Agent Instruction Policy; do not treat a working AND section in the wrong file as normalized.
+- Read the installed `normalize-agent-instructions` skill completely and use its workflow as the sole policy authority for scanning, classifying, changing, and verifying Agent instruction files. Identify symlinks before editing; do not treat a working AND section in the wrong file as normalized.
 - Follow instruction references only far enough to determine the effective rules.
 - For `github-native`, inspect repository identity, issues availability, fixed labels, authenticated permissions, and native containment and dependency relationship capability.
 - For `markdown-file-based`, inspect whether `.and/work` can be the only workflow-state store in the worktree.
@@ -88,7 +78,7 @@ Always complete the underlying assessment. Adapt only the reporting detail:
 
 For a setup or repair request with gaps, present one write envelope that includes:
 
-- every file and section to create, replace, move, or delete;
+- every file, section, and directory to create, replace, move, or delete;
 - every backend action;
 - exact structured values, including config content and GitHub label names;
 - the reason and user-visible impact of each action;
@@ -121,40 +111,18 @@ Run the same assessment against the same target after writes.
 
 Completion criterion: the receipt proves the resulting state and routes the user without making the receipt itself a setup requirement.
 
-## Backend Requirements
+## Backend Application
 
-### GitHub-Native
+Use the configured or proposed backend reference as the sole authority for its schema, fixed labels, storage, representation, operations, capability interpretation, and verification. Setup owns only the current-state audit and the approved minimum application.
 
-- Use only these fixed AND labels: `needs-triage`, `needs-info`, `needs-pack`, `ready-for-agent`, `parent-prd`.
-- Create only missing fixed labels included in the approved envelope. Leave existing matching labels unchanged.
-- Confirm issues availability and authenticated access for the workflow operations required by the installed AND skills.
-- Confirm native parent/sub-issue and blocked-by/blocking reads and mutations with the shared [Relationship API Recipes](../and-backend-contract/backends/github-native.md#relationship-api-recipes).
-- Follow the shared rules for issue numbers versus database IDs, permissions, pagination, response interpretation, write verification, and probe cleanup.
-- Do not emulate native relationships with task lists, labels, comments, or other representations.
+- For `github-native`, use the shared [Relationship API Recipes](../and-backend-contract/backends/github-native.md#relationship-api-recipes) for relationship reads, mutations, ID semantics, permissions, pagination, response interpretation, write verification, and probe cleanup.
+- For either backend, identify missing minimum state from its reference, include each exact action in the write envelope, and leave satisfied state unchanged.
 
-### Markdown-File-Based
+## Agent Instruction Integration
 
-- Use `.and/work` as the only workflow-state source.
-- Create `.and/work/` and `.and/work/.gitkeep` only when needed to retain the directory.
-- Do not create sample work records, GitHub labels, or a GitHub issue mirror.
+Run `normalize-agent-instructions` as the policy authority. Do not redefine its classifications or merge rules here. Resolve any decision it reports before preparing the write envelope.
 
-## Agent Instruction Policy
-
-Apply `normalize-agent-instructions` across the project, then ensure the root shared instructions contain the AND section.
-
-- `agents-only`: preserve each `AGENTS.md` and add the sibling `CLAUDE.md` adapter.
-- `claude-only`: move each file's shared content to sibling `AGENTS.md`, then create the `CLAUDE.md` adapter.
-- normalized paired files: leave them unchanged only when `CLAUDE.md` imports `@AGENTS.md` and contains no distinct shared instructions beyond optional Claude-specific rules.
-- paired files where `CLAUDE.md` lacks the import but its remaining content is clearly Claude-specific: add `@AGENTS.md` before that content without asking a merge question.
-- paired files with non-identical or ambiguously shared content: stop for an explicit merge decision.
-- mixed instruction-file layouts without an explicit project policy: stop for an explicit normalization decision.
-- no instruction files: propose a root `AGENTS.md` with the fixed AND section and a root `CLAUDE.md` adapter; there is no filename decision.
-
-The adapter content is:
-
-```markdown
-@AGENTS.md
-```
+Setup has one fixed integration rule beyond that shared policy: when the project has no Agent instruction files, propose a root `AGENTS.md` plus a root `CLAUDE.md` adapter without asking the user to choose a filename. The adapter imports `@AGENTS.md` as defined by `normalize-agent-instructions`.
 
 Add or replace one root `AGENTS.md` section while preserving unrelated content:
 
