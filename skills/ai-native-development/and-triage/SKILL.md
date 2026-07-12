@@ -67,7 +67,7 @@ Ask before editing only when:
    - Choose `closed` when the work has a verified terminal reason and closure authority exists or confirmation is obtained.
    - Choose `needs-info` when one specific missing input blocks safe packaging.
    - Choose `needs-pack` when the work is worth doing and packageable.
-   - Use `and-clarify` when one concrete product, domain, architecture, naming, or testing decision can be resolved in one interview.
+   - Use `and-clarify` when one bounded product, domain, architecture, naming, or testing decision space is visible enough for its questions to be enumerated now and traversed through one coherent interview.
    - Use `and-wayfind` when the destination is visible but later questions depend on unfinished investigation and the complete decision path cannot yet be stated. Work that is merely large but already clear goes to `needs-pack`.
    - For an `and-wayfind` route, make the State Reason question the destination-level uncertainty and make its exit criteria the condition for a clear map; individual sharp questions will live on the map.
    - Use the smallest accountable owner for missing facts, access, external state, or acceptance input.
@@ -153,5 +153,5 @@ Authority:
 - Do not claim, implement, review, merge, or release ownership.
 - Do not close work without explicit authority or confirmation.
 - Do not ask broad questions when a specific State Reason can be written.
-- Do not run a structured decision interview or chart a map; route one concrete decision to `and-clarify` and map-shaped uncertainty to `and-wayfind`.
+- Do not run a structured decision interview or chart a map; route a bounded, currently enumerable decision space to `and-clarify` and map-shaped uncertainty to `and-wayfind`.
 - Do not apply AND workflow state or lifecycle outcomes to linked external PRs.

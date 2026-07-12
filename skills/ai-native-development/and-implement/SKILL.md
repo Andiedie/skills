@@ -26,7 +26,7 @@ If one is missing, stop with the exact missing skill and route to `setup-and` or
 
 Invoke `tdd` where test-first work is practical, supplying the testing seam already confirmed in the Package Contract. Invoke `code-review` before finalizing the implementation diff, supplying both the implementation fixed point and the complete Package Contract as its explicit Spec source.
 
-Do not copy either skill's testing, smell, or review rules into this skill. AND has already supplied the tracker and Spec context; do not run external setup or tracker discovery for these invocations.
+The AND-provided tracker and Spec context satisfy their inputs, so continue directly to their runtime process.
 
 ## Preconditions
 

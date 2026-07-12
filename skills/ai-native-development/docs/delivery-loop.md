@@ -36,7 +36,7 @@ Observe -> Decide -> Clarify -> Pack -> Claim -> Implement -> Close/Learn
 | --- | --- | --- |
 | Observe | What signal arrived, and what is already known? | A durable work record with source evidence. |
 | Decide | Is this worth acting on, and what is missing? | Closure, a specific wait, or a route to packaging. |
-| Clarify | Which decision, fact, permission, acceptance input, or external event blocks a correct package? | Confirmed input or one explicit unresolved question. |
+| Clarify | Which bounded, currently enumerable decision space or other required input blocks a correct package? | Confirmed input or one explicit unresolved question. |
 | Pack | What complete delivery unit can an Agent execute? | A single issue package or PRD package. |
 | Claim | Who owns the whole delivery unit? | One recorded owner and an unchanged scope. |
 | Implement | What change satisfies the package? | An isolated, verified, and reviewed implementation. |
@@ -44,7 +44,7 @@ Observe -> Decide -> Clarify -> Pack -> Claim -> Implement -> Close/Learn
 
 This is a loop rather than a one-way assembly line. A later stage can reveal that an earlier assumption was wrong, but the correction returns to the stage that owns it. Packaging does not improvise a missing product decision, and implementation does not privately rewrite the package.
 
-Wayfinding is a conditional on-ramp before Pack, not another mandatory stage. Use it when the destination is visible but the questions required to reach it cannot yet be enumerated in one session. It clears that fog as a shared investigation map; ordinary work still follows Clarify or goes directly to Pack.
+Wayfinding is a conditional on-ramp before Pack, not another mandatory stage. Use it when the destination is visible but later questions cannot yet be enumerated without further investigation. It clears that fog as a shared investigation map; ordinary work still follows Clarify or goes directly to Pack.
 
 ## Human And Agent Collaboration
 
@@ -86,6 +86,7 @@ flowchart TD
   Clarify --> Pack
   Wayfind --> Pack
   Pack --> Clarify
+  Pack --> Wayfind
   Pack --> Claim
   Claim --> Implement
   Implement --> Pack
@@ -122,7 +123,7 @@ Each stage leaves only the durable evidence needed to continue the work. Tempora
 
 The loop preserves correctness by making route-backs explicit:
 
-- A missing decision, fact, permission, acceptance input, or external event returns to Clarify and its accountable owner.
+- A bounded decision space whose questions can be enumerated now returns to Clarify; uncertainty whose later questions depend on further investigation returns to Wayfind. Missing facts, permissions, acceptance inputs, and external events return to their accountable owner.
 - A weak or incorrect delivery boundary returns to Pack.
 - Contradictory or stale workflow state is repaired before claim or implementation.
 - Failed implementation verification returns to Implement unless it exposes a package defect.

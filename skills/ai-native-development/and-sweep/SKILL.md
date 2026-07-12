@@ -37,7 +37,7 @@ Completion criterion: scope, backend, query, and limit or pagination strategy ar
 - `ready-for-agent` combined with waiting states;
 - closed or terminal lifecycle with active stage state;
 - `needs-info` without a current State Reason;
-- malformed State Reason fields;
+- malformed non-clearing State Reason fields;
 - `needs-info` with newer activity that may satisfy or obsolete the State Reason.
 
 ### Package And Relationship Drift
@@ -50,6 +50,7 @@ Completion criterion: scope, backend, query, and limit or pagination strategy ar
 - dependency used to express parent/child containment;
 - parent PRD used as blocker for children merely because it is parent;
 - ready PRD parent with incomplete child structure.
+- work routed for Wayfinding while still carrying a Package Contract, executable package shape, PRD containment, or child records.
 
 ### Ownership And Implementation Drift
 
@@ -72,9 +73,9 @@ Completion criterion: scope, backend, query, and limit or pagination strategy ar
 
 ### Wayfinding Drift
 
-- map has an invalid active stage, missing map marker, malformed body, or State Reason that does not resume with `and-wayfind`;
+- map has an invalid active stage, missing map marker, malformed body, delivery ownership evidence, or State Reason that does not resume with `and-wayfind`;
 - investigation has a public stage, missing or multiple methods, broken map membership, invalid dependency, or delivery claim evidence;
-- pending investigation publication has missing or duplicate key matches, incomplete map membership, or incomplete dependency writes;
+- pending investigation publication has missing, duplicate, or content-mismatched key matches, incomplete map membership, or incomplete dependency writes;
 - derived frontier disagrees with open lifecycle, dependencies, or investigation ownership;
 - resolved investigation lacks one durable resolution, remains open without a recoverable owner, or its map advance has not completed;
 - clear map still has fog or open investigations, or a completed map lacks one authoritative replacement package;

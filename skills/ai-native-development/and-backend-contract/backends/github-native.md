@@ -21,6 +21,8 @@ Session-recovery and durable-workflow identities are the same:
 
 The canonical identity of a Wayfinding source map is therefore its repository identity plus its issue number. Once a durable key appears in a receipt, retry reuses it.
 
+Canonical actor identity is the authenticated GitHub login, lowercased and without an `@` prefix. Resolve it from GitHub's authenticated-user endpoint. An open investigation is unclaimed with no assignee and has one owner with exactly one assignee; multiple assignees are ownership drift. Ownership belongs to the actor only when that sole assignee login matches it case-insensitively.
+
 ## Capability Requirements
 
 GitHub-native requires:
@@ -57,7 +59,7 @@ workflow_state_backend: github-native
 | Investigation | Sub-issue of a map carrying exactly one `wayfinder:<method>` label and no active stage label. |
 | Investigation key | Hidden `<!-- and-investigation:<key> -->` marker in the investigation's initial body. |
 | Map relationship | GitHub parent/sub-issue relationship whose parent is `wayfinder:map`. |
-| Investigation ownership | Investigation assignee while the issue is open. |
+| Investigation ownership | Exactly one investigation assignee while the issue is open; none means unclaimed, and more than one is drift. |
 | Investigation resolution | Comment headed `## Investigation Resolution` plus closed investigation state. |
 | Investigation asset | Branch, commit, file, screenshot, or other evidence linked from the resolution comment. |
 | Dependency relationship | GitHub blocked-by/blocking relationship. |
@@ -115,7 +117,15 @@ Resume with: <and-triage, and-clarify, and-wayfind, or and-pack>
 Exit criteria: <what must be true before this work issue can leave needs-info>
 ```
 
-State Reason comments are append-only. The latest State Reason supersedes earlier State Reasons.
+State Reason comments are append-only. The latest State Reason supersedes earlier State Reasons. When a record leaves `needs-info`, append this tombstone so earlier reasons are no longer current:
+
+```markdown
+## State Reason
+
+State: cleared
+```
+
+A latest `State: cleared` comment means the record has no current State Reason.
 
 ## Relationships
 
@@ -179,16 +189,14 @@ The map also carries `needs-info` or `needs-pack`. Each investigation carries ex
 
 ### Chart A Map
 
-1. Re-read the selected work issue and verify it has no existing map, package, ownership, or implementation conflict. If it is already a map whose initial investigation keys lack completed publication evidence, resume that publication instead of starting a new chart.
-2. Reuse the recorded map chart key, or derive it from durable-workflow identity when none exists, then append the pending investigation-publication receipt before structural mutation.
-3. Preserve material source evidence in the map Notes, a receipt comment, or GitHub history; update the existing issue rather than creating a second map.
-4. Replace the body with `Destination`, `Notes`, `Decisions so far`, `Not yet specified`, and `Out of scope`; set `wayfinder:map` plus `needs-info` and append a State Reason with `Resume with: and-wayfind`.
-5. Append a map-chart receipt with the interview checkpoint.
-6. For each planned investigation, search issue bodies for its exact `<!-- and-investigation:<key> -->` marker. Reuse a sole match or create one issue whose initial body carries the marker and `## Question`, with exactly one method label.
-7. Add every investigation as a native sub-issue of the map. Add native blocked-by edges only after all required issue IDs exist.
-8. Re-read key matches, map membership, labels, and dependencies. Append completed investigation-publication evidence only when each key has one match and every relationship is present; then stop without resolving an investigation.
+Apply the backend-neutral Chart Wayfinding Map operation with these representations:
 
-If publication fails, retry against the same map and pending receipt. Reuse exact-key matches and finish missing relationships before creating missing investigations. Multiple matches for one key keep the map non-executable and route to `and-sweep`.
+- investigation-publication and map-chart evidence are issue comments on the selected source issue, including when publication intent precedes map promotion;
+- map promotion updates that same issue body to the five map sections, preserves material source evidence in Notes, a receipt, or GitHub history, and applies `wayfinder:map`, `needs-info`, and the `and-wayfind` State Reason;
+- exact-key lookup searches issue bodies for `<!-- and-investigation:<key> -->`;
+- each investigation is an issue whose initial body carries that marker and `## Question`, with exactly one method label;
+- map membership uses native sub-issues, and investigation dependencies use native blocked-by relationships after the required issue IDs exist;
+- completed publication evidence is an issue comment on the map after the configured relationships verify.
 
 Use the sub-issues and issue-dependencies REST endpoints defined by GitHub. Payload relationship IDs are numeric database IDs, not issue numbers or GraphQL node IDs. If either native capability is unavailable, route to `setup-and`; do not write a fallback convention.
 
@@ -196,42 +204,22 @@ Use the sub-issues and issue-dependencies REST endpoints defined by GitHub. Payl
 
 List the map's open native sub-issues, retain those with one method label, and drop any issue with an open blocker or assignee. Preserve the backend's child order when choosing the first frontier investigation.
 
-For resume, first select an open, unblocked investigation assigned to the current actor. Assignment to another actor remains unavailable. A closed investigation with one resolution but a missing map pointer or map advance is pending recovery, not frontier work.
-
 ### Resolve One Investigation
 
-1. Re-read the map, chosen investigation, assignee, open blockers, resolution comments, and map pointer.
-2. Reuse ownership when the current actor is already assigned; otherwise assign an unclaimed investigation before work and re-read authoritative state. Never continue under another actor's assignment.
-3. If one durable resolution already exists, do not rerun the method or append another. Otherwise run the investigation method and append one comment:
+Apply the backend-neutral Resolve Investigation operation and the `and-wayfind` receipt content with these representations:
 
-```markdown
-## Investigation Resolution
-
-Checkpoint: <interview checkpoint when HITL; omit for AFK>
-
-Answer:
-<durable answer>
-
-Assets:
-- <link and cleanup or Package-promotion disposition, or none>
-```
-
-4. Close an open investigation after its durable resolution exists, then re-read the map and append one linked, named gist to `Decisions so far`, or one linked reason to `Out of scope` when the investigation sits beyond the Destination. If it was already closed, resume only the missing map mutation.
-5. Create and wire newly sharp investigations, remove graduated fog, and update out-of-scope evidence when required.
-
-The detailed answer lives only in the resolution comment. A map pointer names and links the investigation without restating it; an out-of-scope investigation never also appears in `Decisions so far`.
-
-When the current owner explicitly abandons an unresolved investigation, preserve its blocker or recovery evidence, then unassign that actor. Do not unassign another actor.
+- current ownership is the sole investigation assignee, and release removes only that assignee;
+- blockers are native blocked-by relationships;
+- the Investigation Resolution receipt is an issue comment on the investigation;
+- completed investigation lifecycle is the GitHub closed state;
+- the map pointer is one linked, named gist in `Decisions so far`, or one linked reason in `Out of scope`;
+- newly sharp investigations use the Chart A Map representation above.
 
 ### Complete And Hand Off A Map
 
-When no open investigations or in-scope fog remain, replace `needs-info` with `needs-pack` and remove the current State Reason by superseding it with the map's clear state.
+When no open investigations or in-scope fog remain, replace `needs-info` with `needs-pack` and clear the current State Reason with the append-only tombstone above.
 
-Before issue creation, `and-pack` re-reads the map and searches issue bodies for the exact handoff marker, appends a pending map-handoff intent containing the deterministic key, then searches again. It resumes the sole match or creates a replacement issue in `needs-pack` only when no match exists. The replacement's initial body contains the source-map link and `<!-- and-map-handoff:<key> -->`.
-
-Immediately after creation, search again. Continue Package publication only when exactly one issue carries the marker. Multiple matches remain in `needs-pack`, the map remains open, and `and-pack` routes the competing handoff to `and-sweep`. For one match, append its identity to later handoff evidence, publish the Package Contract, complete asset disposition, replace `needs-pack` with `ready-for-agent`, then remove the map's active stage and close the map.
-
-On retry, read handoff receipts and search issue bodies for the exact handoff marker before creating anything. A sole matching replacement resumes in place whether or not its issue number was written back to the map before interruption.
+Apply the backend-neutral Hand Off Wayfinding Map operation with pending and completed map-handoff receipts as map comments and exact-key lookup over the hidden `<!-- and-map-handoff:<key> -->` marker in replacement issue bodies. The replacement body also links the source map. A replacement begins as a top-level issue in `needs-pack`; successful Package publication moves it to `ready-for-agent`, then removes the map's active stage and closes the map.
 
 Resolved investigation issues remain closed planning evidence. A failed handoff leaves the map open and resumable.
 
@@ -271,7 +259,7 @@ Check for:
 
 - multiple active queue labels;
 - `needs-info` without a current State Reason;
-- malformed State Reason fields;
+- malformed non-clearing State Reason fields;
 - PRD children with active queue labels;
 - missing or inconsistent native parent/sub-issue relationships;
 - `parent-prd` issues without native sub-issue structure when the package body claims child slices exist;
@@ -282,11 +270,11 @@ Check for:
 - implementation artifacts used as ownership without assignee or claim comment;
 - merged delivery with missing completion evidence, an active stage label, or an open delivery-unit issue;
 - completed children with an open parent PRD;
-- map missing `wayfinder:map`, carrying `ready-for-agent`, or carrying neither `needs-info` nor `needs-pack` while open;
+- map missing `wayfinder:map`, carrying `ready-for-agent`, carrying delivery ownership evidence, or carrying neither `needs-info` nor `needs-pack` while open;
 - investigation with an active stage, missing or multiple method labels, missing map parent, or a parent that is not a map;
 - map sub-issue used as a PRD child or investigation reused as an implementation slice;
 - open investigation whose blockers are closed and assignee is absent but which is omitted from the derived frontier;
-- stale investigation assignee, conflicting resolution comments, or closed investigation without a resolution;
+- stale or multiple investigation assignees, conflicting resolution comments, or closed investigation without a resolution;
 - pending investigation publication with a missing relationship, no exact-key match, or multiple exact-key matches;
 - investigation carrying an `and-investigation` marker but missing from its map, or a closed resolved investigation whose map advance is incomplete;
 - map decision pointer that duplicates an answer, lacks a named investigation link, or points to an open investigation;

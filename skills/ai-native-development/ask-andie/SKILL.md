@@ -18,7 +18,7 @@ If setup is missing, invalid, unsupported, or the backend contract is unavailabl
 
 ## Route Map
 
-Main loop: `and-intake` -> `and-triage` -> `and-clarify` when one decision is needed -> `and-pack` -> `and-pick` -> `and-claim` -> `and-implement` -> `and-finish`.
+Main loop: `and-intake` -> `and-triage` -> `and-clarify` when a bounded, currently enumerable decision space needs resolution -> `and-pack` -> `and-pick` -> `and-claim` -> `and-implement` -> `and-finish`.
 
 `and-wayfind` is a conditional on-ramp before `and-pack` when the destination is visible but the investigation path cannot yet be enumerated.
 
@@ -64,7 +64,7 @@ Do not perform full triage, pick ranking, package validation, implementation pla
 4. Choose exactly one next skill, one owner question, or one setup/install route. Do not run the next workflow skill inside `ask-andie`.
 5. Report the route and one teaching rule using the user's language. Keep skill names, labels, issue numbers, work IDs, commands, and code identifiers literal.
 
-If the route is uncertain, choose the smallest route: `and-triage` for unclear backend state or unrecorded map-shaped evidence, `and-clarify` for one recorded concrete decision, `and-wayfind` for an existing recorded Wayfinding route, `setup-and` for missing repository rules, or one direct question when the user must decide.
+If the route is uncertain, choose the smallest route: `and-triage` for unclear backend state or unrecorded map-shaped evidence, `and-clarify` for one recorded bounded decision space whose questions are currently enumerable, `and-wayfind` for an existing recorded Wayfinding route, `setup-and` for missing repository rules, or one direct question when the user must decide.
 
 ## Output Shape
 

@@ -21,7 +21,7 @@ Version 1 config has exactly `version` and `workflow_state_backend`. Any additio
 
 ## Canonical Identities
 
-Session-recovery identity for ordinary `and-clarify` preserves the existing local-buffer contract:
+Session-recovery identity for `and-clarify` is:
 
 - repository identity is the real absolute path of the repository root containing `.and/config.yml`;
 - work-record identity is the normalized repository-relative path to the current record, with `.` and `..` resolved and `/` as the separator.
@@ -32,6 +32,8 @@ Durable-workflow identity for `and-wayfind`, investigation publication, and map 
 - work-record identity is the stable operation target: top-level `AND-xxxx` for map chart, investigation publication, and handoff; `AND-xxxx-Iyy` for one investigation's interview recovery.
 
 Once a durable key appears in a receipt, retry reuses it instead of deriving another.
+
+Canonical actor identity is `git-email:<email>`, where `<email>` is the trimmed, lowercased effective `git config user.email` for the repository. Resolve it before reading or writing investigation ownership. Changing that value selects a different workflow actor; it does not transfer an existing claim. If it is unavailable, stop before ownership mutation and report the missing Git identity.
 
 ## Storage
 
@@ -81,13 +83,14 @@ Child slice IDs derive from the parent:
 Investigation IDs derive from the map and use an explicit namespace:
 
 - `AND-0007-I01`;
-- `AND-0007-I02`.
+- `AND-0007-I02`;
+- `AND-0007-I01-N01` for an investigation sharpened while advancing `AND-0007-I01`.
 
 Allocate a new top-level work-record ID by scanning `.and/work/AND-*`, taking the highest numeric ID, and adding one. Confirm the target directory does not already exist before writing. If it exists, rescan and pick the next ID.
 
 Allocate child IDs within the parent by taking the next numeric suffix. Never renumber IDs after creation. IDs are stable even when titles change.
 
-Allocate investigation IDs within the map by taking the next `I` numeric suffix. Never reuse or renumber a closed investigation ID.
+Allocate initial investigation IDs within the map by taking the next `I` numeric suffix in confirmed chart order. For a later batch, derive each ID from the source investigation ID plus its stable `N` ordinal in confirmed batch order. Independent source investigations therefore use different paths. Before writing, verify the intended path is absent or carries the same investigation key; conflicting content is drift, never an overwrite or re-key. Never reuse or renumber a closed investigation ID.
 
 Do not use GitHub `#6` as the file-based work record ID.
 
@@ -322,33 +325,7 @@ Raw request records should use concise source sections:
 
 Packed delivery units should use the Package Contract body from `and-pack`.
 
-Wayfinding maps use:
-
-```markdown
-# <map title>
-
-## Destination
-
-## Notes
-
-## Decisions so far
-
-## Not yet specified
-
-## Out of scope
-```
-
-Investigation records use:
-
-```markdown
-# <investigation title>
-
-## Question
-
-<one sharp question>
-```
-
-The detailed answer lives in one investigation resolution receipt. `Decisions so far` contains only a named relative link and one-line gist.
+Store the map and investigation body schemas defined by [`and-wayfind`](../../and-wayfind/SKILL.md#map-and-investigation) in `map.md` and each investigation record. The detailed answer lives in one investigation resolution receipt. `Decisions so far` contains only a named relative link and one-line gist.
 
 Do not keep long raw request history in the main Package Contract after pack. Preserve source evidence in receipts or a short source section.
 
@@ -418,50 +395,34 @@ A resolved investigation uses `lifecycle: completed` and requires one resolution
 
 After the opening grill proves that fog exists:
 
-1. Reuse the recorded map chart key, or derive it from durable-workflow identity when none exists, then append the pending `investigation-publication` receipt with every planned stable key, method, title, and question.
-2. Preserve material source evidence and the interview checkpoint in a `map-chart` receipt and map Notes.
-3. Rename the current `package.md` to `map.md`, replace delivery-unit frontmatter with map frontmatter, and write the five map body sections.
-4. For each planned key, scan investigation frontmatter and reuse a sole match or create the intended directory and record with that `investigation_key`.
-5. Add investigation IDs to the map and wire `blocked_by` after all identities exist.
-6. Verify one match per key, reciprocal membership, dependencies, State Reason, and receipts. Append completed investigation-publication evidence, then stop without resolving an investigation.
+Apply the backend-neutral Chart Wayfinding Map operation with these representations:
 
-If charting fails, resume against the same map and pending receipt. Reuse exact-key matches and finish missing index or dependency writes before creating missing investigations. Multiple matches keep the map non-executable and route to `and-sweep`; do not create a second top-level record.
+- investigation-publication evidence is an append-only receipt under the selected top-level record, including when publication intent precedes renaming `package.md` to `map.md`;
+- map promotion renames that file, replaces delivery-unit frontmatter with map frontmatter, writes the five map sections, and preserves material source evidence and the interview checkpoint in Notes and a `map-chart` receipt;
+- exact-key lookup scans investigation frontmatter for `investigation_key`;
+- each investigation uses its intended directory and record, map membership is the map's investigation ID list, and dependencies use `blocked_by` after all identities exist;
+- completed investigation-publication evidence is appended after reciprocal membership, dependencies, State Reason, and receipts verify.
 
 ### Query The Frontier
 
 Read the map's investigation list. Retain investigations whose lifecycle is open, whose `blocked_by` records are all completed, and whose latest valid investigation ownership receipt is absent or released. Preserve map order when selecting the first frontier investigation.
 
-For resume, first select an open, unblocked investigation whose latest claim belongs to the current actor. A completed investigation with one resolution but a missing map pointer or map advance is pending recovery, not frontier work.
-
 ### Resolve One Investigation
 
-Reuse the current actor's valid claim or append a claim receipt for an unclaimed investigation. If one durable resolution already exists, do not rerun the method or append another. Otherwise, after the method produces an answer, append one resolution receipt:
+Apply the backend-neutral Resolve Investigation operation and the `and-wayfind` receipt content with these representations:
 
-```markdown
-# Investigation Resolution
-
-Checkpoint: <interview checkpoint when HITL; omit for AFK>
-
-Answer:
-<durable answer>
-
-Assets:
-- <link and cleanup or promote-to-package disposition, or none>
-```
-
-Then set an open investigation's lifecycle to `completed`, re-read `map.md`, append one named relative pointer to `Decisions so far` or `Out of scope` according to the answer, and update newly sharp investigations, dependencies, or fog. If lifecycle is already completed, resume only the missing map mutation. Before creating newly sharp investigations, append their pending investigation-publication receipt and use the same key-recovery rules as charting. An out-of-scope investigation never appears in both sections.
-
-When the current owner explicitly abandons unresolved work, preserve blocker or recovery evidence and append a release receipt. Do not release another actor's claim.
+- investigation ownership is derived from append-only claim and release receipts under that investigation;
+- blockers are IDs in `blocked_by`;
+- the Investigation Resolution receipt is append-only evidence under the investigation;
+- completed investigation lifecycle is `lifecycle: completed` in frontmatter;
+- the map pointer is one named relative link in `Decisions so far`, or one linked reason in `Out of scope`;
+- newly sharp investigations use the Chart A Map representation above.
 
 ### Complete And Hand Off A Map
 
 When no open investigation or in-scope fog remains, set the map stage to `needs-pack` and remove `state_reason`.
 
-Before ID allocation, `and-pack` re-reads the map and scans top-level package records for the exact handoff marker, appends a pending map-handoff receipt containing the deterministic key, then scans again. It resumes the sole match or allocates a replacement directory only when no match exists. The initial `package.md` uses `needs-pack` and contains the source-map link plus `<!-- and-map-handoff:<key> -->`.
-
-Immediately after allocation, scan again. Continue Package publication only when exactly one record carries the marker. Multiple matches remain in `needs-pack`, the map remains open, and `and-pack` routes the competing handoff to `and-sweep`. For one match, append its allocated ID to later handoff evidence, complete asset disposition, replace `needs-pack` with `ready-for-agent`, then remove the map stage and set map lifecycle to `completed`.
-
-On retry, read handoff receipts and scan top-level package records for the exact handoff marker before allocating another ID. A sole matching replacement resumes in place whether or not its ID was written back to the map before interruption.
+Apply the backend-neutral Hand Off Wayfinding Map operation with append-only pending and completed map-handoff receipts and exact-key lookup over the hidden `<!-- and-map-handoff:<key> -->` marker in top-level package records. A replacement `package.md` begins in `needs-pack` with the source-map link; successful Package publication moves it to `ready-for-agent`, then removes the map stage and sets map lifecycle to `completed`.
 
 ## Finish Delivery
 
@@ -521,7 +482,7 @@ Check for:
 - terminal lifecycle on the authoritative target without matching completion evidence;
 - markdown-file-based work with GitHub issue mirror references;
 - work-record directory containing both `package.md` and `map.md`;
-- map with missing sections, invalid stage, `ready-for-agent`, stale `state_reason`, or inconsistent investigation index;
+- map with missing sections, invalid stage, `ready-for-agent`, stale `state_reason`, delivery ownership evidence, or inconsistent investigation index;
 - investigation stored under package `children/`, using a child-slice ID, carrying stage, or naming a missing or non-map parent;
 - invalid or missing investigation method, cross-map `blocked_by`, or dependency on the map parent;
 - derived frontier inconsistent with lifecycle, blockers, or investigation claim receipts;
@@ -531,5 +492,5 @@ Check for:
 - investigation key missing or duplicated, investigation omitted from its map, or completed resolution with an incomplete map advance;
 - map decision pointer that duplicates the answer, lacks a named investigation link, or points to an open investigation;
 - clear map still carrying `needs-info`, in-scope fog, or an open investigation;
-- completed map without one authoritative linked replacement package, or competing map-handoff receipts;
+- completed map without one authoritative linked replacement package, distinct handoff keys, or multiple replacements for one key;
 - temporary investigation asset without cleanup or Package-promotion disposition.

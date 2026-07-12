@@ -44,7 +44,7 @@ Stop when a correct package needs missing human judgment, reporter facts, permis
 
 When backend edits are safe, route the work to `needs-info` through the configured backend and record a State Reason with `Cause`, `Owner`, `Question`, `Resume with`, and `Exit criteria`.
 
-Use `and-clarify` for unresolved product, domain, architecture, naming, or testing decisions. Use the accountable owner for reporter facts, access, external state, or acceptance input.
+Use `and-clarify` when unresolved product, domain, architecture, naming, or testing work forms one bounded decision space whose questions can be enumerated now. Use `and-wayfind` when later questions cannot be enumerated without further investigation. Use the accountable owner for reporter facts, access, external state, or acceptance input.
 
 Use `and-wayfind` when the source map still has an open investigation or in-scope fog. Do not resolve or reinterpret map uncertainty while packaging.
 
@@ -56,16 +56,17 @@ Do not ask the blocker in chat from inside `and-pack`; record the blocker and st
    - Read the work body, comments or receipts, latest State Reason, triage notes, `and-clarify` notes, existing PRD or package, containment and dependency relationships, blockers, linked implementation artifacts, and attachments.
    - Read relevant code, tests, docs, domain glossary, architectural decision records, and backend conventions only when they materially affect the package.
    - When the source is a Wayfinding map, read its destination, decision pointers, every investigation resolution relevant to delivery, fog, out-of-scope boundary, asset dispositions, and existing handoff evidence.
+   - When the selected record carries a map-handoff key or source-map link, resolve that map and resume its handoff instead of treating the replacement as ordinary work.
    - Completion criterion: the pack notes can name current behavior, desired behavior, constraints, confirmed decisions, unknowns, blockers, verification path, and source map when any.
 
 2. Check package blockers.
    - Verify facts locally before asking.
    - Distinguish unknown facts from human judgment.
-   - Route missing decisions to `and-clarify`.
+   - Route a bounded, currently enumerable decision space to `and-clarify`; route uncertainty whose later questions depend on further investigation to `and-wayfind`.
    - Route missing facts, access, external state, or acceptance input to the accountable owner.
    - Do not continue with guessed decisions.
    - For a Wayfinding source, require `needs-pack`, no open investigation, no in-scope fog, one durable resolution per completed investigation, and a cleanup or promotion disposition for each linked temporary asset.
-   - Before allocating a replacement package, derive the deterministic handoff key, read map-handoff receipts, and search work records for that exact key to detect a prior partial publication or competing handoff.
+   - For a Wayfinding source, use the backend contract's Hand Off Wayfinding Map operation to recover any partial or competing handoff before package allocation.
    - Completion criterion: either no blocker remains, or the backend/report names the blocker, owner, resume skill, exit criteria, and where `and-pack` should resume.
 
 3. Choose package shape.
@@ -88,14 +89,13 @@ Do not ask the blocker in chat from inside `and-pack`; record the blocker and st
 5. Publish through the configured backend.
    - Treat invocation as authorization to publish a package from confirmed workflow state.
    - Ask before publishing only when the target work is ambiguous, publishing would overwrite unrelated maintainer text, backend permissions or access are unclear, or the package requires an unconfirmed human judgment.
-   - Publish ordinary work in its existing record. For a Wayfinding source, re-read the map and exact-key matches, append a pending map-handoff intent, then search again before creating anything. Resume the sole existing match; create one separate delivery unit in `needs-pack` only when no match exists. Its initial record must contain the key and source-map link. Never reuse investigations as PRD children.
-   - Immediately after creation, re-read exact-key matches before publishing the Package Contract. Continue only when exactly one replacement exists. If concurrent writers produced multiple matches, keep the map open and every match non-executable, then route cleanup to `and-sweep` without choosing a winner.
-   - For a Wayfinding handoff, finish every Package promotion and authorized throwaway-asset cleanup before setting the replacement delivery unit to `ready-for-agent`; then remove the map's active stage and close the map.
+   - Publish ordinary work in its existing record. For a Wayfinding source, use the backend contract's Hand Off Wayfinding Map operation with the Map Handoff receipt below and the configured backend representation. Append a pending receipt before allocating the sole replacement, then append a completed receipt with its identity after handoff verification. Never reuse investigations as PRD children.
+   - Complete every Package promotion and authorized throwaway-asset cleanup required by the handoff operation before making the replacement ready and completing the map.
    - Set public ready state only on the delivery unit.
    - Write containment and dependency relationships through the backend reference.
    - Publish child work in dependency order when backend identifiers are needed.
    - Do not duplicate backend containment relationships in package body text.
-   - A failure before ready state leaves the source map and replacement package non-executable and resumes against the linked package instead of creating another. If failure occurs after ready state, retry only map completion.
+   - Resume an incomplete Wayfinding publication through the same handoff operation.
    - Completion criterion: the configured backend expresses one executable delivery unit with no contradictory stage, containment, dependency, blocker, ownership-neutral metadata, competing map handoff, or unpromoted temporary investigation asset.
 
 6. Report a receipt.
@@ -189,7 +189,8 @@ Use only when packaging a clear Wayfinding map:
 
 Source map: <link or work ID>
 Handoff key: <deterministic SHA-256 key>
-Replacement package: <link or work ID>
+Handoff: <pending or completed>
+Replacement package: <pending or link/work ID>
 Package shape: <single issue or PRD package>
 Ready state verified: <yes or pending reason>
 Assets promoted: <none or list>
@@ -197,7 +198,7 @@ Assets cleaned: <none, list, or pending reason>
 Map completion: <completed or exact remaining operation>
 ```
 
-Resolve the source map's durable-workflow repository and work-record identities through `and-backend-contract`, then derive the handoff key through its deterministic operation-key rules with namespace `and-pack-map-handoff:v1`. Append the first receipt with that key and `Replacement package: pending` before allocation. The replacement's initial record must carry the same key, so a retry searches backend work by exact key before creating anything. Append later receipts for allocated identity, completed publication, cleanup, ready state, and map completion rather than mutating history or creating another package.
+Derive the handoff key from the source map's durable-workflow identity with namespace `and-pack-map-handoff:v1`, then use this receipt with the backend contract's Hand Off Wayfinding Map operation. The pending and completed receipts for one handoff reuse the same key; they are one operation, not competing handoffs.
 
 ## Boundaries
 

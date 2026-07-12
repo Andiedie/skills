@@ -38,7 +38,6 @@ Use it before an AND workflow skill reads, writes, validates, or reasons about w
 - Do not choose or switch the repository backend; `setup-and` owns that.
 - Do not mutate issues, files, labels, relationships, ownership, claims, branches, PRs, or lifecycle state.
 - Do not run the calling workflow stage.
-- Do not duplicate backend reference rules into the calling workflow skill.
 - Do not invent fields outside `.and/config.yml` v1 or the configured backend reference.
 - Do not maintain GitHub and markdown workflow state in parallel.
 - Do not treat implementation artifacts as workflow state.

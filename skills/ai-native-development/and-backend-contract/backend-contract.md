@@ -54,6 +54,7 @@ The configured backend is exclusive. A repository may reference investigation as
 | Map relationship | A Wayfinding map owns investigation records. It is distinct from PRD containment even when a backend uses the same native parent/sub-issue primitive. |
 | Fog | In-scope uncertainty that cannot yet be phrased as a sharp investigation question. |
 | Frontier | Open, unblocked, unclaimed investigations on a map. |
+| Actor identity | The backend-defined coordination identity used to compare investigation ownership across sessions and linked worktrees. Equality means the same workflow actor; it is not an authentication or authorization mechanism. |
 | Investigation ownership | Responsibility for one investigation. It grants no delivery ownership. |
 | Investigation asset | Linked evidence produced to answer an investigation. It is not workflow state or repository truth unless a Package Contract promotes it. |
 | External blocker | A blocker outside the work record graph. |
@@ -141,19 +142,21 @@ The frontier is derived from current investigation state rather than stored as a
 
 Promote one existing top-level work record into a Wayfinding map, preserve material source evidence, create currently sharp investigations, and write map relationships and investigation dependencies.
 
-Before creating any initial or newly visible investigation batch, record a deterministic publication intent on the map. It lists stable investigation keys, methods, titles, and questions. Every investigation carries its key in its initial authoritative record. Retry searches those keys first, reuses a sole match, creates only missing records, and finishes missing membership or dependency edges. Multiple matches are drift and leave the map non-executable for `and-sweep`.
+Before map promotion or creation of any initial or newly visible investigation batch, inspect the latest publication evidence. If a pending intent exists, resume it whether or not the source record already carries its map representation; do not repeat the interview or derive new keys. Otherwise record the calling skill's deterministic publication intent on the source map record before structural mutation.
+
+Every investigation carries its key in its initial authoritative record. Publication creates all missing records before writing membership and dependency relationships. Retry searches exact keys first and reuses a sole match only when it has no parent yet or belongs to the target map, and its method, title, and question match the recorded publication intent. A different parent, content mismatch, or multiple matches are drift and leave the map non-executable for `and-sweep`. Otherwise create only missing records and finish missing relationships.
 
 Map creation is authoritative only when the map, every planned investigation, and every created relationship can be recovered through the configured backend.
 
 ### Resolve Investigation
 
-Record or resume one investigation claim, run its method only when no durable resolution exists, write one durable resolution, close that investigation, append a named context pointer to the map, and update newly visible investigations, dependencies, fog, or scope. A current owner may resume an open investigation; a closed resolved investigation with an incomplete map advance resumes that missing mutation before new frontier work. Resolution never establishes delivery ownership.
+Record or resume one investigation claim, run its method only when no durable resolution exists, write one durable resolution, close that investigation, append a named context pointer to the map, and update newly visible investigations, dependencies, fog, or scope. The durable investigation resolution precedes map projection, so an optimistic concurrent overwrite creates a recoverable incomplete map advance rather than losing the answer. A current owner may resume an open, unblocked investigation; a closed resolved investigation with an incomplete map advance resumes that missing mutation before new frontier work. Resolution never establishes delivery ownership.
 
 ### Hand Off Wayfinding Map
 
-When a map is clear, derive and record a deterministic handoff key on the map before creating a separate delivery unit. The replacement carries that key in its initial authoritative record, so retry can recover an identity even if creation succeeded before its ID was written back to the map.
+When a map is clear, derive a deterministic handoff key and append pending handoff evidence on the map before creating a separate delivery unit. The replacement carries that key in its initial authoritative record, so retry can recover an identity even if creation succeeded before its ID was written back to the map. After the replacement and all handoff effects verify, append completed handoff evidence with the replacement identity. Pending and completed evidence with the same key belong to one operation.
 
-Re-read the map and exact-key matches immediately before allocation and again after creation. Continue publication only when exactly one replacement matches. If concurrent writers create multiple matches, keep the map open and every matching replacement non-executable, then route the drift to `and-sweep`; do not choose a winner inside `and-pack`.
+On entry, resolve the source map from either the map itself or a replacement's handoff key and source-map link. Re-read the map and exact-key matches immediately before allocation and again after creation. Continue publication only when exactly one replacement matches. If concurrent writers create multiple matches, keep the map open and every matching replacement non-executable, then route the drift to `and-sweep`; do not choose a winner inside `and-pack`.
 
 Finish Package promotion and temporary-asset disposition before making the sole replacement ready, then complete the map.
 
