@@ -23,10 +23,12 @@
       "description": "Workflow skills for turning ambiguous signals into verified software changes.",
       "skills": [
         "and-backend-contract",
+        "and-interview-contract",
         "ask-andie",
         "and-intake",
         "and-triage",
         "and-clarify",
+        "and-wayfind",
         "and-pack",
         "and-pick",
         "and-claim",

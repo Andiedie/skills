@@ -46,18 +46,19 @@ Setup is complete when:
 3. Check backend readiness.
    - For `github-native`, confirm repository identity, issues availability, native parent/sub-issue support, and native blocked-by/blocking support.
    - For `github-native`, confirm authenticated write access for issue creation and updates, stage labels, comments or receipts, ownership recording, lifecycle changes, and native containment and dependency relationship mutations.
-   - For `github-native`, prepare creation only for missing fixed labels: `needs-triage`, `needs-info`, `needs-pack`, `ready-for-agent`, and `parent-prd`.
+   - For `github-native`, prepare creation only for missing fixed labels declared by the GitHub-native backend reference.
    - For `markdown-file-based`, ensure `.and/work` can be created and updated in the repository worktree and no GitHub issue mirror is being configured.
    - If required backend write access cannot be confirmed, report the exact access blocker and do not declare the backend ready.
    - Do not emulate unavailable GitHub-native relationships with markdown task lists, labels, or comments.
 
-4. Check external skill readiness.
+4. Check runtime skill readiness.
    - Check current skill availability from the session list when visible. If needed, use the repository's documented skill-list command. When neither source establishes availability, report it as unverified.
-   - Check `grilling`, `tdd`, and `code-review`.
-   - Missing external skills are environment readiness gaps, not repository setup failures.
+   - Check the AND reference `and-interview-contract` and Matt runtime skills `grilling`, `research`, `prototype`, `tdd`, and `code-review`.
+   - Missing runtime skills are environment readiness gaps, not repository setup failures.
    - Do not install external skills unless the user explicitly asks.
    - Do not block repository setup for missing external skills unless the user asked for full-ready setup or the missing skill blocks the setup itself.
-   - Report missing skills with an install command. When the actual agent targets are known, include them explicitly with `--agent <known-target...>`. Otherwise use interactive target selection by omitting `--agent`, for example `npx --yes skills add mattpocock/skills -g --skill <missing-skill...>`.
+   - Report missing skills with an install command from their owning repository. When the actual agent targets are known, include them explicitly with `--agent <known-target...>`. Otherwise use interactive target selection by omitting `--agent`.
+   - Use `Andiedie/skills` for a missing `and-interview-contract` and `mattpocock/skills` for missing Matt runtime skills; never combine different sources in one install command.
    - Completion criterion: each required external skill is available, missing, or unverified, and every missing skill has an install command scoped to known targets or interactive target selection.
 
 5. Prepare the setup plan.
@@ -88,7 +89,7 @@ Setup is complete when:
 
 Use GitHub-native when GitHub issues are the workflow state source and native relationships are available.
 
-- Create or reuse only these AND labels: `needs-triage`, `needs-info`, `needs-pack`, `ready-for-agent`, `parent-prd`.
+- Create or reuse only the fixed AND labels declared by the GitHub-native backend reference.
 - Close-reason labels are repository policy and outside the required AND label set; do not create or modify them during AND setup.
 - If native parent/sub-issue or blocked-by/blocking support is unavailable, recommend resolving GitHub capability or using `markdown-file-based`; do not silently degrade.
 

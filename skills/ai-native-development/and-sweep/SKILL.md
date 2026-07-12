@@ -24,7 +24,7 @@ Default to open work in the current repository.
 
 Ask before sweeping a large, destructive, cross-repository, or ambiguous scope. Use explicit limits or pagination.
 
-Supported scopes include current repo, specific issue or work ID, ready slate, `needs-info`, claimed work, PRD packages, stale claims, and all open work.
+Supported scopes include current repo, specific issue or work ID, ready slate, `needs-info`, Wayfinding maps, investigations, claimed work, PRD packages, stale claims, and all open work.
 
 Completion criterion: scope, backend, query, and limit or pagination strategy are explicit.
 
@@ -70,6 +70,17 @@ Completion criterion: scope, backend, query, and limit or pagination strategy ar
 - missing reporter or maintainer input has arrived but work remains waiting;
 - blocker is represented as dependency when it is actually external state, or vice versa.
 
+### Wayfinding Drift
+
+- map has an invalid active stage, missing map marker, malformed body, or State Reason that does not resume with `and-wayfind`;
+- investigation has a public stage, missing or multiple methods, broken map membership, invalid dependency, or delivery claim evidence;
+- pending investigation publication has missing or duplicate key matches, incomplete map membership, or incomplete dependency writes;
+- derived frontier disagrees with open lifecycle, dependencies, or investigation ownership;
+- resolved investigation lacks one durable resolution, remains open without a recoverable owner, or its map advance has not completed;
+- clear map still has fog or open investigations, or a completed map lacks one authoritative replacement package;
+- multiple replacement packages carry the same map-handoff key;
+- temporary investigation asset has neither cleanup nor Package-promotion disposition.
+
 ### Backend-Specific Drift
 
 Apply the configured backend reference's sweep checks, such as GitHub-native label, relationship, and comment invariants or markdown-file-based frontmatter, ID, and receipt invariants.
@@ -81,6 +92,7 @@ Report before editing. Apply only low-risk fixes approved in this run, or fixes 
 Low-risk fixes may include:
 
 - removing public stage state from PRD children;
+- removing public stage state from an investigation whose map membership and method are otherwise authoritative;
 - removing clearly contradictory duplicate active stage state;
 - adding raw entry state to obviously unstaged open work when repository convention requires it;
 - adding a setup-required child coverage note when containment is already clear.
@@ -89,6 +101,7 @@ High-risk actions require explicit approval or route to the correct skill:
 
 - close work;
 - release stale claim;
+- release stale investigation ownership;
 - override owner;
 - remove blocker;
 - mark ready;
@@ -110,7 +123,7 @@ High-risk actions require explicit approval or route to the correct skill:
 
 2. Collect workflow state.
    - Read work records in scope.
-   - Read stage state, lifecycle, current State Reason, comments or receipts, containment, dependencies, external blockers, ownership, linked implementation artifacts, updated time, activity, close status, and completion evidence.
+   - Read stage state, lifecycle, current State Reason, comments or receipts, containment, map membership, dependencies, external blockers, delivery and investigation ownership, linked assets and implementation artifacts, updated time, activity, close status, and completion evidence.
    - For markdown-file-based, derive ownership from claim receipts and treat ownership frontmatter as drift.
    - Completion criterion: the audit set is complete for the declared scope, or inaccessible data is named.
 
@@ -169,7 +182,7 @@ Metadata cleanup:
 
 Candidate follow-up:
 - <work>: <reason>
-  Route: <and-triage, and-clarify, and-pack, and-claim, human approval, wait, or no action>
+  Route: <and-triage, and-clarify, and-wayfind, and-pack, and-claim, human approval, wait, or no action>
 ```
 
 When fixes are applied, append:

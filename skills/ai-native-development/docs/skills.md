@@ -9,8 +9,9 @@ Use this guide to choose the next skill in the AND delivery loop. If the current
 | Setup | The repository has no valid AND configuration or minimum integration. | [`setup-and`](../setup-and/SKILL.md) | Configured backend, readiness checks, and an Agent entrypoint. | `and-intake`, `and-triage`, or `ask-andie` |
 | Route | The current position is unclear. | [`ask-andie`](../ask-andie/SKILL.md) | One next skill or accountable-owner action. | The named route |
 | Observe | A raw signal has no authoritative work record. | [`and-intake`](../and-intake/SKILL.md) | A work record, usually entering `needs-triage`. | `and-triage` |
-| Decide | A work record needs a route. | [`and-triage`](../and-triage/SKILL.md) | A lifecycle outcome, `needs-info` with a State Reason, or `needs-pack`. | Input owner, `and-clarify`, or `and-pack` |
+| Decide | A work record needs a route. | [`and-triage`](../and-triage/SKILL.md) | A lifecycle outcome, `needs-info` with a State Reason, or `needs-pack`. | Input owner, `and-clarify`, `and-wayfind`, or `and-pack` |
 | Clarify | `needs-info` names a required decision, fact, permission, acceptance input, or external event. | [`and-clarify`](../and-clarify/SKILL.md) for a structured decision; otherwise the accountable owner | Confirmed input or a current State Reason. | The recorded resume skill |
+| Wayfind | A destination is visible, but later questions depend on unfinished investigation and cannot yet be enumerated. | [`and-wayfind`](../and-wayfind/SKILL.md) | A resumable investigation map, or a clear map ready to package. | `and-wayfind` or `and-pack` |
 | Pack | Worth-doing work is not executable yet. | [`and-pack`](../and-pack/SKILL.md) | A `ready-for-agent` single issue package or PRD package. | `and-pick` |
 | Ready | A delivery unit should be recommended for execution. | [`and-pick`](../and-pick/SKILL.md) | One read-only delivery-unit recommendation. | `and-claim` |
 | Claim | An unclaimed ready delivery unit with no active implementation evidence has been chosen. | [`and-claim`](../and-claim/SKILL.md) | Ownership of the complete delivery unit. | `and-implement` |
@@ -22,18 +23,22 @@ Use this guide to choose the next skill in the AND delivery loop. If the current
 
 Workflow skills use [`and-backend-contract`](../and-backend-contract/SKILL.md) to load backend-neutral concepts and the configured backend representation. The reference returns control to the calling skill rather than performing a workflow stage.
 
+Decision interviews use [`and-interview-contract`](../and-interview-contract/SKILL.md) for shared evidence, recovery, domain modeling, and artifact-ready output. `and-clarify` and `and-wayfind` retain their distinct workflow effects.
+
 ## External Runtime Skills
 
-AND composes with three external runtime skills:
+AND composes with five external runtime skills:
 
 | Skill | Used by |
 | --- | --- |
-| `grilling` | `and-clarify` for interview behavior. |
+| `grilling` | `and-clarify` and `and-wayfind` for interview behavior. |
+| `research` | `and-wayfind` for AFK investigation. |
+| `prototype` | `and-wayfind` for HITL concrete exploration. |
 | `tdd` | `and-implement` when test-first work is practical at the agreed seam. |
 | `code-review` | `and-implement` before finalizing the delivery-unit diff. |
 
 Example for a global Codex and Claude Code environment:
 
 ```sh
-npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill grilling tdd code-review -y
+npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill grilling research prototype tdd code-review -y
 ```
