@@ -16,7 +16,7 @@ Repository setup is conformant when:
 
 - `.and/config.yml` is a valid v1 config under `and-backend-contract` and selects exactly one supported backend.
 - The configured backend satisfies its minimum storage, capability, and single-source-of-truth requirements in `and-backend-contract`.
-- Every directory containing an Agent instruction file is normalized under the `normalize-agent-instructions` policy: it has an `AGENTS.md` shared source of truth and a sibling `CLAUDE.md` that imports it with `@AGENTS.md` before any Claude-specific rules. Having only one of the two files is a Setup Contract gap.
+- Every Agent instruction file conforms to the `normalize-agent-instructions` policy.
 - The root `AGENTS.md` contains one effective, concise AND section that directs agents to `.and/config.yml`, the configured backend, `ask-andie`, and the installed AND skills and backend contract.
 - No effective repository instruction contradicts the configured backend, directs agents to parallel workflow state, or requires a relationship fallback forbidden by the backend contract.
 
@@ -170,10 +170,8 @@ Next: <one AND workflow skill>
 ## Boundaries
 
 - Do not change product requirements or implementation code.
-- Do not configure parallel workflow-state backends.
-- Do not add fields beyond `.and/config.yml` v1.
+- Do not change the configured backend outside the approved write envelope.
 - Do not migrate or alter existing issues and work records during setup.
-- Do not create relationship substitutes, duplicate Agent guidance, or duplicate workflow rules.
 - Do not create project-specific docs without repository-specific facts.
 - Do not install external skills without explicit authorization.
 - Do not claim work, implement product changes, close work, merge delivery branches, or release ownership.
