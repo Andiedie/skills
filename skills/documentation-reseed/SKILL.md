@@ -16,18 +16,23 @@ Clear ordinary docs out of the way so the old structure stops shaping the new on
 ## Related Skills
 
 - Use `documentation-maintenance` for write/delete/keep rules, source-of-truth choices, docs-as-code handling, semantic rewrite guards, and final-response shape.
-- `setup-matt-pocock-skills` is user-invoked. Do not invoke it from this workflow. If setup is needed, stop after the backup and tell the user to run it manually.
 
-If either skill is unavailable, continue with the same principles and note the gap in the final report.
+If `documentation-maintenance` is unavailable, continue with the same principles and note the gap in the final report.
 
 ## Reseed Workspace
 
-Default to `.scratch/documentation-reseed/YYYY-MM-DD/`, using the current date. If it already exists, append `-N`.
+For a new run, default to `.scratch/documentation-reseed/YYYY-MM-DD/`, using the current date. Before creating it, inspect existing reseed workspaces. An incomplete workspace has status `active` or `awaiting-continuation`. Use the workspace the user identifies; when the request is to continue an existing reseed and exactly one incomplete workspace exists, use it. Ask when multiple incomplete workspaces exist or when starting new versus resuming is unclear. Append `-N` only for a genuinely new run.
 
 - `moved-docs/` holds moved ordinary docs, preserving original relative paths.
-- `ledger.md` records every documentation-like candidate, original path, category, backup path or exclusion reason, retention status, final destination, and verification source.
+- `ledger.md` records the reseed status, the next numbered step to execute, and every documentation-like candidate's original path, category, backup path or exclusion reason, retention status, final destination, verification source, and checkpoint fingerprint when applicable. Set the next step to `1` when creating a workspace and advance it only after the current step's completion criterion is met.
 
-Exclude the active reseed workspace from inventory and validation searches. The exceptions are reading `ledger.md` and `moved-docs/` for setup evidence preparation, and reading `moved-docs/` during harvest.
+The status has three values:
+
+- `active`: set when a workspace is created or a paused run has a verified resume baseline. Resume at the recorded next step and use candidate dispositions instead of repeating completed moves.
+- `awaiting-continuation`: set only at the clean-deck checkpoint. Resume through Step 3 after explicit user continuation.
+- `complete`: set after validation and the Step 7 report summary are recorded, immediately before delivering that report. Completed workspaces are evidence, not resume targets.
+
+Exclude the active reseed workspace from inventory and validation searches. Read `ledger.md` to resolve and resume the run, and read `moved-docs/` during harvest.
 
 Use a different workspace only when local rules designate one or the user asks for it.
 
@@ -64,28 +69,43 @@ Classify each candidate in `ledger.md`:
 - **product/runtime docs:** public API specs, package docs, Storybook stories, fixtures, tests, or files whose path or format affects product behavior
 - **scratch/plans:** temporary work notes, PRDs, issue breakdowns, and exploration notes
 
+Classify documentation by its current function, not by which workflow or setup created it.
+
 Move eligible ordinary docs to `moved-docs/`, preserving original relative paths. This move is intentional: old locations are evidence, but they should not keep shaping the rebuilt structure.
 
 Do not move product/runtime docs, docs-as-code sources, generated outputs, tests, fixtures, package metadata, or active agent/skill discovery files unless the user explicitly approves. If an agent entrypoint should be reset, write the replacement router in the same change that moves the old file.
 
 Completion criterion: `ledger.md` lists every documentation-like candidate outside the active reseed workspace with category, moved path or exclusion reason, and initial disposition; eligible ordinary docs have been moved with paths preserved; protected exclusions are intentional; and no documentation-like file was silently ignored.
 
-### 3. Manual Matt Pocock Setup Stop
+### 3. Pause At The Clean Deck
 
-After backup, check whether the cleared repo already has the Matt Pocock setup outputs:
+After inventory and backup, verify that eligible ordinary docs have moved, protected discovery remains available or has an approved replacement, and `ledger.md` accounts for every candidate. Run `git status --short --untracked-files=all` and record the snapshot. Add a checkpoint fingerprint that records path state and a content hash when content exists for:
 
-- an `## Agent skills` block in `AGENTS.md` or `CLAUDE.md`
-- `docs/agents/issue-tracker.md`
-- `docs/agents/triage-labels.md`
-- `docs/agents/domain.md`
+- every file under `moved-docs/`;
+- every documentation-like or protected discovery file left in place;
+- every path already present in the `git status` snapshot outside the active reseed workspace.
 
-If any are missing and the user wants Matt Pocock engineering skills, prepare a setup evidence summary before stopping. Read only setup-relevant evidence from the cleared repo, `ledger.md`, and `moved-docs/`: prior or current Agent skills blocks, context layout files, ADR locations, `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`, `docs/agents/domain.md`, and `.scratch/` issue-tracker clues.
+Keep the next step at `3`, set the reseed status to `awaiting-continuation`, and stop.
 
-Treat the cleared repo as the target baseline. Treat backed-up setup files as evidence for the setup evidence summary, not authority to restore old structure. Do not inspect live issue tracker labels, choose label vocabulary, restore old setup docs, or reproduce that skill's product-governance questions here.
+Report a short checkpoint receipt with:
 
-Stop and tell the user to manually run `setup-matt-pocock-skills`, passing the setup evidence summary, then resume this reseed.
+- the active reseed workspace;
+- a summary of moved docs;
+- protected or excluded docs and why they remain;
+- the current working-tree state;
+- how to continue the same reseed.
 
-Completion criterion: setup outputs exist, the user confirms setup was manually completed with cleared-repo baseline and backup evidence considered, or the final report records why setup was skipped.
+The user may inspect the clean deck, run setup, make another intentional change, or continue immediately. Keep the receipt neutral unless the user already named an intervening operation. Rebuild, harvest, pruning, and final validation begin only after explicit continuation.
+
+On continuation, reopen the same workspace and compare current paths, hashes, and `git status` with the checkpoint fingerprint. Re-read local documentation rules, agent entrypoints, and docs indexes. Give every post-checkpoint delta one disposition in `ledger.md`:
+
+- **baseline:** the user named the intervening operation or confirms the output belongs in the rebuilt documentation system;
+- **unrelated:** preserve it without treating it as reseed input;
+- **ambiguous:** keep status `awaiting-continuation`, report the exact delta, and ask one focused question before continuing.
+
+New or changed baseline files remain in place instead of moving into `moved-docs/`. Set the reseed status back to `active` and the next step to `4` only after every delta has a non-ambiguous disposition, then continue without another confirmation.
+
+Completion criterion: the run is durably paused with a complete checkpoint receipt, or the user has explicitly continued and the same workspace records a disposition for every post-checkpoint delta with no ambiguity remaining.
 
 ### 4. Rebuild Discoverability
 
@@ -138,10 +158,14 @@ Summarize:
 - reseed workspace path
 - what was moved to backup
 - what was kept in place or excluded, and why
+- what changed during the clean-deck pause and how it was treated, when applicable
 - what was rebuilt
 - what was intentionally not documented
 - what remains uncertain
-- Matt Pocock setup status
 - which validation commands ran
 
 If docs changed, use the final-response shape required by `documentation-maintenance`.
+
+Record the prepared report summary in `ledger.md`, set the reseed status `complete`, then deliver the same report.
+
+Completion criterion: `ledger.md` contains the final report summary and status `complete`, and the user receives the same report.
