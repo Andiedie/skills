@@ -142,7 +142,9 @@ The frontier is derived from current investigation state rather than stored as a
 
 Promote one existing top-level work record into a Wayfinding map, preserve material source evidence, create currently sharp investigations, and write map relationships and investigation dependencies.
 
-The deterministic chart key identifies exactly one chart outcome: a no-map Wayfinding exit or investigation publication. Before either outcome is appended and before its effects are applied, query both receipt types by that key. One well-formed outcome history is resumable; a matching pending and completed publication pair belongs to one history. Duplicate Exit receipts, competing publication intents, mismatched content, or both outcome types for one key are drift and must not be resolved by choosing one outcome.
+The deterministic chart key identifies exactly one initial chart outcome: a no-map Wayfinding exit, or an initial investigation publication whose publication key equals the chart key. Before either initial outcome is appended and before its effects are applied, query both receipt types by that key. One well-formed initial outcome history is resumable; a matching pending and completed initial publication pair belongs to one history. Duplicate Exit receipts, competing initial publication intents, mismatched content, or both initial outcome types are drift and must not be resolved by choosing one outcome.
+
+Each later investigation batch has a separate deterministic publication key derived from the source investigation key. Its pending and completed receipts form one resumable publication history and do not compete with the initial chart outcome or batches from other source investigations.
 
 Before map promotion or creation of any initial or newly visible investigation batch, inspect the latest publication evidence. If a pending intent exists, resume it whether or not the source record already carries its map representation; do not repeat the interview or derive new keys. Otherwise record the calling skill's deterministic publication intent on the source map record before structural mutation.
 

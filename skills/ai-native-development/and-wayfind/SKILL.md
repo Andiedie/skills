@@ -73,7 +73,7 @@ Choose exactly one path per invocation. A non-map work record with a unique vali
 
 Use this path for a non-map work record whose current route is `and-wayfind`, whose valid exit effects are incomplete, or whose initial investigation publication is incomplete.
 
-Resolve the deterministic chart key from durable-workflow identity with namespace `and-wayfind-map-chart:v1`, then query `Wayfinding Exit` and `Investigation Publication` receipt histories carrying that key. Resume one well-formed outcome history. Duplicate Exit receipts, competing publication intents, mismatched content, or both receipt types for one key are drift and route to `and-sweep`; a matching pending and completed publication pair is one history. Re-read both receipt types immediately before appending either outcome and again before applying its structural or route effects.
+Resolve the deterministic chart key from durable-workflow identity with namespace `and-wayfind-map-chart:v1`, then query `Wayfinding Exit` receipts carrying that chart key and initial `Investigation Publication` histories whose publication key equals it. Resume one well-formed initial outcome history. Duplicate Exit receipts, competing initial publication intents, mismatched content, or both initial outcome types are drift and route to `and-sweep`; a matching pending and completed initial publication pair is one history. Re-read both initial outcome types immediately before appending either one and again before applying its structural or route effects.
 
 For an incomplete exit, re-read the non-map record and verify the receipt's checkpoint and complete confirmed result. Apply only the missing target stage and target State Reason effects recorded by the receipt, verify them, clean matching synchronized recovery, report the recovered route, and stop. Do not repeat the interview or append another exit receipt.
 
@@ -142,7 +142,7 @@ Use this path for an existing map. An investigation argument is optional.
    - Re-read the map immediately before mutation.
    - Write the resolution only when none exists, including the valid interview checkpoint when the method was HITL. Close the investigation only when it is still open.
    - Append one linked, named gist to `Decisions so far` when the answer advances the route. If the investigation proves to be beyond the Destination, put one linked reason in `Out of scope` instead and do not add it to Decisions.
-   - Publish newly sharp investigations through the backend contract's Chart Wayfinding Map operation using the Investigation Publication receipt below. Derive each batch's keys from the source investigation key plus stable confirmed-order ordinals such as `<source-investigation-key>:N01`, so independent frontier advances cannot allocate the same key.
+   - Publish newly sharp investigations through the backend contract's Chart Wayfinding Map operation using the Investigation Publication receipt below. Derive one batch publication key as `<source-investigation-key>:batch` and each investigation key from the source investigation key plus stable confirmed-order ordinals such as `<source-investigation-key>:N01`, so independent frontier advances cannot allocate the same key. Resume only the matching publication history for that batch key; competing intent or mismatched content routes to `and-sweep`.
    - Remove graduated fog, update invalidated records, and move beyond-destination findings to `Out of scope`.
    - When no open investigation or in-scope fog remains, move the map to `needs-pack`; otherwise preserve `needs-info` and an accurate `Resume with: and-wayfind` State Reason.
    - Re-read after mutation and verify that the map preserves newer concurrent changes and includes the durable resolution's named pointer or out-of-scope reason. If projection is incomplete or conflicting, keep the investigation resolution authoritative, report an incomplete map advance, and stop; the next invocation recovers it before frontier selection.
@@ -177,7 +177,7 @@ Use this append-only receipt before creating an initial or newly visible batch:
 ```markdown
 ## Investigation Publication
 
-Chart key: <deterministic map chart key>
+Publication key: <initial chart key, or deterministic later batch key>
 Checkpoint: <interview checkpoint for the initial chart; omit for later publication>
 Investigations:
 - <investigation key> | <method> | <title> | <one sharp question>
