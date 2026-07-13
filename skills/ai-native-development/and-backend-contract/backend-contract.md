@@ -142,6 +142,8 @@ The frontier is derived from current investigation state rather than stored as a
 
 Promote one existing top-level work record into a Wayfinding map, preserve material source evidence, create currently sharp investigations, and write map relationships and investigation dependencies.
 
+The deterministic chart key identifies exactly one chart outcome: a no-map Wayfinding exit or investigation publication. Before either outcome is appended and before its effects are applied, query both receipt types by that key. One well-formed outcome history is resumable; a matching pending and completed publication pair belongs to one history. Duplicate Exit receipts, competing publication intents, mismatched content, or both outcome types for one key are drift and must not be resolved by choosing one outcome.
+
 Before map promotion or creation of any initial or newly visible investigation batch, inspect the latest publication evidence. If a pending intent exists, resume it whether or not the source record already carries its map representation; do not repeat the interview or derive new keys. Otherwise record the calling skill's deterministic publication intent on the source map record before structural mutation.
 
 Every investigation carries its key in its initial authoritative record. Publication creates all missing records before writing membership and dependency relationships. Retry searches exact keys first and reuses a sole match only when it has no parent yet or belongs to the target map, and its method, title, and question match the recorded publication intent. A different parent, content mismatch, or multiple matches are drift and leave the map non-executable for `and-sweep`. Otherwise create only missing records and finish missing relationships.

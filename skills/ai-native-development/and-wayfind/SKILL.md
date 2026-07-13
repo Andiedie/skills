@@ -67,13 +67,15 @@ Create research and prototype assets in a dedicated investigation branch/worktre
 
 ## Process
 
-Choose exactly one path per invocation. A non-map work record with a valid `Wayfinding Exit` receipt whose recorded route or recovery cleanup is incomplete resumes that exit inside `Chart A Map`; pending initial investigation publication also resumes there. Other maps use `Work Through A Map`. Never chart a map and resolve an investigation in the same invocation, and never resolve more than one investigation.
+Choose exactly one path per invocation. A non-map work record with a unique valid `Wayfinding Exit` receipt whose recorded route or recovery cleanup is incomplete resumes that exit inside `Chart A Map`; pending initial investigation publication also resumes there. Other maps use `Work Through A Map`. Never chart a map and resolve an investigation in the same invocation, and never resolve more than one investigation.
 
 ### Chart A Map
 
 Use this path for a non-map work record whose current route is `and-wayfind`, whose valid exit effects are incomplete, or whose initial investigation publication is incomplete.
 
-For an incomplete exit, re-read the non-map record and verify the receipt's checkpoint and complete confirmed result. Apply only the missing stage and State Reason effects recorded by `Next step`, verify them, clean matching synchronized recovery, report the recovered route, and stop. Do not repeat the interview or append another exit receipt.
+Resolve the deterministic chart key from durable-workflow identity with namespace `and-wayfind-map-chart:v1`, then query `Wayfinding Exit` and `Investigation Publication` receipt histories carrying that key. Resume one well-formed outcome history. Duplicate Exit receipts, competing publication intents, mismatched content, or both receipt types for one key are drift and route to `and-sweep`; a matching pending and completed publication pair is one history. Re-read both receipt types immediately before appending either outcome and again before applying its structural or route effects.
+
+For an incomplete exit, re-read the non-map record and verify the receipt's checkpoint and complete confirmed result. Apply only the missing target stage and target State Reason effects recorded by the receipt, verify them, clean matching synchronized recovery, report the recovered route, and stop. Do not repeat the interview or append another exit receipt.
 
 For incomplete initial publication, re-read the record and apply the eligibility checks in Resolve the work record, then read the recorded intent and resume at Publish the map whether or not map promotion already occurred. Do not repeat the destination interview, breadth-first exploration, or already verified writes.
 
@@ -93,11 +95,11 @@ For incomplete initial publication, re-read the record and apply the eligibility
 3. Explore breadth-first.
    - Invoke `grilling` across the whole decision space, surfacing sharp questions, their likely methods, known ordering, and fog without resolving one thread deeply.
    - Obtain final shared-understanding confirmation for the destination, scope, first visible frontier, and remaining fog before any backend synchronization.
-   - If no real fog exists, append one `Wayfinding Exit` receipt carrying the interview checkpoint and complete confirmed result without creating map state. Keep one bounded, currently enumerable decision space in `needs-info` with `Resume with: and-clarify`; otherwise move confirmed packageable work to `needs-pack`. Verify the route, clean synchronized recovery, report it, and stop without entering map publication.
+   - If no real fog exists, target `needs-info` with a complete `and-clarify` State Reason when one bounded decision space remains; otherwise target `needs-pack` with a cleared State Reason. Append one `Wayfinding Exit` receipt carrying the chart key, interview checkpoint, complete confirmed result, and exact target without creating map state. Re-read and require that it is the sole outcome for the chart key before applying the recorded route. Verify the route, clean synchronized recovery, report it, and stop without entering map publication.
    - Completion criterion: the work either exits without a map, or has confirmed multi-session fog plus a complete first visible frontier.
 
 4. Publish the map.
-   - Use the backend contract's Chart Wayfinding Map operation with the Investigation Publication receipt below. When no chart key is recorded, derive it from durable-workflow identity with namespace `and-wayfind-map-chart:v1`; derive initial investigation keys from that key plus stable map ordinals such as `<chart-key>:I01`.
+   - Use the backend contract's Chart Wayfinding Map operation with the Investigation Publication receipt below. Derive initial investigation keys from the resolved chart key plus stable map ordinals such as `<chart-key>:I01`.
    - Supply the confirmed destination, five map sections, material source evidence, interview checkpoint, currently sharp investigations, methods, ordering, and remaining fog. Promote the existing work record rather than creating a second map.
    - Record the destination-level State Reason with `Resume with: and-wayfind`; the Investigation Publication receipt carries the interview checkpoint.
    - Verify every created record, method, relationship, stage, and receipt, then clean synchronized interview recovery.
@@ -158,10 +160,13 @@ Use this append-only receipt when the opening grill proves that map state is unn
 ```markdown
 ## Wayfinding Exit
 
+Chart key: <deterministic chart key>
 Checkpoint: <interview checkpoint>
 Confirmed result:
 <artifact-ready destination, scope, decisions and rationale, domain or documentation updates, and acceptance implications>
-Remaining blocker: <one bounded decision space, or none>
+Target stage: <needs-info or needs-pack>
+Target State Reason:
+<the complete State Reason when target stage is needs-info, or `State: cleared`>
 Next step: <and-clarify or and-pack>
 ```
 
