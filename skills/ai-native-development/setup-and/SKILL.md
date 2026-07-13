@@ -4,114 +4,140 @@ description: Configure a repository for the AND delivery loop.
 disable-model-invocation: true
 ---
 
-# Setup AND
+# AND Setup
 
-Set up a repository to run the AND delivery loop with exactly one configured workflow state backend.
+Audit and configure a repository to run the AND delivery loop with exactly one authoritative workflow-state backend.
 
-This is a repository bootstrap skill, not a workflow handbook. Discover the repository, choose or verify the backend, write the minimal configuration, update the existing agent entrypoint, check external skill readiness, and report the next workflow skill.
-
-Use the installed workflow skills as the source of truth for runtime behavior and `and-backend-contract` for backend rules. Use the delivery-loop docs to explain the conceptual model. Do not copy package rules into each target repository unless they are real repository-specific facts.
-
-## Setup Approach
-
-Explore first, present findings, confirm durable choices, then write.
-
-AND setup centers on one workflow state backend and minimal repository integration.
+Judge only the repository's current evidence and the required results below. Repositories with the same current evidence must receive the same assessment and actions. Use the installed AND skills and `and-backend-contract` as shared authorities instead of copying workflow rules into the target repository.
 
 ## Setup Contract
 
-Setup is complete when:
+Repository setup is conformant when:
 
-- `.and/config.yml` exists with only `version: 1` and `workflow_state_backend`.
-- The selected backend has the minimum representation needed by `and-backend-contract`.
-- The existing agent entrypoint tells agents to use the AND loop and `ask-andie`.
-- External skill readiness has been checked and reported.
-- The final receipt names the next workflow skill.
+- `.and/config.yml` is a valid v1 config under `and-backend-contract` and selects exactly one supported backend.
+- The configured backend satisfies its minimum storage, capability, and single-source-of-truth requirements in `and-backend-contract`.
+- Every directory containing Agent instructions follows the Agent Instruction Policy below.
+- The root `AGENTS.md` contains one effective, concise AND section that directs agents to `.and/config.yml`, the configured backend, `ask-andie`, and the installed AND skills and backend contract.
+- No effective repository instruction contradicts the configured backend, directs agents to parallel workflow state, or requires a relationship fallback forbidden by the backend contract.
+
+External skill readiness and the next-skill receipt are mandatory report results, not repository conformance conditions. When the user explicitly requests a full-ready result, missing external skills make full readiness incomplete while repository conformance is still reported separately.
 
 ## Process
 
-1. Explore the repository.
-   - Inspect `.and/config.yml`, git remotes, root `AGENTS.md` / `CLAUDE.md`, existing agent docs, existing workflow conventions, existing `.and/work`, and enough domain or ADR docs to preserve established repository conventions.
-   - If GitHub is the likely backend and `gh` is available, inspect repository identity, issues, labels, and native relationship support.
-   - Completion criterion: you can say whether the repo is already configured, which backend is likely, which entrypoint to edit, what writes are needed, and what is blocking setup.
+### 1. Establish the Target
 
-2. Choose or verify the backend.
-   - If `.and/config.yml` exists and is valid, verify it instead of re-deciding.
-   - If no config exists, choose exactly one backend: `github-native` or `markdown-file-based`.
-   - Recommend `github-native` when the repository already uses GitHub issues and native parent/sub-issue plus blocked-by/blocking relationships are available.
-   - Recommend `markdown-file-based` when workflow state should live in repository files, when no GitHub remote is available, or when GitHub-native relationship capabilities are unavailable.
-   - Ask only when there is no config, the config is invalid, repository signals conflict, or the user wants to switch backends.
-   - Prepare `.and/config.yml` with only `version: 1` and `workflow_state_backend`.
+Read and validate `.and/config.yml` before selecting a backend reference.
 
-3. Check backend readiness.
-   - For `github-native`, confirm repository identity, issues availability, native parent/sub-issue support, and native blocked-by/blocking support.
-   - For `github-native`, confirm authenticated write access for issue creation and updates, stage labels, comments or receipts, ownership recording, lifecycle changes, and native containment and dependency relationship mutations.
-   - For `github-native`, prepare creation only for missing fixed labels declared by the GitHub-native backend reference.
-   - For `markdown-file-based`, ensure `.and/work` can be created and updated in the repository worktree and no GitHub issue mirror is being configured.
-   - If required backend write access cannot be confirmed, report the exact access blocker and do not declare the backend ready.
-   - Do not emulate unavailable GitHub-native relationships with markdown task lists, labels, or comments.
+- If the config is valid, read the backend-neutral contract and exactly the configured backend reference. Do not infer or switch the backend from repository instructions.
+- If the config is missing or invalid, read the backend-neutral contract and inspect the two supported backend references only as needed to choose or recommend a valid target.
+- Treat instructions that disagree with a valid config as gaps to repair, never as evidence for backend selection.
+- Derive the target from this Setup Contract, the installed AND skills, and `and-backend-contract`. Do not create a repository-local target checklist.
 
-4. Check runtime skill readiness.
-   - Check current skill availability from the session list when visible. If needed, use the repository's documented skill-list command. When neither source establishes availability, report it as unverified.
-   - Check the AND reference `and-interview-contract` and Matt runtime skills `grilling`, `research`, `prototype`, `tdd`, and `code-review`.
-   - Missing runtime skills are environment readiness gaps, not repository setup failures.
-   - Do not install external skills unless the user explicitly asks.
-   - Do not block repository setup for missing external skills unless the user asked for full-ready setup or the missing skill blocks the setup itself.
-   - Report missing skills with an install command from their owning repository. When the actual agent targets are known, include them explicitly with `--agent <known-target...>`. Otherwise use interactive target selection by omitting `--agent`.
-   - Use `Andiedie/skills` for a missing `and-interview-contract` and `mattpocock/skills` for missing Matt runtime skills; never combine different sources in one install command.
-   - Completion criterion: each required external skill is available, missing, or unverified, and every missing skill has an install command scoped to known targets or interactive target selection.
+The backend contract owns the supported identifiers and exact v1 schema. When proposing a config write, copy the exact config from the selected backend reference into the write envelope.
 
-5. Prepare the setup plan.
-   - Present a concise plan containing the backend, files to create or update, GitHub labels to create or reuse when relevant, the agent entrypoint target, missing external skills, and unresolved decisions.
-   - Do not output the full workflow state table, full State Reason schema, claim policy, or backend representation.
+Completion criterion: one current or proposed backend target is known, or one genuine user decision is identified.
 
-6. Confirm risky writes.
-   - Confirm backend choice when new or changing.
-   - Confirm creating or changing `.and/config.yml`.
-   - Confirm GitHub label creation.
-   - Confirm editing `AGENTS.md` / `CLAUDE.md`, creating `.and/work`, creating project-specific docs, or migrating existing work.
-   - Do not ask the user to re-confirm fixed AND invariants such as the small active stage set or one-backend rule after the setup plan is approved.
+### 2. Audit Current Evidence
 
-7. Write minimal setup.
-   - Create or change `.and/config.yml` only when needed. Leave an existing valid config unchanged.
-   - Write the backend minimum: GitHub labels for `github-native` when approved, or `.and/work` for `markdown-file-based`.
-   - Update the existing agent entrypoint instead of creating a duplicate.
-   - Create or update project-specific docs only when they record real repository-specific facts.
-   - Completion criterion: future agents can discover the AND loop from repository state alone.
+Complete the assessment before proposing any write.
 
-8. Report the receipt.
-   - Report what was configured, which backend was selected, which files or backend labels changed, which external skills are missing when any, how to install missing skills, and the next workflow skill.
-   - Keep the receipt short. It is not a setup log or copied PRD.
+- Inspect the config, git remotes, configured backend state, root and nested `AGENTS.md` / `CLAUDE.md` files, and effective instructions that govern workflow behavior.
+- Scan every `AGENTS.md` and `CLAUDE.md` outside dependency, generated, and VCS directories; classify the results by directory and identify symlinks before editing. Do not treat a working AND section in the wrong file as normalized.
+- Follow instruction references only far enough to determine the effective rules.
+- For `github-native`, inspect repository identity, issues availability, fixed labels, authenticated permissions, and native containment and dependency relationship capability.
+- For `markdown-file-based`, inspect whether `.and/work` can be the only workflow-state store in the worktree.
+- Check the AND reference `and-interview-contract` and Matt runtime skills `grilling`, `research`, `prototype`, `tdd`, and `code-review` separately as environment readiness.
+- Treat mere file or directory existence as irrelevant unless its current content or behavior affects a required result.
+- Do not mutate files, labels, issues, relationships, or work records during the audit.
 
-## Backend-Specific Setup
+Completion criterion: every Setup Contract condition has current evidence, every real gap is known, and environment readiness is available, missing, or unverified.
 
-### GitHub-Native
+### 3. Resolve Genuine Decisions
 
-Use GitHub-native when GitHub issues are the workflow state source and native relationships are available.
+Investigate facts before asking the user. Do not ask when evidence determines the action.
 
-- Create or reuse only the fixed AND labels declared by the GitHub-native backend reference.
-- Close-reason labels are repository policy and outside the required AND label set; do not create or modify them during AND setup.
-- If native parent/sub-issue or blocked-by/blocking support is unavailable, recommend resolving GitHub capability or using `markdown-file-based`; do not silently degrade.
+When a user decision remains:
 
-### Markdown-File-Based
+- ask one decision at a time, in dependency order;
+- give the valid options, recommendation, rationale, and impact;
+- use the answer to investigate and resolve the next dependent decision;
+- do not present a fixed questionnaire.
 
-Use markdown-file-based when repository files are the workflow state source.
+Examples that require a decision include choosing between two genuinely viable backends with different desired sources of truth, merging non-identical paired Agent instructions, and normalizing a project whose instruction-file layout has mixed cases without an existing policy.
 
-- Write `.and/config.yml` with `workflow_state_backend: markdown-file-based`.
-- Create `.and/work/` and use `.and/work/.gitkeep` only when needed to keep the directory in version control.
-- Do not create sample work records.
-- Do not create GitHub labels or a GitHub issue mirror.
+Completion criterion: no unresolved choice can materially change the proposed writes.
 
-## Agent Entrypoint
+### 4. Report and Prepare One Write Envelope
 
-Update the existing agent entrypoint.
+Always complete the underlying assessment. Adapt only the reporting detail:
 
-- If `AGENTS.md` exists, prefer it.
-- If no `AGENTS.md` exists but `CLAUDE.md` exists, update `CLAUDE.md`.
-- If both exist, update `AGENTS.md` and do not delete `CLAUDE.md`.
-- If neither exists, ask which one to create.
+- By default, give a compact satisfied summary and detail every real gap.
+- For a conformant repository, give a concise no-op result.
+- When the user explicitly asks for a full audit, show every contract condition and its evidence.
+- When the user asks for audit only, stop after the report without writes.
 
-Keep the entrypoint short:
+For a setup or repair request with gaps, present one write envelope that includes:
+
+- every file, section, and directory to create, replace, move, or delete;
+- every backend action;
+- exact structured values, including config content and GitHub label names;
+- the reason and user-visible impact of each action;
+- the complete proposed replacement section for any user-readable Agent instruction section, without unrelated surrounding content.
+
+Show a full patch only when requested. One approval authorizes every listed write. If execution requires any action outside, beyond, or contrary to the approved envelope, stop and request renewed approval for the changed envelope.
+
+Completion criterion: the user can approve all necessary writes once, with no hidden or per-surface follow-up confirmation.
+
+### 5. Apply the Approved Minimum
+
+- Perform only the approved writes.
+- Preserve unrelated instructions, documentation, issues, work records, and implementation artifacts.
+- Leave valid config and satisfied backend state unchanged.
+- Create project-specific documentation only for real repository facts that cannot be inferred from the AND skills or backend contract.
+- Do not install external skills unless the user explicitly requested installation and it was included in the envelope.
+
+Completion criterion: every approved gap is addressed and nothing outside the envelope changed.
+
+### 6. Re-audit and Return a Receipt
+
+Run the same assessment against the same target after writes.
+
+- Verify every Setup Contract condition from current evidence.
+- Verify that a second apply would be a no-op.
+- Report repository conformance separately from external skill readiness and, when requested, full readiness.
+- Name files and backend state changed, any remaining blocker, missing skill install commands, and exactly one next workflow skill.
+- If a condition remains unsatisfied, report the evidence and required next action instead of declaring success.
+- Name a downstream workflow skill only when repository setup is conformant. Otherwise route back to `setup-and` after the stated blocker or decision is resolved.
+
+Completion criterion: the receipt proves the resulting state and routes the user without making the receipt itself a setup requirement.
+
+## Backend Application
+
+Use the configured or proposed backend reference as the sole authority for its schema, fixed labels, storage, representation, operations, capability interpretation, and verification. Setup owns only the current-state audit and the approved minimum application.
+
+- For `github-native`, use the shared [Relationship API Recipes](../and-backend-contract/backends/github-native.md#relationship-api-recipes) for relationship reads, mutations, ID semantics, permissions, pagination, response interpretation, write verification, and probe cleanup.
+- For either backend, identify missing minimum state from its reference, include each exact action in the write envelope, and leave satisfied state unchanged.
+
+## Agent Instruction Integration
+
+Apply this policy directly; do not load or require another skill:
+
+- `AGENTS.md` holds shared cross-Agent instructions.
+- A sibling `CLAUDE.md` imports `@AGENTS.md` first, then may append Claude Code-specific rules. Do not duplicate shared instructions between the two files.
+- If only `AGENTS.md` files exist, preserve them and add each sibling `CLAUDE.md` adapter.
+- If only `CLAUDE.md` files exist, move each file's shared content to sibling `AGENTS.md`, then create the adapter. Use `git mv` for tracked files when possible.
+- If paired files already follow the import rule and contain no distinct shared instructions, leave them unchanged.
+- If paired files contain non-identical or ambiguously shared content, stop for one explicit merge-policy decision; do not merge or discard content autonomously.
+- If the project mixes Agent-only, Claude-only, and paired directories without an explicit project policy, report each directory class and stop for one normalization-policy decision.
+- If no Agent instruction files exist, propose a root `AGENTS.md` plus a root `CLAUDE.md` adapter without asking the user to choose a filename.
+
+The adapter content is:
+
+```markdown
+@AGENTS.md
+```
+
+Add or replace one root `AGENTS.md` section while preserving unrelated content:
 
 ```markdown
 ## AI-native development
@@ -125,48 +151,41 @@ This repository uses the AND delivery loop.
 - For workflow rules, use the installed `ai-native-development` skills and backend contract.
 ```
 
-## Project-Specific Docs
+## Environment Readiness
 
-Do not create a heavy project documentation set by default.
+Check the AND reference `and-interview-contract` and Matt runtime skills `grilling`, `research`, `prototype`, `tdd`, and `code-review` from the session skill list or the repository's documented skill-list command. Report unverified when neither establishes availability.
 
-Create or update a project-specific doc only when it records facts that cannot be inferred from the AND skills or backend contract, such as existing domain docs, ADR locations, repository-specific implementation isolation, or GitHub capability limits.
+Missing skills do not authorize installation. When installation is requested, use the skill's owning repository and known Agent targets where available:
 
-Prefer one file, such as `docs/agents/ai-native-development.md`, when project-specific notes are needed. Do not default to separate tracker, label, claim, implementation, and domain docs.
-
-## Output Shape
-
-Before writing, use an exploration summary with the likely backend, entrypoint target, planned file or label changes, missing external skills, and unresolved decisions.
-
-When blocked, state the blocker, the decision needed, and your recommendation.
-
-After writing, use a short receipt:
-
-```markdown
-AND setup is configured.
-
-Backend: markdown-file-based
-Files changed:
-- .and/config.yml
-- .and/work/.gitkeep
-- AGENTS.md
-
-External skills: missing `tdd`.
-Install: <generated install command>
-
-Next: use `and-intake` for new requests, or `ask-andie` if you are unsure where existing work belongs.
+```bash
+npx --yes skills add Andiedie/skills -g --skill and-interview-contract --agent <known-target...>
+npx --yes skills add mattpocock/skills -g --skill <missing-matt-skill...> --agent <known-target...>
 ```
 
-Avoid long `none` sections, full workflow tables, copied backend schemas, and setup-process logs.
+When targets are unknown, omit `--agent` for interactive selection. Keep skills from different repositories in separate install commands.
+
+## Reporting Shape
+
+Keep default reports compact. A gap item needs the required result, current evidence, concrete problem, proposed action, reason, and impact. Group satisfied conditions into a short summary unless a full audit was requested.
+
+Before writes, list the backend target, exact file/section actions, exact labels or other backend actions, environment readiness, and any unresolved blocker. End an audit-only request there.
+
+After a successful apply, report:
+
+```markdown
+Repository setup: conformant
+Backend: <github-native | markdown-file-based>
+Changed: <files and backend actions, or none>
+Environment readiness: <ready | missing or unverified skills>
+Full readiness: <ready | incomplete, only when requested>
+Next: <one AND workflow skill>
+```
 
 ## Boundaries
 
 - Do not change product requirements or implementation code.
-- Do not migrate existing issues or work records unless the user explicitly asks.
-- Do not configure more than one workflow state backend.
-- Do not create GitHub and markdown workflow state in parallel.
-- Keep `.and/config.yml` within the v1 schema: `version` and `workflow_state_backend` only.
-- Do not invent public stage states beyond the AND active stage set.
-- Do not create duplicate agent entrypoints.
-- Do not create project-specific docs unless they record real repository-specific facts.
-- Do not release claims, override ownership, close work, or repair backend drift.
-- Do not install external skills unless the user explicitly asks.
+- Do not change the configured backend outside the approved write envelope.
+- Do not migrate or alter existing issues and work records during setup.
+- Do not create project-specific docs without repository-specific facts.
+- Do not install external skills without explicit authorization.
+- Do not claim work, implement product changes, close work, merge delivery branches, or release ownership.

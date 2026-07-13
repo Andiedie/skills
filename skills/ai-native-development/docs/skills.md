@@ -6,7 +6,7 @@ Use this guide to choose the next skill in the AND delivery loop. If the current
 
 | Position | Situation | Action | Result | Usually next |
 | --- | --- | --- | --- | --- |
-| Setup | The repository has no valid AND configuration or minimum integration. | [`setup-and`](../setup-and/SKILL.md) | Configured backend, readiness checks, and an Agent entrypoint. | `and-intake`, `and-triage`, or `ask-andie` |
+| Setup | The repository needs initial setup, has a current Setup Contract gap, or needs an explicit setup audit, repair, or full-ready check. | [`setup-and`](../setup-and/SKILL.md) | A current-state audit, or after one approved write envelope a conformant repository plus a separate readiness result. | `and-intake`, `and-triage`, or `ask-andie` |
 | Route | The current position is unclear. | [`ask-andie`](../ask-andie/SKILL.md) | One next skill or accountable-owner action. | The named route |
 | Observe | A raw signal has no authoritative work record. | [`and-intake`](../and-intake/SKILL.md) | A work record, usually entering `needs-triage`. | `and-triage` |
 | Decide | A work record needs a route. | [`and-triage`](../and-triage/SKILL.md) | A lifecycle outcome, `needs-info` with a State Reason, or `needs-pack`. | Input owner, `and-clarify`, `and-wayfind`, or `and-pack` |
