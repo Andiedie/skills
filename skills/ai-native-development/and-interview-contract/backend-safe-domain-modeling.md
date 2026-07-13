@@ -1,7 +1,5 @@
 # Backend-Safe Domain Modeling
 
-This reference defines the domain-modeling discipline used throughout every `and-clarify` interview.
-
 Produce precise package input without editing repository documentation before the delivery unit is claimed and implemented.
 
 ## Active Discipline
@@ -26,8 +24,6 @@ If no relevant context or ADR location exists, propose the smallest new artifact
 
 ## Artifact-Ready Outputs
 
-Return artifact-ready confirmed content, not merely reminders to update documentation.
-
 For a canonical term, record:
 
 ```markdown
@@ -51,8 +47,8 @@ For another documentation update, record the target document and section, the pr
 
 ## Boundaries
 
-- Preserve exact confirmed meaning without editing repository files during clarification.
+- Preserve exact confirmed meaning without editing repository files during the interview.
 - Keep `CONTEXT.md` entries implementation-independent, project-specific, concise, and opinionated about preferred language.
 - Keep ADRs sparse; easy, obvious, or no-tradeoff decisions remain outside ADRs.
 - Keep delivery-local decisions in the Package Contract instead of manufacturing permanent documentation.
-- Keep unconfirmed language, decisions, and document drafts as blockers rather than resolved outputs.
+- Keep unconfirmed language, decisions, and document drafts as unresolved outputs.

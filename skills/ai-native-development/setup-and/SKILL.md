@@ -44,9 +44,9 @@ Complete the assessment before proposing any write.
 - Inspect the config, git remotes, configured backend state, root and nested `AGENTS.md` / `CLAUDE.md` files, and effective instructions that govern workflow behavior.
 - Scan every `AGENTS.md` and `CLAUDE.md` outside dependency, generated, and VCS directories; classify the results by directory and identify symlinks before editing. Do not treat a working AND section in the wrong file as normalized.
 - Follow instruction references only far enough to determine the effective rules.
-- For `github-native`, inspect repository identity, issues availability, fixed labels, authenticated permissions, and native containment and dependency relationship capability.
+- For `github-native`, inspect repository identity, issues availability, fixed labels, authenticated issue-write and self-assignment permissions, and native containment and dependency relationship capability.
 - For `markdown-file-based`, inspect whether `.and/work` can be the only workflow-state store in the worktree.
-- Check `grilling`, `tdd`, and `code-review` availability separately as environment readiness.
+- Check the AND reference `and-interview-contract` and Matt runtime skills `grilling`, `research`, `prototype`, `tdd`, and `code-review` separately as environment readiness.
 - Treat mere file or directory existence as irrelevant unless its current content or behavior affects a required result.
 - Do not mutate files, labels, issues, relationships, or work records during the audit.
 
@@ -153,15 +153,16 @@ This repository uses the AND delivery loop.
 
 ## Environment Readiness
 
-Check `grilling`, `tdd`, and `code-review` from the session skill list or the repository's documented skill-list command. Report unverified when neither establishes availability.
+Check the AND reference `and-interview-contract` and Matt runtime skills `grilling`, `research`, `prototype`, `tdd`, and `code-review` from the session skill list or the repository's documented skill-list command. Report unverified when neither establishes availability.
 
-Missing skills do not authorize installation. When installation is requested, use the accepted distribution and known Agent targets where available:
+Missing skills do not authorize installation. When installation is requested, use the skill's owning repository and known Agent targets where available:
 
 ```bash
-npx --yes skills add mattpocock/skills -g --skill <missing-skill...> --agent <known-target...>
+npx --yes skills add Andiedie/skills -g --skill and-interview-contract --agent <known-target...>
+npx --yes skills add mattpocock/skills -g --skill <missing-matt-skill...> --agent <known-target...>
 ```
 
-When targets are unknown, omit `--agent` for interactive selection.
+When targets are unknown, omit `--agent` for interactive selection. Keep skills from different repositories in separate install commands.
 
 ## Reporting Shape
 

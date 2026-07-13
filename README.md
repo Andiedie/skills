@@ -15,7 +15,7 @@ npx --yes skills add Andiedie/skills --list
 Example: install the AI-native development loop globally for Codex and Claude Code:
 
 ```bash
-npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill and-backend-contract ask-andie and-intake and-triage and-clarify and-pack and-pick and-claim and-implement and-finish and-sweep setup-and -y
+npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill and-backend-contract and-interview-contract ask-andie and-intake and-triage and-clarify and-wayfind and-pack and-pick and-claim and-implement and-finish and-sweep setup-and -y
 ```
 
 Install the repository interactively:
@@ -36,6 +36,13 @@ AND workflow skills depend on `and-backend-contract`. When installing one explic
 npx --yes skills add Andiedie/skills --skill and-backend-contract and-pack
 ```
 
+`and-clarify` and `and-wayfind` also invoke `and-interview-contract`. Install either one with both reference skills:
+
+```bash
+npx --yes skills add Andiedie/skills --skill and-backend-contract and-interview-contract and-clarify
+npx --yes skills add Andiedie/skills --skill and-backend-contract and-interview-contract and-wayfind
+```
+
 ## Skill Packages
 
 ### AI-native development
@@ -45,10 +52,12 @@ npx --yes skills add Andiedie/skills --skill and-backend-contract and-pack
 It includes:
 
 - `and-backend-contract`
+- `and-interview-contract`
 - `ask-andie`
 - `and-intake`
 - `and-triage`
 - `and-clarify`
+- `and-wayfind`
 - `and-pack`
 - `and-pick`
 - `and-claim`
@@ -74,13 +83,15 @@ The AI-native development loop builds on [Matt Pocock's skills repository](https
 AND requires exactly these external runtime skills:
 
 - `grilling`
+- `research`
+- `prototype`
 - `tdd`
 - `code-review`
 
 Example for a global Codex and Claude Code environment:
 
 ```sh
-npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill grilling tdd code-review -y
+npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill grilling research prototype tdd code-review -y
 ```
 
 `setup-and` reports missing dependencies and the install command without installing them unless explicitly asked.
@@ -96,7 +107,7 @@ Snapshot from my local skill environment on 2026-07-11. This is a factual person
 | [Andiedie/cd2-skills](https://github.com/Andiedie/cd2-skills) | `cd2` |
 | [Andiedie/loopmark](https://github.com/Andiedie/loopmark) | `loopmark` |
 | [Andiedie/openlist-skills](https://github.com/Andiedie/openlist-skills) | `openlist` |
-| [Andiedie/skills](https://github.com/Andiedie/skills) | `and-backend-contract`, `and-claim`, `and-clarify`, `and-implement`, `and-intake`, `and-pack`, `and-pick`, `and-sweep`, `and-triage`, `ask-andie`, `documentation-maintenance`, `documentation-reseed`, `install-skills`, `normalize-agent-instructions`, `setup-and` |
+| [Andiedie/skills](https://github.com/Andiedie/skills) | `and-backend-contract`, `and-claim`, `and-clarify`, `and-finish`, `and-implement`, `and-intake`, `and-pack`, `and-pick`, `and-sweep`, `and-triage`, `ask-andie`, `documentation-maintenance`, `documentation-reseed`, `install-skills`, `normalize-agent-instructions`, `setup-and` |
 | [mattpocock/skills](https://github.com/mattpocock/skills) | `ask-matt`, `code-review`, `codebase-design`, `diagnosing-bugs`, `domain-modeling`, `grill-me`, `grill-with-docs`, `grilling`, `handoff`, `implement`, `improve-codebase-architecture`, `prototype`, `research`, `scaffold-exercises`, `setup-matt-pocock-skills`, `tdd`, `teach`, `to-spec`, `to-tickets`, `triage`, `wayfinder`, `writing-great-skills` |
 | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | `web-design-guidelines`, `writing-guidelines` |
 | [vercel-labs/skills](https://github.com/vercel-labs/skills) | `find-skills` |

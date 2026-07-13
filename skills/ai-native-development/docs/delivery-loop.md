@@ -36,13 +36,15 @@ Observe -> Decide -> Clarify -> Pack -> Claim -> Implement -> Close/Learn
 | --- | --- | --- |
 | Observe | What signal arrived, and what is already known? | A durable work record with source evidence. |
 | Decide | Is this worth acting on, and what is missing? | Closure, a specific wait, or a route to packaging. |
-| Clarify | Which decision, fact, permission, acceptance input, or external event blocks a correct package? | Confirmed input or one explicit unresolved question. |
+| Clarify | Which bounded, currently enumerable decision space or other required input blocks a correct package? | Confirmed input or one explicit unresolved question. |
 | Pack | What complete delivery unit can an Agent execute? | A single issue package or PRD package. |
 | Claim | Who owns the whole delivery unit? | One recorded owner and an unchanged scope. |
 | Implement | What change satisfies the package? | An isolated, verified, and reviewed implementation. |
 | Close/Learn | What proves completion, and what follows from it? | A lifecycle outcome, completion evidence, and any new signal. |
 
 This is a loop rather than a one-way assembly line. A later stage can reveal that an earlier assumption was wrong, but the correction returns to the stage that owns it. Packaging does not improvise a missing product decision, and implementation does not privately rewrite the package.
+
+Wayfinding is a conditional on-ramp before Pack, not another mandatory stage. Use it when the destination is visible but later questions cannot yet be enumerated without further investigation. It clears that fog as a shared investigation map; ordinary work still follows Clarify or goes directly to Pack.
 
 ## Human And Agent Collaboration
 
@@ -52,7 +54,7 @@ Humans should not be the bottleneck for facts an Agent can verify. Agents should
 | --- | --- |
 | Human | Value judgments, business tradeoffs, authorization, acceptance, merge, rejection, and risk acceptance. |
 | Agent | Fact-finding, reproduction, synthesis, packaging, implementation, verification, and consistency checks. |
-| Workflow state backend | Durable work, decisions, package contracts, relationships, ownership, and completion evidence. |
+| Workflow state backend | Durable work, investigation maps, decisions, package contracts, relationships, ownership, and completion evidence. |
 
 The collaboration follows a few practical rules:
 
@@ -69,6 +71,7 @@ flowchart TD
   Observe["Observe<br/>record signal and evidence"]
   Decide["Decide<br/>close, wait, or continue"]
   Clarify["Clarify<br/>resolve required input"]
+  Wayfind["Wayfind when needed<br/>clear multi-session fog"]
   Pack["Pack<br/>publish one delivery unit"]
   Claim["Claim<br/>record whole-unit ownership"]
   Implement["Implement<br/>change, verify, and review"]
@@ -78,9 +81,12 @@ flowchart TD
   Observe --> Decide
   Decide --> Close
   Decide --> Clarify
+  Decide --> Wayfind
   Decide --> Pack
   Clarify --> Pack
+  Wayfind --> Pack
   Pack --> Clarify
+  Pack --> Wayfind
   Pack --> Claim
   Claim --> Implement
   Implement --> Pack
@@ -89,6 +95,8 @@ flowchart TD
 ```
 
 Clarification is conditional. Work that already contains every required input can move from Decide to Pack. Work that is duplicate, complete, rejected, or no longer relevant can close without entering implementation.
+
+Wayfinding is also conditional. Its map and investigations are planning records, not delivery units: they cannot be picked or claimed for implementation. Once the map is clear, Pack publishes a separate delivery unit and keeps the completed map as linked planning evidence.
 
 ## Delivery Units
 
@@ -103,7 +111,7 @@ A PRD package is still claimed as one unit. Its owner may delegate child slices,
 
 ## Durable Handoffs
 
-The configured workflow state backend is the source of truth for the loop. It keeps the current work record, State Reason, Package Contract, relationships, owner, and evidence recoverable when sessions or Agents change.
+The configured workflow state backend is the source of truth for the loop. It keeps the current work record, Wayfinding map when any, State Reason, Package Contract, relationships, owner, and evidence recoverable when sessions or Agents change.
 
 Before implementation, work moves through a small queue: `needs-triage`, `needs-info`, `needs-pack`, and `ready-for-agent`. These states describe where pre-execution uncertainty remains; they are not implementation progress states. The [backend contract](../and-backend-contract/backend-contract.md) defines their backend-neutral meaning and invariants; the configured [backend reference](../and-backend-contract/backends/) defines their representation.
 
@@ -115,7 +123,7 @@ Each stage leaves only the durable evidence needed to continue the work. Tempora
 
 The loop preserves correctness by making route-backs explicit:
 
-- A missing decision, fact, permission, acceptance input, or external event returns to Clarify and its accountable owner.
+- A bounded decision space whose questions can be enumerated now returns to Clarify; uncertainty whose later questions depend on further investigation returns to Wayfind. Missing facts, permissions, acceptance inputs, and external events return to their accountable owner.
 - A weak or incorrect delivery boundary returns to Pack.
 - Contradictory or stale workflow state is repaired before claim or implementation.
 - Failed implementation verification returns to Implement unless it exposes a package defect.
@@ -130,3 +138,4 @@ Closure can produce a new signal: a follow-up requirement, a documentation need,
 - Use the [skills guide](skills.md) to choose the next workflow skill.
 - Use the [backend contract](../and-backend-contract/backend-contract.md) for workflow-state concepts and invariants.
 - Use the configured [backend reference](../and-backend-contract/backends/) for representation and operations.
+- Read the [Wayfinding records ADR](adr/0001-separate-wayfinding-records-from-delivery-units.md) for the map-to-package boundary.

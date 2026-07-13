@@ -18,16 +18,20 @@ If setup is missing, invalid, unsupported, or the backend contract is unavailabl
 
 ## Route Map
 
-Main loop: `and-intake` -> `and-triage` -> `and-clarify` when needed -> `and-pack` -> `and-pick` -> `and-claim` -> `and-implement` -> `and-finish`.
+Main loop: `and-intake` -> `and-triage` -> `and-clarify` when a bounded, currently enumerable decision space needs resolution -> `and-pack` -> `and-pick` -> `and-claim` -> `and-implement` -> `and-finish`.
 
-Keep clarification and packaging in one context until the package is published. After a PRD package is claimed, its owner may use child records as subagent work units grounded in the parent PRD plus the child record.
+`and-wayfind` is a conditional on-ramp before `and-pack` when the destination is visible but the investigation path cannot yet be enumerated.
+
+Keep ordinary clarification and packaging in one context when practical. Wayfinding intentionally spans sessions through its map. After a PRD package is claimed, its owner may use child records as subagent work units grounded in the parent PRD plus the child record.
 
 | Surface / evidence | Route |
 | --- | --- |
 | Initial repository setup, a current Setup Contract gap, or an explicit request for a setup audit, repair, or full-ready check | `setup-and` |
 | Untracked raw signal, including an external PR or local diff with no work record | `and-intake` |
 | Existing work with unclear state, new activity, duplicate or closure question, or missing State Reason | `and-triage` |
-| `needs-info` with `Resume with: and-clarify` or `Cause: decision-needed` | `and-clarify` |
+| `needs-info` with `Resume with: and-clarify` | `and-clarify` |
+| `needs-info` with `Resume with: and-wayfind` | `and-wayfind` |
+| Existing work appears map-shaped but has no recorded `and-wayfind` route | `and-triage` |
 | `needs-info` waiting for facts, access, external state, or acceptance | Route the State Reason question to its owner; resume with the recorded skill |
 | `needs-pack` | `and-pack` |
 | Ready work slate with no chosen delivery unit | `and-pick` |
@@ -60,7 +64,7 @@ Do not perform full triage, pick ranking, package validation, implementation pla
 4. Choose exactly one next skill, one owner question, or one setup/install route. Do not run the next workflow skill inside `ask-andie`.
 5. Report the route and one teaching rule using the user's language. Keep skill names, labels, issue numbers, work IDs, commands, and code identifiers literal.
 
-If the route is uncertain, choose the smallest clarifying route: `and-triage` for unclear backend state, `and-clarify` for missing product or business decisions, `setup-and` for missing repository rules, or one direct question when the user must decide.
+If the route is uncertain, choose the smallest route: `and-triage` for unclear backend state or unrecorded map-shaped evidence, `and-clarify` for one recorded bounded decision space whose questions are currently enumerable, `and-wayfind` for an existing recorded Wayfinding route, `setup-and` for missing repository rules, or one direct question when the user must decide.
 
 ## Output Shape
 

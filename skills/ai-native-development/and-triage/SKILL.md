@@ -67,7 +67,9 @@ Ask before editing only when:
    - Choose `closed` when the work has a verified terminal reason and closure authority exists or confirmation is obtained.
    - Choose `needs-info` when one specific missing input blocks safe packaging.
    - Choose `needs-pack` when the work is worth doing and packageable.
-   - Use `and-clarify` as the resume path for structured product, domain, architecture, naming, or testing decisions.
+   - Use `and-clarify` when one bounded product, domain, architecture, naming, or testing decision space is visible enough for its questions to be enumerated now and traversed through one coherent interview.
+   - Use `and-wayfind` when the destination is visible but later questions depend on unfinished investigation and the complete decision path cannot yet be stated. Work that is merely large but already clear goes to `needs-pack`.
+   - For an `and-wayfind` route, make the State Reason question the destination-level uncertainty and make its exit criteria the condition for a clear map; individual sharp questions will live on the map.
    - Use the smallest accountable owner for missing facts, access, external state, or acceptance input.
    - Treat package-shape recommendations as hints only; final package shape belongs to `and-pack`.
    - Completion criterion: exactly one route is selected, or one confirmation question is asked with the evidence and risk named.
@@ -84,7 +86,7 @@ Ask before editing only when:
 5. Report a receipt.
    - Include the work link or ID, outcome, state or lifecycle change, material facts verified, exact unresolved question when any, and next skill.
    - Do not repeat full issue bodies, full triage notes, full State Reason markdown, long reproduction logs, or empty sections.
-   - Completion criterion: the next actor can continue with `and-clarify`, `and-pack`, or closure follow-up without rereading the whole triage session.
+   - Completion criterion: the next actor can continue with `and-clarify`, `and-wayfind`, `and-pack`, or closure follow-up without rereading the whole triage session.
 
 ## Backend Notes
 
@@ -105,7 +107,7 @@ Needed input:
 - Cause: <missing-facts, decision-needed, access-needed, external-state, or acceptance-needed>
 - Owner: <reporter, maintainer, human, agent, or external-system>
 - Question: <one specific question, decision, permission, external event, or acceptance gate>
-- Resume with: <and-triage, and-clarify, or and-pack>
+- Resume with: <and-triage, and-clarify, and-wayfind, or and-pack>
 - Exit criteria: <what must be true before this work can leave needs-info>
 ```
 
@@ -151,5 +153,5 @@ Authority:
 - Do not claim, implement, review, merge, or release ownership.
 - Do not close work without explicit authority or confirmation.
 - Do not ask broad questions when a specific State Reason can be written.
-- Do not run a structured decision interview; route those decisions to `and-clarify`.
+- Do not run a structured decision interview or chart a map; route a bounded, currently enumerable decision space to `and-clarify` and map-shaped uncertainty to `and-wayfind`.
 - Do not apply AND workflow state or lifecycle outcomes to linked external PRs.

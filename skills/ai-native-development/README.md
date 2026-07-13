@@ -15,10 +15,12 @@ This package defines the AND delivery loop and the workflow skills that turn amb
 ## Included Skills
 
 - `and-backend-contract`
+- `and-interview-contract`
 - `ask-andie`
 - `and-intake`
 - `and-triage`
 - `and-clarify`
+- `and-wayfind`
 - `and-pack`
 - `and-pick`
 - `and-claim`
@@ -27,4 +29,4 @@ This package defines the AND delivery loop and the workflow skills that turn amb
 - `and-sweep`
 - `setup-and`
 
-See the repository [README](../../README.md) for installation commands. Install `and-backend-contract` with any individually installed AND workflow skill because it supplies the configured backend rules.
+See the repository [README](../../README.md) for installation commands. Install `and-backend-contract` with any individually installed AND workflow skill. Install `and-interview-contract` as well when installing `and-clarify` or `and-wayfind` because both invoke that shared reference at runtime.
