@@ -44,7 +44,7 @@ Complete the assessment before proposing any write.
 - Inspect the config, git remotes, configured backend state, root and nested `AGENTS.md` / `CLAUDE.md` files, and effective instructions that govern workflow behavior.
 - Scan every `AGENTS.md` and `CLAUDE.md` outside dependency, generated, and VCS directories; classify the results by directory and identify symlinks before editing. Do not treat a working AND section in the wrong file as normalized.
 - Follow instruction references only far enough to determine the effective rules.
-- For `github-native`, inspect repository identity, issues availability, fixed labels, authenticated permissions, and native containment and dependency relationship capability.
+- For `github-native`, inspect repository identity, issues availability, fixed labels, authenticated issue-write and self-assignment permissions, and native containment and dependency relationship capability.
 - For `markdown-file-based`, inspect whether `.and/work` can be the only workflow-state store in the worktree.
 - Check the AND reference `and-interview-contract` and Matt runtime skills `grilling`, `research`, `prototype`, `tdd`, and `code-review` separately as environment readiness.
 - Treat mere file or directory existence as irrelevant unless its current content or behavior affects a required result.

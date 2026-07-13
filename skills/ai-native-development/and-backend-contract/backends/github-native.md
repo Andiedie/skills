@@ -32,9 +32,10 @@ GitHub-native requires:
 - native parent/sub-issue relationships for PRD package containment;
 - native blocked-by/blocking relationships for dependency order;
 - comments for receipts;
-- assignees or claim comments for ownership.
+- assignees or claim comments for delivery ownership;
+- assignees for investigation ownership, including permission to assign the authenticated actor.
 
-Wayfinding additionally requires the same native parent/sub-issue and blocked-by/blocking capabilities for maps and investigations.
+Wayfinding additionally requires the same native parent/sub-issue and blocked-by/blocking capabilities for maps and investigations, plus exactly-one-assignee investigation ownership.
 
 If native parent/sub-issue or blocked-by/blocking relationships are unavailable, do not emulate them with markdown task lists, labels, or comments. Route to `setup-and` to resolve GitHub capability or choose `markdown-file-based`.
 
@@ -260,7 +261,7 @@ Investigation ownership is separate: assign only the open frontier investigation
 Workflow receipts are comments on the record whose operation they evidence:
 
 - State Reason, intake, triage, Wayfinding-exit, pack, claim, implementation, review, verification, and completion receipts live on the original top-level work issue or delivery unit;
-- map-chart, investigation-publication, and map-handoff receipts live on the map;
+- investigation-publication and map-handoff receipts live on the map;
 - investigation resolution receipts live on the investigation; current ownership uses the assignee rules above.
 
 Branches, commits, PRs, CI, and review results linked from delivery receipts are implementation artifacts. Evidence linked from an investigation resolution is an investigation asset. Neither replaces workflow state, ownership, or lifecycle outcome.
@@ -283,7 +284,7 @@ The map also carries `needs-info` or `needs-pack`. Each investigation carries ex
 
 Apply the backend-neutral Chart Wayfinding Map operation with these representations:
 
-- investigation-publication and map-chart evidence are issue comments on the selected source issue, including when publication intent precedes map promotion;
+- investigation-publication evidence is an issue comment on the selected source issue, including when publication intent precedes map promotion;
 - map promotion updates that same issue body to the five map sections, preserves material source evidence in Notes, a receipt, or GitHub history, and applies `wayfinder:map`, `needs-info`, and the `and-wayfind` State Reason;
 - exact-key lookup searches issue bodies for `<!-- and-investigation:<key> -->`;
 - each investigation is an issue whose initial body carries that marker and `## Question`, with exactly one method label;

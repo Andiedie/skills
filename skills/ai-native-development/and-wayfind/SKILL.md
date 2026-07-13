@@ -61,7 +61,7 @@ Use one test: create an investigation when its question can be stated precisely 
 - **Research** (AFK): invoke `research` for facts requiring primary sources outside the current worktree. Link its Markdown evidence from the resolution.
 - **Prototype** (HITL): invoke `prototype` for a cheap concrete artifact that lets the human judge behavior or form. The human must actually react before resolution.
 - **Grilling** (HITL): invoke `grilling` directly under `and-interview-contract`, one question at a time. Do not invoke `and-clarify` from this skill.
-- **Task** (AFK or HITL): perform bounded prerequisite work whose result makes a later decision possible. It may act, but it does not deliver the destination.
+- **Task** (AFK or HITL): perform bounded prerequisite work whose result makes a later decision possible. An Agent may perform only routine actions already authorized by the investigation; actions involving permissions, cost, secrets, terms, or broader shared state require the accountable human to act or authorize them. Record what was done and the resulting non-secret facts in the resolution. A task does not deliver the destination.
 
 Create research and prototype assets in a dedicated investigation branch/worktree, never the ordinary worktree. The resolution links the asset and marks it for cleanup or Package promotion. Its answer remains authoritative even when a throwaway asset is later removed.
 
@@ -85,12 +85,13 @@ For incomplete initial publication, re-read the record and apply the eligibility
 
 2. Name the destination.
    - Invoke `grilling` to establish what must be clear before packaging can begin. The destination fixes scope.
-   - Completion criterion: the human confirms a concise destination and its out-of-scope boundary.
+   - Treat the confirmed destination and scope as a material result under `and-interview-contract`; verify that they are recoverable with a valid checkpoint before continuing.
+   - Completion criterion: the human confirms a concise destination and its out-of-scope boundary, and that result is recoverable.
 
 3. Explore breadth-first.
    - Invoke `grilling` across the whole decision space, surfacing sharp questions, their likely methods, known ordering, and fog without resolving one thread deeply.
    - Obtain final shared-understanding confirmation for the destination, scope, first visible frontier, and remaining fog before any backend synchronization.
-   - If no real fog exists, append one `Wayfinding Exit` receipt carrying the interview checkpoint without creating map state. Keep one bounded, currently enumerable decision space in `needs-info` with `Resume with: and-clarify`; otherwise move confirmed packageable work to `needs-pack`. Verify the route, clean synchronized recovery, report it, and stop without entering map publication.
+   - If no real fog exists, append one `Wayfinding Exit` receipt carrying the interview checkpoint and complete confirmed result without creating map state. Keep one bounded, currently enumerable decision space in `needs-info` with `Resume with: and-clarify`; otherwise move confirmed packageable work to `needs-pack`. Verify the route, clean synchronized recovery, report it, and stop without entering map publication.
    - Completion criterion: the work either exits without a map, or has confirmed multi-session fog plus a complete first visible frontier.
 
 4. Publish the map.
@@ -156,7 +157,9 @@ Use this append-only receipt when the opening grill proves that map state is unn
 ## Wayfinding Exit
 
 Checkpoint: <interview checkpoint>
-Outcome: <bounded decision space or packageable work>
+Confirmed result:
+<artifact-ready destination, scope, decisions and rationale, domain or documentation updates, and acceptance implications>
+Remaining blocker: <one bounded decision space, or none>
 Next step: <and-clarify or and-pack>
 ```
 

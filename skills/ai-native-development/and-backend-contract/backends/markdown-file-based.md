@@ -59,7 +59,7 @@ Canonical actor identity is `git-email:<email>`, where `<email>` is the trimmed,
             claim-2026-07-08.md
             resolution-2026-07-08.md
       receipts/
-        map-chart-2026-07-08.md
+        investigation-publication-2026-07-08.md
 ```
 
 Each top-level work-record directory is one identity boundary. A delivery unit uses `package.md`; a Wayfinding map uses `map.md`. A directory never contains both as competing current records.
@@ -342,7 +342,7 @@ receipts/<operation>-YYYY-MM-DD-2.md
 
 Use the stage or operation name, such as `triage`, `grill`, `pack`, `claim`, `implementation`, `review`, `verification`, `completion`, `rejection`, or `state-reason`. If the target filename exists, append `-2`, then `-3`, and so on. Do not overwrite existing receipts.
 
-Top-level Wayfinding receipts use operations such as `wayfinding-exit`, `map-chart`, `investigation-publication`, and `map-handoff`. Investigation receipts live under that investigation's `receipts/` and use `claim`, `release`, or `resolution`.
+Top-level Wayfinding receipts use operations such as `wayfinding-exit`, `investigation-publication`, and `map-handoff`. Investigation receipts live under that investigation's `receipts/` and use `claim`, `release`, or `resolution`.
 
 Use receipts for:
 
@@ -398,7 +398,7 @@ After the opening grill proves that fog exists:
 Apply the backend-neutral Chart Wayfinding Map operation with these representations:
 
 - investigation-publication evidence is an append-only receipt under the selected top-level record, including when publication intent precedes renaming `package.md` to `map.md`;
-- map promotion renames that file, replaces delivery-unit frontmatter with map frontmatter, writes the five map sections, and preserves material source evidence and the interview checkpoint in Notes and a `map-chart` receipt;
+- map promotion renames that file, replaces delivery-unit frontmatter with map frontmatter, writes the five map sections, and preserves material source evidence in Notes and the interview checkpoint in the investigation-publication receipt;
 - exact-key lookup scans investigation frontmatter for `investigation_key`;
 - each investigation uses its intended directory and record, map membership is the map's investigation ID list, and dependencies use `blocked_by` after all identities exist;
 - completed investigation-publication evidence is appended after reciprocal membership, dependencies, State Reason, and receipts verify.

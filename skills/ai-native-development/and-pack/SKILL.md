@@ -62,7 +62,7 @@ Do not ask the blocker in chat from inside `and-pack`; record the blocker and st
 2. Check package blockers.
    - Verify facts locally before asking.
    - Distinguish unknown facts from human judgment.
-   - Route a bounded, currently enumerable decision space to `and-clarify`; route uncertainty whose later questions depend on further investigation to `and-wayfind`.
+   - Route unresolved decision work to `and-triage`; do not choose its clarification method inside Pack.
    - Route missing facts, access, external state, or acceptance input to the accountable owner.
    - Do not continue with guessed decisions.
    - For a Wayfinding source, require `needs-pack`, no open investigation, no in-scope fog, one durable resolution per completed investigation, and a cleanup or promotion disposition for each linked temporary asset.
