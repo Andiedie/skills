@@ -18,7 +18,7 @@ Use the configured backend reference for reading the target, writing Clarificati
 
 Use `and-clarify` when work is `needs-info`, its current State Reason names one bounded product, domain, architecture, naming, testing, or acceptance decision space whose questions can be enumerated now, and `Resume with` points to `and-clarify`.
 
-Route reporter facts, access waits, external state, direct acceptance input, and work that is already packable to the accountable owner or recorded resume skill. Route an initially unknowable, multi-session decision path to `and-wayfind`.
+Route reporter facts, access waits, external state, direct acceptance input, work that is already packable, and decision spaces that cannot currently be bounded and enumerated to the accountable owner or `ask-andie`.
 
 ## Process
 
@@ -35,7 +35,6 @@ Route reporter facts, access waits, external state, direct acceptance input, and
 
 3. Capture the result.
    - Receive the complete artifact-ready output from `and-interview-contract`.
-   - When no blocker remains, obtain final shared-understanding confirmation.
    - Completion criterion: `and-pack` can consume the result without replaying the interview, or one owner and exit condition remain.
 
 4. Synchronize the backend.
@@ -81,6 +80,6 @@ Next step:
 
 ## Boundaries
 
-- Keep one bounded, currently enumerable decision space inside this stage. When later questions cannot be enumerated without further investigation, route the work to `and-wayfind`.
+- Keep one bounded, currently enumerable decision space inside this stage. Route work outside that shape through `ask-andie`.
 - Keep repository and implementation artifacts unchanged; record required future changes as package inputs.
 - Stop after clarification state is synchronized; packing, claiming, implementation, closure, and merge belong downstream.

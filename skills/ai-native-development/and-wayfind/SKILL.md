@@ -14,7 +14,7 @@ Wayfinding plans; it does not deliver the destination. The pull to implement is 
 
 Before reading or writing workflow state, read `.and/config.yml`, invoke `and-backend-contract`, and use the configured backend reference for map, investigation, relationship, ownership, resolution, and lifecycle operations.
 
-Invoke `and-interview-contract` whenever charting or resolving a HITL investigation requires an interview. It owns evidence, recovery, backend-safe domain modeling, and artifact-ready output. Before the selected path or investigation method begins, verify only what it invokes: charting and grilling require `grilling` plus the interview contract; prototype also requires `prototype`; research requires `research`; a HITL task requires `grilling` plus the interview contract, while an AFK task requires only the skills named by that task or the map Notes. Stop with exact install guidance when a required skill is unavailable.
+Invoke `and-interview-contract` whenever charting or resolving a human-in-the-loop (HITL) investigation requires an interview. It owns evidence, recovery, backend-safe domain modeling, and artifact-ready output. Before the selected path or investigation method begins, verify only what it invokes: charting and grilling require `grilling` plus the interview contract; prototype also requires `prototype`; research requires `research`; a HITL task requires `grilling` plus the interview contract, while an unattended (AFK) task requires only the skills named by that task or the map Notes. Stop with exact install guidance when a required skill is unavailable.
 
 ## Map And Investigation
 
@@ -79,7 +79,7 @@ For incomplete initial publication, re-read the record and apply the eligibility
    - Read its stage, State Reason, source evidence, receipts, relationships, ownership, and linked artifacts.
    - If the work record carries delivery ownership or claim evidence, stop and route the drift to `and-sweep`; a map must begin unclaimed.
    - If the work record already carries a Package Contract, an executable package shape such as `single` or `prd-package`, PRD containment, or child records, do not promote or reinterpret it as a map; route the contradictory package state to `and-sweep`.
-   - Route unrecorded work to `and-intake`, untriaged work to `and-triage`, a bounded decision space whose questions are currently enumerable to `and-clarify`, and already-clear work to `and-pack`.
+   - Route unrecorded work to `and-intake`, untriaged or incorrectly routed work to `and-triage`, and already-clear work to `and-pack`.
    - Supply `and-interview-contract` with workflow skill `and-wayfind`, objective `chart-map`, the canonical repository and work identities, current evidence, and the destination question.
    - Completion criterion: one eligible existing work record and its uncertainty boundary are explicit.
 
@@ -96,7 +96,7 @@ For incomplete initial publication, re-read the record and apply the eligibility
 4. Publish the map.
    - Use the backend contract's Chart Wayfinding Map operation with the Investigation Publication receipt below. When no chart key is recorded, derive it from durable-workflow identity with namespace `and-wayfind-map-chart:v1`; derive initial investigation keys from that key plus stable map ordinals such as `<chart-key>:I01`.
    - Supply the confirmed destination, five map sections, material source evidence, interview checkpoint, currently sharp investigations, methods, ordering, and remaining fog. Promote the existing work record rather than creating a second map.
-   - Record the destination-level State Reason with `Resume with: and-wayfind` and a map-chart receipt carrying the interview checkpoint.
+   - Record the destination-level State Reason with `Resume with: and-wayfind`; the Investigation Publication receipt carries the interview checkpoint.
    - Verify every created record, method, relationship, stage, and receipt, then clean synchronized interview recovery.
    - Completion criterion: one resumable map exists with a queryable frontier and no investigation has been resolved.
 
@@ -148,6 +148,18 @@ Use this path for an existing map. An investigation argument is optional.
    - Name the map, investigation resolved or blocker, new frontier or clear state, asset disposition when relevant, and next `and-wayfind` or `and-pack`.
    - Do not copy full answers, map bodies, or investigation records into chat.
 
+## Wayfinding Exit Receipt
+
+Use this append-only receipt when the opening grill proves that map state is unnecessary:
+
+```markdown
+## Wayfinding Exit
+
+Checkpoint: <interview checkpoint>
+Outcome: <bounded decision space or packageable work>
+Next step: <and-clarify or and-pack>
+```
+
 ## Investigation Publication Receipt
 
 Use this append-only receipt before creating an initial or newly visible batch:
@@ -156,6 +168,7 @@ Use this append-only receipt before creating an initial or newly visible batch:
 ## Investigation Publication
 
 Chart key: <deterministic map chart key>
+Checkpoint: <interview checkpoint for the initial chart; omit for later publication>
 Investigations:
 - <investigation key> | <method> | <title> | <one sharp question>
 Publication: <pending, or completed with linked identities>

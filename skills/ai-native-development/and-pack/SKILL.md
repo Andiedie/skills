@@ -44,7 +44,7 @@ Stop when a correct package needs missing human judgment, reporter facts, permis
 
 When backend edits are safe, route the work to `needs-info` through the configured backend and record a State Reason with `Cause`, `Owner`, `Question`, `Resume with`, and `Exit criteria`.
 
-Use `and-clarify` when unresolved product, domain, architecture, naming, or testing work forms one bounded decision space whose questions can be enumerated now. Use `and-wayfind` when later questions cannot be enumerated without further investigation. Use the accountable owner for reporter facts, access, external state, or acceptance input.
+Route unresolved product, domain, architecture, naming, or testing decisions through `and-triage` so the authoritative route can be selected. Use the accountable owner for reporter facts, access, external state, or acceptance input.
 
 Use `and-wayfind` when the source map still has an open investigation or in-scope fog. Do not resolve or reinterpret map uncertainty while packaging.
 

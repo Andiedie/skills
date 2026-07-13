@@ -93,7 +93,7 @@ The contract is complete when:
 - `clarify-decision` resolves one bounded decision space with confirmed decisions and rationale, or has one precise blocker;
 - `chart-map` has a confirmed destination, scope, first visible frontier, and explicit remaining fog without resolving an investigation;
 - `resolve-investigation` has one durable answer or one precise blocker;
-- final shared understanding is confirmed for the objective's output;
+- final shared understanding is confirmed before returning a resolved output;
 - the complete result is returned without this contract mutating workflow state.
 
 ## Boundaries

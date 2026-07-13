@@ -32,8 +32,8 @@ AND composes with five external runtime skills:
 | Skill | Used by |
 | --- | --- |
 | `grilling` | `and-clarify` and `and-wayfind` for interview behavior. |
-| `research` | `and-wayfind` for AFK investigation. |
-| `prototype` | `and-wayfind` for HITL concrete exploration. |
+| `research` | `and-wayfind` for unattended investigation. |
+| `prototype` | `and-wayfind` for human-in-the-loop concrete exploration. |
 | `tdd` | `and-implement` when test-first work is practical at the agreed seam. |
 | `code-review` | `and-implement` before finalizing the delivery-unit diff. |
 
