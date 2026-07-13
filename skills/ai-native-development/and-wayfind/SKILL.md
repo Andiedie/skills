@@ -61,17 +61,19 @@ Use one test: create an investigation when its question can be stated precisely 
 - **Research** (AFK): invoke `research` for facts requiring primary sources outside the current worktree. Link its Markdown evidence from the resolution.
 - **Prototype** (HITL): invoke `prototype` for a cheap concrete artifact that lets the human judge behavior or form. The human must actually react before resolution.
 - **Grilling** (HITL): invoke `grilling` directly under `and-interview-contract`, one question at a time. Do not invoke `and-clarify` from this skill.
-- **Task** (AFK or HITL): perform bounded prerequisite work whose result makes a later decision possible. An Agent may perform only routine actions already authorized by the investigation; actions involving permissions, cost, secrets, terms, or broader shared state require the accountable human to act or authorize them. Record what was done and the resulting non-secret facts in the resolution. A task does not deliver the destination.
+- **Task** (AFK or HITL): perform bounded prerequisite work whose result makes a later decision possible. An Agent may perform only routine, authorized actions whose outcome is verifiable and whose repetition is idempotent; re-check the external result before acting or resuming, and record an already completed result instead of repeating it. Non-idempotent actions, and actions involving permissions, cost, secrets, terms, or broader shared state, require the accountable human to act. Record what was done and the resulting non-secret facts in the resolution. A task does not deliver the destination.
 
 Create research and prototype assets in a dedicated investigation branch/worktree, never the ordinary worktree. The resolution links the asset and marks it for cleanup or Package promotion. Its answer remains authoritative even when a throwaway asset is later removed.
 
 ## Process
 
-Choose exactly one path per invocation. Any work record with pending initial investigation publication resumes `Chart A Map`; other maps use `Work Through A Map`. Never chart a map and resolve an investigation in the same invocation, and never resolve more than one investigation.
+Choose exactly one path per invocation. A non-map work record with a valid `Wayfinding Exit` receipt whose recorded route or recovery cleanup is incomplete resumes that exit inside `Chart A Map`; pending initial investigation publication also resumes there. Other maps use `Work Through A Map`. Never chart a map and resolve an investigation in the same invocation, and never resolve more than one investigation.
 
 ### Chart A Map
 
-Use this path for a non-map work record whose current route is `and-wayfind`, or for any work record whose initial investigation publication is incomplete.
+Use this path for a non-map work record whose current route is `and-wayfind`, whose valid exit effects are incomplete, or whose initial investigation publication is incomplete.
+
+For an incomplete exit, re-read the non-map record and verify the receipt's checkpoint and complete confirmed result. Apply only the missing stage and State Reason effects recorded by `Next step`, verify them, clean matching synchronized recovery, report the recovered route, and stop. Do not repeat the interview or append another exit receipt.
 
 For incomplete initial publication, re-read the record and apply the eligibility checks in Resolve the work record, then read the recorded intent and resume at Publish the map whether or not map promotion already occurred. Do not repeat the destination interview, breadth-first exploration, or already verified writes.
 
