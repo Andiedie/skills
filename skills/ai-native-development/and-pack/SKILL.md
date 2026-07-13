@@ -10,11 +10,11 @@ Pack synthesizes confirmed work into one executable delivery unit and publishes 
 
 Ordinary source work becomes its package. A clear Wayfinding map hands off to one separate package; the map and its investigations remain planning evidence.
 
-## Backend Authority
+## Workflow Authority
 
-Before reading or writing workflow state, read `.and/config.yml` and use `and-backend-contract`. Follow the configured backend for the `Publish Package`, `Write Relationships`, `Write Stage State`, `Write State Reason`, and `Hand Off Wayfinding Map` operations. Pack owns Package Contract and Map Handoff receipt content; the backend authorities own representation, identity, relationships, lifecycle mechanics, and any operation-specific recovery they define.
+Use `and-workflow-contract` for `Publish Package`, `Write Relationships`, `Write Stage State`, `Write State Reason`, and `Hand Off Wayfinding Map`. Read [wayfinding.md](../and-workflow-contract/wayfinding.md) for map handoff and [relationship-api.md](../and-workflow-contract/relationship-api.md) before native relationship mutation. Pack owns Package Contract and Map Handoff receipt content; the workflow contract owns representation, identity, relationships, lifecycle mechanics, and operation recovery.
 
-If the configured authority is missing, unsupported, or inaccessible, stop and route to `setup-and` or ask the user to install the missing skill.
+If GitHub workflow state or the contract is unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
 
 ## Contract Standard
 
@@ -40,7 +40,7 @@ The contract is complete only when an implementation agent can begin without rep
 
 1. **Gather the complete source.**
    - Read the work body, comments and receipts, latest State Reason, triage and clarification decisions, existing package text, relationships, blockers, implementation artifacts, and attachments.
-   - Inspect code, tests, docs, the domain glossary, ADRs, and backend conventions only where they change the contract.
+   - Inspect code, tests, docs, the domain glossary, ADRs, and GitHub workflow conventions only where they change the contract.
    - For a Wayfinding source, use `Read Wayfinding Map` and `Hand Off Wayfinding Map` to recover its destination, decisions, resolved investigations, fog, scope boundary, linked assets, and any interrupted handoff. A replacement carrying a handoff key resumes that source map.
    - Completion criterion: every desired behavior is grounded in a source fact or confirmed decision, every remaining unknown is explicit, and current behavior, constraints, verification clues, blockers, and handoff state are known.
 
@@ -61,10 +61,10 @@ The contract is complete only when an implementation agent can begin without rep
    - Completion criterion: the Package Contract meets the Contract Standard, and every child maps to parent stories, key interfaces, behavioral acceptance, dependency intent, and a declared verification path.
 
 4. **Publish safely.**
-   - Invocation authorizes publication from confirmed workflow state. Confirm only an ambiguous mutation target, overwrite of unrelated maintainer text, unclear backend authority or access, or unconfirmed human judgment.
-   - Publish ordinary work in its existing record with `Publish Package`. Supply the full contract, ordered child bodies, semantic containment and dependency graph, and verification expectations; let the configured backend represent the operation. If publication is partial or ambiguous, stop with the exact observed state and route it to `and-sweep` before retrying Pack.
+   - Invocation authorizes publication from confirmed workflow state. Confirm only an ambiguous mutation target, overwrite of unrelated maintainer text, unclear GitHub authority or access, or unconfirmed human judgment.
+   - Publish ordinary work in its existing record with `Publish Package`. Supply the full contract, ordered child bodies, semantic containment and dependency graph, and verification expectations; use the workflow contract's GitHub representation. If publication is partial or ambiguous, stop with the exact observed state and route it to `and-sweep` before retrying Pack.
    - For a clear map, run `Hand Off Wayfinding Map` with the Map Handoff receipt. Publish one separate replacement package and keep investigations as planning evidence.
-   - Completion criterion: the backend expresses exactly one executable delivery unit with the correct ready state, containment, dependencies, and no unresolved blocker or contradictory workflow state. A map handoff also has one verified replacement, complete Package promotion and asset disposition, and a completed source map; an interrupted map handoff remains recoverable and a competing handoff remains non-executable.
+   - Completion criterion: GitHub expresses exactly one executable delivery unit with the correct ready state, containment, dependencies, and no unresolved blocker or contradictory workflow state. A map handoff also has one verified replacement, complete Package promotion and asset disposition, and a completed source map; an interrupted map handoff remains recoverable and a competing handoff remains non-executable.
 
 5. **Return a short receipt.**
    - Report the package link or ID, shape, state change, verification path, and next skill. For a PRD, include child count and dependency-order summary. For a map, include the source and handoff result.
@@ -133,7 +133,7 @@ Summary: <one-line behavior change>
 
 ## Dependency intent
 
-<why execution must wait, or none; publish relationship edges through the configured backend>
+<why execution must wait, or none; publish native relationship edges>
 
 ## Acceptance criteria
 
@@ -154,13 +154,13 @@ Summary: <one-line behavior change>
 
 Use only with `Hand Off Wayfinding Map` for a clear map:
 
-Use operation namespace `and-pack-map-handoff:v1` with the backend contract's durable-workflow identity algorithm. The handoff operation owns pending/completed evidence, exact-key recovery, and retry behavior.
+Use operation namespace `and-pack-map-handoff:v1` with the workflow contract's durable-workflow identity algorithm. The handoff operation owns pending/completed evidence, exact-key recovery, and retry behavior.
 
 ```markdown
 ## Map Handoff
 
 Source map: <link or work ID>
-Handoff key: <backend-contract key>
+Handoff key: <workflow-contract key>
 Handoff: <pending or completed>
 Replacement package: <pending or link/work ID>
 Package shape: <single issue or PRD package>
@@ -171,4 +171,4 @@ Map result: <completed or exact remaining operation>
 
 ## Boundary
 
-Pack ends at one published or durably blocked delivery unit. Scope comes from confirmed inputs; `and-pick` and downstream skills own claim and implementation. Public readiness and ownership stay on the single package or PRD parent, while child slices remain internal. The configured backend is the sole relationship representation. A Wayfinding map stays a planning record and hands off to a separate package; its investigations never become delivery slices.
+Pack ends at one published or durably blocked delivery unit. Scope comes from confirmed inputs; `and-pick` and downstream skills own claim and implementation. Public readiness and ownership stay on the single package or PRD parent, while child slices remain internal. Native GitHub edges are the sole relationship representation. A Wayfinding map stays a planning record and hands off to a separate package; its investigations never become delivery slices.

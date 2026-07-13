@@ -19,9 +19,9 @@ Use this guide to choose the next skill in the AND delivery loop. If the current
 | Finish | Reviewed delivery has no pending acceptance or blocker, or an earlier finish needs to resume delivery, lifecycle completion, or cleanup. | [`and-finish`](../and-finish/SKILL.md) | Merged pull request, terminal lifecycle evidence, and safe delivery-artifact cleanup. | A new follow-up signal, or done |
 | Audit | Stage state, State Reasons, relationships, blockers, ownership, implementation artifacts, or lifecycle outcomes may have drifted. | [`and-sweep`](../and-sweep/SKILL.md) | Actionable findings and approved low-risk cleanup. | The skill or owner responsible for the repair |
 
-## Backend Reference
+## Workflow Reference
 
-Workflow skills use [`and-backend-contract`](../and-backend-contract/SKILL.md) to load backend-neutral concepts and the configured backend representation. The reference returns control to the calling skill rather than performing a workflow stage.
+Workflow skills use [`and-workflow-contract`](../and-workflow-contract/SKILL.md) for shared concepts, GitHub representation, operations, and invariants. The reference returns control to the calling skill rather than performing a workflow stage.
 
 Decision interviews use [`and-interview-contract`](../and-interview-contract/SKILL.md) for shared evidence, recovery, domain modeling, and artifact-ready output. `and-clarify` and `and-wayfind` retain their distinct workflow effects.
 

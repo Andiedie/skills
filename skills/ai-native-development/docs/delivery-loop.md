@@ -54,13 +54,13 @@ Humans should not be the bottleneck for facts an Agent can verify. Agents should
 | --- | --- |
 | Human | Value judgments, business tradeoffs, authorization, acceptance, merge, rejection, and risk acceptance. |
 | Agent | Fact-finding, reproduction, synthesis, packaging, implementation, verification, and consistency checks. |
-| Workflow state backend | Durable work, investigation maps, decisions, package contracts, relationships, ownership, and completion evidence. |
+| GitHub workflow state | Durable work, investigation maps, decisions, package contracts, relationships, ownership, and completion evidence. |
 
 The collaboration follows a few practical rules:
 
 - Agents investigate code, tests, logs, docs, and existing workflow state before asking for facts.
 - Human decisions happen once at the stage that needs them; downstream work consumes the recorded result.
-- Requirements and acceptance live in the configured workflow state backend. Chat reports what happened and what comes next instead of becoming a second specification.
+- Requirements and acceptance live in GitHub workflow state. Chat reports what happened and what comes next instead of becoming a second specification.
 - A stage that lacks its preconditions returns the work to the stage that owns the missing input.
 
 ## End-To-End Flow
@@ -111,11 +111,11 @@ A PRD package is still claimed as one unit. Its owner may delegate child slices,
 
 ## Durable Handoffs
 
-The configured workflow state backend is the source of truth for the loop. It keeps the current work record, Wayfinding map when any, State Reason, Package Contract, relationships, owner, and evidence recoverable when sessions or Agents change.
+GitHub is the source of truth for the loop. It keeps the current work record, Wayfinding map when any, State Reason, Package Contract, relationships, owner, and evidence recoverable when sessions or Agents change.
 
-Before implementation, work moves through a small queue: `needs-triage`, `needs-info`, `needs-pack`, and `ready-for-agent`. These states describe where pre-execution uncertainty remains; they are not implementation progress states. The [backend contract](../and-backend-contract/backend-contract.md) defines their backend-neutral meaning and invariants; the configured [backend reference](../and-backend-contract/backends/) defines their representation.
+Before implementation, work moves through a small queue: `needs-triage`, `needs-info`, `needs-pack`, and `ready-for-agent`. These states describe where pre-execution uncertainty remains; they are not implementation progress states. The [workflow contract](../and-workflow-contract/SKILL.md) defines their meaning, GitHub representation, and invariants.
 
-Branches, commits, pull requests, CI, and reviews are implementation artifacts. They provide evidence about delivery, while the workflow backend continues to hold the package, ownership, and lifecycle outcome.
+Branches, commits, pull requests, CI, and reviews are implementation artifacts. They provide evidence about delivery, while GitHub Issues continue to hold the package, ownership, and lifecycle outcome.
 
 Each stage leaves only the durable evidence needed to continue the work. Temporary reasoning and interview transcripts stay out of long-lived state unless they become a decision, blocker, requirement, or completion result.
 
@@ -129,13 +129,12 @@ The loop preserves correctness by making route-backs explicit:
 - Failed implementation verification returns to Implement unless it exposes a package defect.
 - A completed, duplicate, rejected, or superseded delivery unit receives a terminal lifecycle outcome with evidence.
 
-For a reviewed implementation with no pending acceptance or blocker, `and-finish` is the Close/Learn action. It delivers the implementation through one authorized GitHub pull request, makes completion authoritative in the configured backend, and then cleans proven-safe delivery artifacts. Review remains part of implementation evidence rather than being rerun during finish.
+For a reviewed implementation with no pending acceptance or blocker, `and-finish` is the Close/Learn action. It delivers the implementation through one authorized GitHub pull request, records completion on the delivery-unit issue, and then cleans proven-safe delivery artifacts. Review remains part of implementation evidence rather than being rerun during finish.
 
 Closure can produce a new signal: a follow-up requirement, a documentation need, a newly discovered bug, or a lesson that changes future packages. That signal starts another loop instead of quietly expanding the completed delivery unit.
 
 ## Continue Reading
 
 - Use the [skills guide](skills.md) to choose the next workflow skill.
-- Use the [backend contract](../and-backend-contract/backend-contract.md) for workflow-state concepts and invariants.
-- Use the configured [backend reference](../and-backend-contract/backends/) for representation and operations.
+- Use the [workflow contract](../and-workflow-contract/SKILL.md) for workflow-state concepts, GitHub representation, operations, and invariants.
 - Read the [Wayfinding records ADR](adr/0001-separate-wayfinding-records-from-delivery-units.md) for the map-to-package boundary.
