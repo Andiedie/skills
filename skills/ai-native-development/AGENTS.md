@@ -12,12 +12,12 @@ Keep each surface focused on one audience and purpose.
 | `docs/delivery-loop.md` | Someone learning AND | Why the loop exists, how it moves, and how humans and Agents collaborate. |
 | `docs/skills.md` | Someone choosing a skill | Task-oriented routing and skill usage. |
 | `AGENTS.md` | An Agent maintaining this package | Design balances, authority boundaries, and maintenance checks. |
-| `and-backend-contract/backend-contract.md` | A workflow or backend author | Backend-neutral concepts, operations, and invariants. |
-| `and-backend-contract/backends/*.md` | A workflow or backend author | Backend-specific representation, operations, validation, and end-to-end examples. |
+| `and-workflow-contract/SKILL.md` | An AND workflow author | Shared concepts, GitHub representation, operations, and invariants. |
+| `and-workflow-contract/*.md` | An Agent on a conditional contract path | Relationship API, Wayfinding, or sweep mechanics needed only for that operation. |
 | `<skill>/SKILL.md` | An Agent running that skill | Runtime behavior, preconditions, side effects, stop routes, and output contract. |
 | Skill sibling references | An Agent on a conditional path | Detailed guidance that is needed only for that path. |
 
-Give each durable rule one authoritative expression. Navigation may summarize enough purpose or routing to lead a reader to that source, but schemas, invariants, processes, side effects, and output contracts stay with their owner. Reader-facing documents should describe the current system, not its decision history, migration history, or maintenance process.
+Give each durable rule one authoritative expression. Navigation may summarize enough purpose or routing to lead a reader to that source, but schemas, invariants, processes, side effects, and output contracts stay with their owner. Reader-facing documents describe the current system and only the information their readers need.
 
 ## Design Balances
 
@@ -45,7 +45,7 @@ Use these dimensions when designing or editing an AND workflow skill. Choose the
 
 - Keep process and constraints that every execution path needs in `SKILL.md`.
 - Put conditional branches and long reference material behind context pointers that say when and why to load them.
-- Give each normative behavior one authoritative source; do not restate behavior owned by the backend contract, another skill, or a sibling reference.
+- Give each normative behavior one authoritative source; do not restate behavior owned by the workflow contract, another skill, or a sibling reference.
 
 ### Control Allocation: Agent Autonomy vs Human Control
 
@@ -55,7 +55,7 @@ Use these dimensions when designing or editing an AND workflow skill. Choose the
 
 ## Change Rules
 
-- Put runtime behavior in the relevant `SKILL.md`, backend-neutral concepts and invariants in the backend contract, and backend-specific representation in the configured backend reference.
+- Put stage behavior in the relevant `SKILL.md` and shared workflow concepts, GitHub representation, operations, and invariants in `and-workflow-contract`.
 - Keep `delivery-loop.md` conceptual and `docs/skills.md` task-oriented. Update them only when their readers' model or route actually changes.
 - Keep conditional detail in a sibling reference and link it from the owning skill at the decision point.
 - When adding, splitting, or changing invocation, use model invocation only when an Agent or another skill must discover the skill; otherwise prefer user invocation, and add a router when manual discovery becomes costly.

@@ -6,19 +6,19 @@ disable-model-invocation: true
 
 # AND Sweep
 
-Sweep audits the configured workflow backend for drift that can make delivery unsafe. Every finding is classified before mutation:
+Sweep audits GitHub workflow state for drift that can make delivery unsafe. Every finding is classified before mutation:
 
 - **Detect:** the default; report authoritative drift without changing it.
 - **Normalize:** when the user explicitly asks to fix or normalize, apply reported, unambiguous low-risk representation fixes without a second confirmation.
 - **Repair:** changes to meaning or authority require explicit approval for the exact mutation, or route to the owning workflow skill.
 
-## Backend Contract
+## Workflow Contract
 
-Before auditing, read `.and/config.yml`, then use `and-backend-contract`.
+Use `and-workflow-contract` before auditing, then read [sweep-checks.md](../and-workflow-contract/sweep-checks.md).
 
-Use `Locate Work`, `Read Work Record` or `Read Delivery Unit`, and `Audit Invariants`, then apply the configured backend reference's Sweep Checks. Those authorities own the exact state, relationship, ownership, receipt, lifecycle, Wayfinding, and representation checks; Sweep owns finding classification and repair control. Read both backend references only for an explicit comparison or backend-change audit.
+Use `Locate Work`, `Read Work Record` or `Read Delivery Unit`, and `Audit Invariants`, then apply the direct Sweep checklist. Those authorities own exact state, relationship, ownership, receipt, lifecycle, Wayfinding, and representation checks; Sweep owns finding classification and repair control.
 
-If setup is missing, unsupported, or unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
+If repository setup or the contract is unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
 
 ## Scope
 
@@ -28,15 +28,15 @@ Ask one direct question before a large, cross-repository, destructive, or ambigu
 
 ## Audit Coverage
 
-Apply every relevant configured invariant and Sweep Check. The required domains are:
+Apply every relevant workflow invariant and Sweep Check. The required domains are:
 
 - stage, State Reason, and lifecycle;
 - package shape, relationships, dependencies, and external blockers;
 - whole-unit ownership, stale or conflicting claims, implementation artifacts, and duplicate-work risk;
 - Wayfinding maps, investigations, handoff, and temporary assets;
-- completion evidence and backend-specific representation.
+- completion evidence and GitHub representation.
 
-Read a complete delivery unit when a finding can block Pick, Claim, implementation, or completion. Skip only checks that do not apply to the selected records. A required configured-backend capability that is missing or unverified is a `setup-and` finding, not a skipped check.
+Read a complete delivery unit when a finding can block Pick, Claim, implementation, or completion. Skip only checks that do not apply to the selected records. A required GitHub capability that is missing or unverified is a `setup-and` finding, not a skipped check.
 
 ## Finding Classes
 
@@ -48,7 +48,7 @@ Detect is read-only. Report the observed state, expected state and authority, ev
 
 A normalization must satisfy all of these conditions:
 
-- the expected state is uniquely derived from the backend contract and configured reference;
+- the expected state is uniquely derived from the workflow contract;
 - the change is representation-only, bounded, and reversible;
 - it preserves scope, package shape, relationship and dependency intent, blocker meaning, ownership, readiness, and lifecycle outcome;
 - it was reported before mutation and falls within the requested fix or normalize scope.
@@ -61,16 +61,16 @@ Re-read the target immediately before mutation. If evidence changed or the expec
 
 Repair covers changes that choose or alter workflow meaning or authority, including ownership release or override, lifecycle outcome, readiness, blocker intent, scope or package shape, relationship or dependency intent, and resolution of conflicting authorities.
 
-State the exact proposed mutation, authority, impact, and rollback or route, then wait for explicit approval. Sweep may apply an approved repair only when it restores workflow consistency without performing another stage's decision; package publication, triage outcomes, implementation, merge, and lifecycle completion route to their owning skills. Record an applied repair through the configured backend with the changed authority, approval, evidence, verified result, and next route.
+State the exact proposed mutation, authority, impact, and rollback or route, then wait for explicit approval. Sweep may apply an approved repair only when it restores workflow consistency without performing another stage's decision; package publication, triage outcomes, implementation, merge, and lifecycle completion route to their owning skills. Record an applied repair on the affected GitHub work record with the changed authority, approval, evidence, verified result, and next route.
 
 Sweep never silently releases or overrides ownership, closes or reopens work, marks work ready, rewrites scope, removes blockers, changes relationship intent, or chooses among conflicting authorities.
 
 ## Process
 
-1. **Resolve scope and mode.** Determine the repository, configured backend, bounded query, pagination strategy, and whether this run is Detect or explicitly requested Normalize.
+1. **Resolve scope and mode.** Determine the GitHub repository, bounded query, pagination strategy, and whether this run is Detect or explicitly requested Normalize.
    - Completion criterion: the audit boundary and mutation budget are explicit.
 
-2. **Collect and audit.** Read authoritative records for the scope, apply `Audit Invariants` and every relevant configured Sweep Check, and inspect complete delivery units where execution safety is involved.
+2. **Collect and audit.** Read authoritative records for the scope, apply `Audit Invariants` and every relevant Sweep Check, and inspect complete delivery units where execution safety is involved.
    - Completion criterion: each relevant check is passed, a finding, or a named confidence gap.
 
 3. **Classify and report.** Classify each finding as Detect, Normalize, or Repair and report it before any mutation. Omit passed checks and empty groups.
@@ -86,13 +86,13 @@ When there are no findings:
 ```markdown
 No workflow drift found.
 Scope: <query and count>
-Backend: <github-native or markdown-file-based>
+Repository: <GitHub owner/repository>
 ```
 
 When there are findings:
 
 ```markdown
-Sweep: <scope and backend>
+Sweep: <scope and GitHub repository>
 
 - [Detect|Normalize|Repair] <work>: <observed> -> <expected>
   Authority/evidence: <source and fact>
@@ -109,4 +109,4 @@ Remaining:
 - <work>: <route, approval, or no action>
 ```
 
-Omit empty sections, passed-check inventories, full work records, raw backend dumps, and unapproved changes phrased as completed work.
+Omit empty sections, passed-check inventories, full work records, raw API dumps, and unapproved changes phrased as completed work.

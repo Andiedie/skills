@@ -8,11 +8,11 @@ disable-model-invocation: true
 
 Pick recommends one claimable delivery unit from ready work. It is read-only: finish with one recommendation or the smallest route-back blocker, never a claim or repair.
 
-## Backend Contract
+## Workflow Contract
 
-Before reading ready work, read `.and/config.yml`, then use `and-backend-contract`.
+Use `and-workflow-contract` before reading ready work.
 
-Use `Locate Work` to build the slate and `Read Delivery Unit` before recommending a candidate. The backend contract and configured reference own stage, lifecycle, relationship, ownership, receipt, and implementation-artifact representation. If setup is missing, unsupported, or unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
+Use `Locate Work` to build the slate and `Read Delivery Unit` before recommending a candidate. The workflow contract owns stage, lifecycle, relationship, ownership, receipt, and implementation-artifact representation. If repository setup or the contract is unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
 
 ## Delivery Unit
 
@@ -44,7 +44,7 @@ The final recommendation must pass both gates after a complete read. User-suppli
 
 ## Process
 
-1. **Resolve the slate.** Identify the repository, configured backend, and any user-supplied focus. Ask one direct question only when multiple repositories remain plausible. Locate ready work with an explicit limit or pagination, group PRD children under their parent, and retain the query boundary internally.
+1. **Resolve the slate.** Identify the GitHub repository and any user-supplied focus. Ask one direct question only when multiple repositories remain plausible. Locate ready work with an explicit limit or pagination, group PRD children under their parent, and retain the query boundary internally.
    - Completion criterion: one bounded slate of public delivery units is available for gating.
 
 2. **Rank, read, and gate.** Exclude candidates that fail on slate evidence, order the plausible remainder, then fully read the strongest candidate through `Read Delivery Unit` and apply both gates. Inspect linked evidence or attachments when they can change requirements, ownership, blockers, duplicate-work risk, or whether the work is already done. If evidence invalidates that candidate, continue to the next ranked candidate.

@@ -8,9 +8,9 @@ disable-model-invocation: true
 
 Find the current position, name one next move, and teach one reusable rule. Read enough evidence to point; leave the move itself to the skill or owner that owns it.
 
-## Backend Contract
+## Workflow Contract
 
-For workflow-backed routing, read `.and/config.yml`, then use `and-backend-contract`. Route missing, invalid, unsupported, or unavailable setup to `setup-and`.
+Use `and-workflow-contract` when routing depends on GitHub workflow state. Route incomplete repository setup or an unavailable contract to `setup-and`.
 
 ## Route Map
 
@@ -21,7 +21,7 @@ Main loop: `and-intake` -> `and-triage` -> `and-clarify` when a bounded decision
 | Surface or evidence | Next move |
 | --- | --- |
 | Initial setup, a Setup Contract gap, or an explicit setup audit, repair, or full-ready check | `setup-and` |
-| Valid configured backend is inaccessible | Ask the accountable owner to restore the named access or service prerequisite |
+| Required GitHub workflow state is inaccessible | Ask the accountable owner to restore the named access or service prerequisite |
 | Untracked raw signal, including an external PR or local diff with no work record | `and-intake` |
 | Existing work with unclear state, new activity, a duplicate or closure question, or a missing State Reason | `and-triage` |
 | `needs-info` with `Resume with: and-clarify` | `and-clarify` |
@@ -39,13 +39,13 @@ Main loop: `and-intake` -> `and-triage` -> `and-clarify` when a bounded decision
 
 ## Evidence Budget
 
-Read the smallest evidence set that distinguishes the routes: setup/config, stage and lifecycle, latest State Reason, ownership or claim, blockers and parent/child identity, linked implementation artifacts, and the current branch or diff when relevant. Stop when one route follows from one or two decisive facts.
+Read the smallest evidence set that distinguishes the routes: setup readiness, stage and lifecycle, latest State Reason, ownership or claim, blockers and parent/child identity, linked implementation artifacts, and the current branch or diff when relevant. Stop when one route follows from one or two decisive facts.
 
 Leave full triage, ready-work ranking, package validation, implementation planning, and drift audit to their owning skills.
 
 ## Route
 
-Identify the current surface, check setup when workflow-backed state matters, spend the evidence budget, and choose exactly one route from the map. When evidence is incomplete, use the smallest accountable fallback: `and-triage` for unclear backend state or an unrecorded map-shaped signal; the recorded `and-clarify` or `and-wayfind` route for `needs-info`; `setup-and` for missing repository rules; or one direct question for a human-owned decision. Return the route card and stop.
+Identify the current surface, check setup when workflow state matters, spend the evidence budget, and choose exactly one route from the map. When evidence is incomplete, use the smallest accountable fallback: `and-triage` for unclear GitHub state or an unrecorded map-shaped signal; the recorded `and-clarify` or `and-wayfind` route for `needs-info`; `setup-and` for missing repository rules; or one direct question for a human-owned decision. Return the route card and stop.
 
 Completion criterion: the user can invoke one named skill next or answer one concrete owner question that makes the next move clear.
 

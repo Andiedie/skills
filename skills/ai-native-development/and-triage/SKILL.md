@@ -6,15 +6,15 @@ disable-model-invocation: true
 
 # AND Triage
 
-Close, wait, or send one authoritative configured-backend work record to Pack. Ground the route, apply it when authorized, and leave executable package creation to `and-pack`.
+Close, wait, or send one authoritative GitHub work record to Pack. Ground the route, apply it when authorized, and leave executable package creation to `and-pack`.
 
-## Backend Contract
+## Workflow Contract
 
-Before reading or writing workflow state, read `.and/config.yml`, then use `and-backend-contract` for the configured representation. If setup is missing, unsupported, or unavailable, route to `setup-and` or report the missing skill.
+Use `and-workflow-contract` before reading or writing workflow state. If repository setup or the contract is unavailable, route to `setup-and` or report the missing skill.
 
-The backend contract owns stage, State Reason, lifecycle, relationship, and receipt representation.
+The workflow contract owns stage, State Reason, lifecycle, relationship, and receipt representation.
 
-A valid but inaccessible backend remains authoritative: report the exact read or write blocker, and identify any route that could not be written as `unapplied`.
+When GitHub is inaccessible, report the exact read or write blocker and identify any route that could not be written as `unapplied`.
 
 ## Act Or Ask
 
@@ -30,7 +30,7 @@ An explicit authorized route instruction supplies the human judgment; ground onl
 
 1. Resolve one target.
    - Use the work record named by ID, issue number, path, or URL.
-   - For a named external PR, resolve its authoritative configured-backend work record. When none exists, route the PR to `and-intake`.
+   - For a named external PR, resolve its authoritative GitHub work record. When none exists, route the PR to `and-intake`.
    - With no named target, query untriaged work, `needs-triage`, and `needs-info` with new activity; present a compact attention list and let the user select one.
    - Mutate one work record at a time unless the user explicitly requests a batch.
    - Completion criterion: exactly one target is selected, or the run ends with no in-scope work or a short attention list awaiting selection.
@@ -60,16 +60,16 @@ An explicit authorized route instruction supplies the human judgment; ground onl
    - Completion criterion: exactly one route is selected, or one confirmation question names the evidence, authority, or risk preventing a safe mutation.
 
 4. Apply the route.
-   - Write the route and its evidence to the selected work record through the configured backend, clearing contradictory public stage state.
+   - Write the route and its evidence to the selected GitHub work record, clearing contradictory public stage state.
    - For `needs-info`, write triage notes and a current State Reason.
    - For `needs-pack`, write triage notes and package inputs, not a Package Contract.
    - For `closed`, write the terminal reason, evidence, and authority, then record the lifecycle outcome.
    - Keep linked external PRs unchanged; they remain source evidence or implementation artifacts.
-   - Completion criterion: the backend expresses exactly one route, every waiting state has a current State Reason, and closure has recorded authority and evidence.
+   - Completion criterion: GitHub expresses exactly one route, every waiting state has a current State Reason, and closure has recorded authority and evidence.
 
 5. Report the result.
    - Return a short receipt with the work link or ID, route, state or lifecycle change, decisive evidence, the exact unresolved input when any, and the next skill or owner action.
-   - Keep full notes, State Reasons, issue bodies, and logs in the configured backend. Omit receipt fields that do not apply.
+   - Keep full notes, State Reasons, issue bodies, and logs in GitHub. Omit receipt fields that do not apply.
    - Completion criterion: the next actor can continue without rereading the triage session.
 
 ## Triage Notes
@@ -109,7 +109,7 @@ Closure:
 - Authority:
 ```
 
-For `needs-info`, write the current State Reason through the backend contract rather than duplicating its schema in the triage note.
+For `needs-info`, use the workflow contract's State Reason rather than duplicating its schema in the triage note.
 
 ## Stage Boundary
 

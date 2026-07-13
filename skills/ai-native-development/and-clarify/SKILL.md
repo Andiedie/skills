@@ -1,6 +1,6 @@
 ---
 name: and-clarify
-description: Clarify decision-blocked work before packaging, recording backend-safe decisions instead of local docs.
+description: Clarify decision-blocked work before packaging, recording workflow-safe decisions instead of local docs.
 disable-model-invocation: true
 ---
 
@@ -8,9 +8,9 @@ disable-model-invocation: true
 
 Clarify one bounded human decision space whose package-blocking questions can all be enumerated now. `grilling` owns the interview cadence; `and-interview-contract` makes confirmed results recoverable and ready for durable synchronization.
 
-## Backend Contract
+## Workflow Contract
 
-Before reading or writing workflow state, read `.and/config.yml`, then use `and-backend-contract` for the target, receipts, State Reason, and stage mutation. If setup is incomplete or `and-backend-contract`, `and-interview-contract`, or `grilling` is unavailable, route to `setup-and` or installation with the exact missing dependency.
+Use `and-workflow-contract` for the target, receipts, State Reason, and stage mutation. If setup is incomplete or `and-workflow-contract`, `and-interview-contract`, or `grilling` is unavailable, route to `setup-and` or installation with the exact missing dependency.
 
 ## When To Use
 
@@ -23,7 +23,7 @@ Uncertainty whose next sharp questions depend on research, a prototype, a task, 
 1. Focus the decision.
    - Read the work record, current State Reason, relevant receipts, relationships, and newer activity.
    - Verify that one bounded, currently enumerable decision space is the actual package blocker and that `and-clarify` is the recorded route.
-   - Supply `and-interview-contract` with workflow skill `and-clarify`, objective `clarify-decision`, canonical repository and work identities, the decision boundary, and authoritative backend evidence; reconcile valid recovery after backend state.
+   - Supply `and-interview-contract` with workflow skill `and-clarify`, objective `clarify-decision`, canonical repository and work identities, the decision boundary, and authoritative GitHub evidence; reconcile valid recovery after current GitHub state.
    - Completion criterion: target, blocker, decision owner, recovered confirmations, and the complete decision boundary are explicit, or the work is routed without an interview.
 
 2. Grill within the boundary.

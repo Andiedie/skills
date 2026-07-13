@@ -18,7 +18,7 @@ Large or cross-cutting product work still uses ordinary vertical slices whenever
 2. **Migrate**: move callers in batches sized by the real blast radius, such as a package, directory, subsystem, or build unit. Every batch depends on Expand and should remain green and independently verifiable.
 3. **Contract**: after every migration batch, remove the old form and verify that no old caller remains. Contract depends on all migration batches.
 
-Publish containment and dependency through the configured backend. The package is complete only when temporary coexistence is gone and the affected system is green.
+Publish containment and dependency as native GitHub relationships. The package is complete only when temporary coexistence is gone and the affected system is green.
 
 ## Integration Exception
 

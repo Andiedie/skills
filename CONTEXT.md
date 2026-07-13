@@ -4,21 +4,13 @@ This context describes the language for the AI-native skills package and its del
 
 ## Language
 
-**Workflow state backend**:
-The source of truth for AI-native delivery loop state, including Wayfinding maps, package contracts, relationships, blockers, ownership, artifact references, and completion evidence.
-_Avoid_: Issue tracker adapter, tracker fallback
+**AND workflow state**:
+Durable delivery-loop state stored in GitHub Issues, labels, native relationships, comments, and assignees, including Wayfinding maps, package contracts, blockers, ownership, artifact references, and completion evidence.
+_Avoid_: Repository file state, implementation artifact
 
-**Markdown-file-based backend**:
-A workflow state backend where `.and/work` is the authoritative storage for delivery-loop state, with no GitHub issue discussion or mirror surface in the first design.
-_Avoid_: GitHub issue mirror, text fallback
-
-**GitHub-native backend**:
-A workflow state backend where GitHub Issues, labels, native relationships, comments, and assignees are the authoritative storage for delivery-loop state.
-_Avoid_: Markdown shadow state
-
-**Backend contract**:
-A shared reference that defines how workflow skills read and write delivery-loop state for a configured workflow state backend.
-_Avoid_: Backend skill, per-skill backend fork
+**AND workflow contract**:
+The shared `and-workflow-contract` reference that defines workflow concepts, GitHub representations, operations, and invariants for AND skills.
+_Avoid_: Per-skill workflow copies, implementation stage
 
 **Work record**:
 A durable record in the AI-native delivery loop, such as a raw request, Wayfinding map, investigation, single issue package, parent PRD, or child slice.
@@ -45,7 +37,7 @@ One sharp question under a Wayfinding map, sized for one Agent session and carry
 _Avoid_: Task, ticket, child slice
 
 **Map relationship**:
-The relationship between a Wayfinding map and its investigations; it remains distinct from PRD containment even when a backend uses the same parent/sub-issue primitive.
+The relationship between a Wayfinding map and its investigations; it remains distinct from PRD containment even though both use GitHub's parent/sub-issue primitive.
 _Avoid_: Containment relationship, dependency relationship
 
 **Fog**:
@@ -90,40 +82,8 @@ _Avoid_: Package contract, mutable status field
 
 **Implementation artifact**:
 A Git branch, commit, pull request, test result, or review result produced while implementing a delivery unit; it can be referenced as evidence but does not carry workflow state.
-_Avoid_: Workflow state backend, package contract
-
-**And config**:
-The minimal machine-readable workflow configuration at `.and/config.yml`, containing only the config version and the selected workflow state backend in the first schema version.
-_Avoid_: General settings file, project documentation
-
-**And work root**:
-The markdown-file-based backend's authoritative work storage directory at `.and/work`.
-_Avoid_: GitHub issue mirror, scratch directory
-
-**Work record ID**:
-A stable, repo-local identifier for a markdown-file-based work record, such as `AND-0006` for a top-level record, `AND-0006-01` for a child slice, and `AND-0006-I01` for an investigation; new top-level IDs are allocated by scanning `.and/work` for the highest existing ID and adding one.
-_Avoid_: GitHub issue number, slug
-
-**Containment index**:
-The markdown-file-based backend's redundant parent/child index: parent work records list `children`, and child work records name `parent`; both sides must agree.
-_Avoid_: Parallel source of truth
-
-**Map membership index**:
-The markdown-file-based backend's redundant map/investigation index: maps list `investigations`, and investigation records name `parent_map`; both sides must agree.
-_Avoid_: Containment index, parallel source of truth
-
-**Blocked-by index**:
-The markdown-file-based backend's dependency index, stored only on the blocked work record as `blocked_by` work record IDs.
-_Avoid_: Hand-written blocks list
+_Avoid_: AND workflow state, package contract
 
 **External blocker**:
-A blocker outside the work record graph, such as missing access, third-party state, or human acceptance, recorded separately from `blocked_by`.
+A blocker outside the work record graph, such as missing access, third-party state, or human acceptance, recorded separately from native dependency relationships.
 _Avoid_: Dependency relationship
-
-**Package frontmatter**:
-The machine-readable metadata at the top of a markdown-file-based package file, used for routing, indexing, state, lifecycle, and relationships.
-_Avoid_: Package contract
-
-**Child slice frontmatter**:
-The machine-readable metadata at the top of a markdown-file-based child slice file, used for identity, parent containment, lifecycle, and internal dependencies.
-_Avoid_: Public queue state

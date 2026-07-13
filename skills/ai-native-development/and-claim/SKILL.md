@@ -8,11 +8,11 @@ disable-model-invocation: true
 
 Claim records one owner for one whole executable delivery unit without changing scope. Invocation authorizes an ordinary safe claim after current evidence is validated.
 
-## Backend Contract
+## Workflow Contract
 
-Before claiming, read `.and/config.yml`, then use `and-backend-contract`.
+Use `and-workflow-contract` before claiming.
 
-Use `Read Delivery Unit` for the current source of truth, then `Record Ownership` for one logical claim and `Reference Implementation Artifact` when existing evidence must be linked. Record Ownership and the durable Claim receipt are one logical mutation; do not emit duplicate ownership evidence. The backend contract and configured reference own how current ownership, receipts, and implementation artifacts are represented and derived. If setup is missing, unsupported, or unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
+Use `Read Delivery Unit` for the current source of truth, then `Record Ownership` for one logical claim and `Reference Implementation Artifact` when existing evidence must be linked. Record Ownership and the durable Claim receipt are one logical mutation; do not emit duplicate ownership evidence. The workflow contract owns how current ownership, receipts, and implementation artifacts are represented and derived. If repository setup or the contract is unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
 
 ## Atomic Claim Unit
 
@@ -35,7 +35,7 @@ Implementation artifacts are evidence, not owner records. Existing non-conflicti
 
 Apply the claim without another confirmation when the target, claimant, whole-unit boundary, permission, and current ownership state are unambiguous.
 
-Pause only when judgment or authority is missing: the target, claimant, or unit is ambiguous; ownership is existing, stale, partial, or contradictory; implementation evidence creates unresolved duplicate-work risk; backend access is unclear; or the write would overwrite unrelated maintainer text. Releasing or overriding ownership is a high-risk Sweep repair and requires explicit approval there.
+Pause only when judgment or authority is missing: the target, claimant, or unit is ambiguous; ownership is existing, stale, partial, or contradictory; implementation evidence creates unresolved duplicate-work risk; GitHub access is unclear; or the write would overwrite unrelated maintainer text. Releasing or overriding ownership is a high-risk Sweep repair and requires explicit approval there.
 
 Confirmation cannot make unready, externally blocked, partial-PRD, or scope-changing work claimable. Route those defects to their owning stage.
 
@@ -44,15 +44,15 @@ Confirmation cannot make unready, externally blocked, partial-PRD, or scope-chan
 1. **Resolve and validate.** Resolve the actor and complete claim unit, following a child to its parent when needed. If a Pick report exists, confirm the target matches it, but rely on a fresh `Read Delivery Unit`. Inspect material linked implementation evidence and apply Claimability.
    - Completion criterion: one unchanged whole delivery unit and one claimant are known, and the unit is currently safe to claim.
 
-2. **Record atomic ownership.** Immediately re-read ownership and active implementation evidence, then record ownership once on the public delivery unit through the configured backend. The durable Claim receipt names every covered child for a PRD; do not write separate child claims. Link existing non-conflicting artifacts as evidence only.
-   - Completion criterion: the configured backend shows one owner for the whole delivery unit, with no separate child owner. If a backend mutation is partial, stop, report the exact state, and route the drift to `and-sweep`.
+2. **Record atomic ownership.** Immediately re-read ownership and active implementation evidence, then record ownership once on the public delivery unit using the workflow contract. The durable Claim receipt names every covered child for a PRD; do not write separate child claims. Link existing non-conflicting artifacts as evidence only.
+   - Completion criterion: GitHub shows one owner for the whole delivery unit, with no separate child owner. If the mutation is partial, stop, report the exact state, and route the drift to `and-sweep`.
 
 3. **Report the receipt.** Return the claim link or work ID, owner, whole unit, and `and-implement`. Mention existing implementation evidence only when it affects the handoff.
-   - Completion criterion: an implementation agent can start from the durable claim and backend source of truth without a second ownership interpretation.
+   - Completion criterion: an implementation agent can start from the durable claim and GitHub source of truth without a second ownership interpretation.
 
 ## Claim Receipt
 
-Record this content using the configured backend's receipt placement and append rules:
+Append this receipt to the delivery-unit issue:
 
 ```markdown
 ## Claim
