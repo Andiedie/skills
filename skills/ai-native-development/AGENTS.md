@@ -27,7 +27,7 @@ Use these dimensions when designing or editing an AND workflow skill. Choose the
 
 - Keep instructions that materially change execution and checkable completion criteria that prevent premature completion.
 - Remove duplication, no-ops, sediment, and defensive prose that is not justified by a real failure mode.
-- Use no target length; every line must earn its context cost through behavioral value.
+- Do not set a target line count for a skill; every line must earn its context cost through behavioral value.
 
 ### Responsibility Span: Atomic Action vs Multi-Stage Workflow
 
@@ -73,3 +73,5 @@ For package changes, run the checks relevant to the diff:
 - validate affected relative Markdown links;
 - run `npx --yes skills add . --list` when skill discovery or package structure may be affected;
 - search for stale names, terminology drift, or duplicated normative rules when moving responsibilities.
+
+For behavior-bearing runtime edits, also dry-run a representative path. Check that its first action is obvious, evidence gathering is proportional, only genuine decisions require confirmation, conditional detail appears only when needed, and the final receipt stays compact and actionable.

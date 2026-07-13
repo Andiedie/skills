@@ -29,14 +29,9 @@ Rules:
 - Version 1 has no other fields.
 - Missing, malformed, unsupported, or extended config routes to `setup-and`.
 
-## Backend Values
+## Configured Backend
 
-| Backend | Source of truth |
-| --- | --- |
-| `github-native` | GitHub issues, labels, native relationships, comments, and assignees. |
-| `markdown-file-based` | Markdown files under `.and/work`. |
-
-The configured backend is exclusive. A repository may reference investigation assets and implementation artifacts from tools outside the backend, but those artifacts do not become workflow state. Do not maintain GitHub issue state and markdown-file workflow state as parallel sources of truth.
+`github-native` and `markdown-file-based` are the only version 1 backend identifiers. The configured backend is exclusive and is the repository's workflow-state source of truth. Investigation assets and implementation artifacts may be referenced from it, but remain outside workflow state.
 
 ## Core Concepts
 
@@ -51,7 +46,7 @@ The configured backend is exclusive. A repository may reference investigation as
 | Dependency relationship | Work record A must wait for work record B. |
 | Wayfinding map | A shared planning index that holds a destination, decisions, fog, and scope until work can be packaged. It is not a delivery unit. |
 | Investigation | One sharp question under a Wayfinding map, sized for one Agent session and carrying no public stage. |
-| Map relationship | A Wayfinding map owns investigation records. It is distinct from PRD containment even when a backend uses the same native parent/sub-issue primitive. |
+| Map relationship | A Wayfinding map owns investigation records. It is distinct from PRD containment even when a backend uses one structural primitive for both. |
 | Fog | In-scope uncertainty that cannot yet be phrased as a sharp investigation question. |
 | Frontier | Open, unblocked, unclaimed investigations on a map. |
 | Actor identity | The backend-defined coordination identity used to compare investigation ownership across sessions and linked worktrees. Equality means the same workflow actor; it is not an authentication or authorization mechanism. |
@@ -80,8 +75,7 @@ Rules:
 
 - A parent PRD is not a blocker for its children merely because it is the parent.
 - A Wayfinding map is not a PRD parent, and an investigation is not a child slice.
-- The meaning of a native parent/sub-issue edge comes from the parent and child record kinds; map relationships and PRD containment must never be converted into each other.
-- A dependency relationship should never express containment.
+- When one representation primitive can encode both map relationships and PRD containment, the parent and child record kinds determine its meaning; the two relationships never convert into each other.
 - External blockers can make a delivery unit unpickable, but they are not dependency relationships.
 - State Reason explains the current `needs-info` route and names the skill to resume with.
 
@@ -96,6 +90,12 @@ Find candidate work records by stage, lifecycle, ownership, relationship, or dri
 ### Read Work Record
 
 Read one work record enough for the calling stage: body, stage, lifecycle, latest State Reason when present, receipts, relationships, and source evidence.
+
+### Write Work Record
+
+Create one raw top-level work record or merge new source evidence into one identified existing record. The calling skill owns title and body content; the backend owns identity allocation, representation, and durable mutation.
+
+A new record begins open in `needs-triage`. Updating an existing record preserves its stage, lifecycle, relationships, ownership, and prior receipts unless another named operation explicitly changes them.
 
 ### Resolve Canonical Identity
 
@@ -199,9 +199,9 @@ Write containment and dependency relationships without mixing their meanings.
 
 ### Record Ownership
 
-Record one owner for the whole delivery unit. For a PRD package, ownership covers the parent PRD and all children. Child slices can be internal work units but are not public claim units.
+Record the current ownership of the whole delivery unit. A claim sets one owner only when the unit is unowned. An explicitly approved release clears that owner; an explicitly approved override replaces it. For a PRD package, every ownership transition covers the parent PRD and all children. Child slices can be internal work units but are not public claim units.
 
-Backends may represent current ownership directly or derive it from append-only receipts such as claim receipts. Follow the configured backend reference; do not invent extra ownership fields.
+Backends may represent current ownership directly or derive it from append-only ownership receipts. Follow the configured backend reference; do not invent extra ownership fields. Release and override are authority-changing repairs, not ordinary claim behavior, and require durable approval and result evidence.
 
 ### Record Investigation Ownership
 
@@ -209,9 +209,7 @@ Record one owner for one frontier investigation immediately before work. The sam
 
 ### Record Receipt
 
-Append evidence from a workflow stage: grill decisions, Wayfinding claims and resolutions, map handoff, pack publication, claim, implementation, review, verification, completion, rejection, or follow-up.
-
-Receipt content is owned by the calling workflow skill. Receipt location and append rules are owned by the configured backend reference.
+Append evidence from a workflow stage. Receipt content is owned by the calling workflow skill; location and append rules are owned by the configured backend reference.
 
 ### Record Lifecycle Outcome
 
@@ -227,7 +225,8 @@ Coordinate one reviewed implementation artifact with the delivery unit's termina
 
 - Prove that the implementation reached the authorized target.
 - Record completion evidence using the calling skill's receipt contract.
-- Make `completed` authoritative only when delivery and backend completion evidence are both authoritative.
+- For a PRD package, complete every contained child slice before completing the parent; leave merely related work unchanged.
+- Make `completed` authoritative for the whole delivery unit only when delivery and backend completion evidence are both authoritative.
 - Begin source-branch and worktree cleanup only after authoritative completion.
 
 The configured backend reference defines when its completion state becomes authoritative and where the receipt is recorded.
@@ -297,6 +296,7 @@ Use receipts for turning points:
 - Wayfinding chart, investigation, and map-handoff evidence;
 - package publication;
 - claim;
+- approved ownership release or override and other workflow repairs;
 - implementation;
 - review;
 - verification;
@@ -307,5 +307,5 @@ Receipts should not become a duplicate Package Contract unless the calling stage
 
 ## References
 
-- [GitHub-native backend](backends/github-native.md)
-- [Markdown-file-based backend](backends/markdown-file-based.md)
+- [GitHub-native Operation Index](backends/github-native.md#operation-index)
+- [Markdown-file-based Operation Index](backends/markdown-file-based.md#operation-index)
