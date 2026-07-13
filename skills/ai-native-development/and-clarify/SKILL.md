@@ -6,48 +6,42 @@ disable-model-invocation: true
 
 # AND Clarify
 
-Clarify one bounded human decision space whose questions can be enumerated now and which blocks `needs-info` work from being packaged. It invokes `grilling` for interview behavior and `and-interview-contract` for evidence, recovery, domain modeling, and artifact-ready output.
+Clarify one bounded human decision space whose package-blocking questions can all be enumerated now. `grilling` owns the interview cadence; `and-interview-contract` makes confirmed results recoverable and ready for durable synchronization.
 
 ## Backend Contract
 
-Before reading or writing workflow state, read `.and/config.yml`, then use `and-backend-contract`.
-
-Use the configured backend reference for reading the target, writing Clarification Notes and State Reasons, and moving stage state. If setup, either required AND contract, or `grilling` is unavailable, stop and route to `setup-and` or installation with the exact missing dependency.
+Before reading or writing workflow state, read `.and/config.yml`, then use `and-backend-contract` for the target, receipts, State Reason, and stage mutation. If setup is incomplete or `and-backend-contract`, `and-interview-contract`, or `grilling` is unavailable, route to `setup-and` or installation with the exact missing dependency.
 
 ## When To Use
 
-Use `and-clarify` when work is `needs-info`, its current State Reason names one bounded product, domain, architecture, naming, testing, or acceptance decision space whose questions can be enumerated now, and `Resume with` points to `and-clarify`.
+Use `and-clarify` when work is `needs-info`, `Resume with` points here, and the current State Reason names one bounded product, domain, architecture, naming, testing, or acceptance decision space whose branches are visible now.
 
-Route reporter facts, access waits, external state, direct acceptance input, work that is already packable, and decision spaces that cannot currently be bounded and enumerated to the accountable owner or `ask-andie`.
+Uncertainty whose next sharp questions depend on research, a prototype, a task, or an earlier investigation is fog and belongs in `and-wayfind`. Facts, access waits, external state, direct acceptance input, and already-packable work continue through their accountable route.
 
 ## Process
 
-1. Resolve the target.
+1. Focus the decision.
    - Read the work record, current State Reason, relevant receipts, relationships, and newer activity.
    - Verify that one bounded, currently enumerable decision space is the actual package blocker and that `and-clarify` is the recorded route.
    - Supply `and-interview-contract` with workflow skill `and-clarify`, objective `clarify-decision`, canonical repository and work identities, the decision boundary, and authoritative backend evidence; reconcile valid recovery after backend state.
-   - Completion criterion: target, blocker, owner, recovered confirmed inputs, and decision boundary are explicit, or the work is routed without an interview.
+   - Completion criterion: target, blocker, decision owner, recovered confirmations, and the complete decision boundary are explicit, or the work is routed without an interview.
 
-2. Run the interview.
-   - Invoke `grilling` and follow its one-question-at-a-time behavior.
-   - Apply `and-interview-contract` throughout the exchange and persist each materially confirmed result through its recovery rules.
-   - Completion criterion: every package blocker within the decision boundary is resolved with allowed evidence, or one precise remaining blocker is recoverable.
+2. Grill within the boundary.
+   - Invoke `grilling` with the package blocker, decision boundary, and confirmed inputs. Let it own question order, recommendations, fact-finding, and final shared understanding.
+   - Apply `and-interview-contract` throughout the exchange so each material confirmation is recoverable.
+   - When an answer reveals that the next question cannot be made sharp without an investigation, stop expanding the interview and return that remaining uncertainty as an `and-wayfind` route.
+   - Completion criterion: every package blocker in the bounded decision space is resolved with allowed evidence, or the result contains one precise resumable blocker or destination-level Wayfinding uncertainty.
 
-3. Capture the result.
-   - Receive the complete artifact-ready output from `and-interview-contract`.
-   - Completion criterion: `and-pack` can consume the result without replaying the interview, or one owner and exit condition remain.
+3. Synchronize the result.
+   - Receive one complete result from `and-interview-contract`. At completion, pause, task switch, or handoff, append only the missing Clarification Notes receipt for its valid checkpoint.
+   - With no material confirmation and no recovery buffer, skip the empty receipt. When a blocker or fog remains, keep `needs-info` and write its precise current State Reason; move to `needs-pack` only after the resolved receipt is authoritative.
+   - Verify every mutation. On failure, retain the recovery buffer and pre-advance stage; after success, clean only the matching synchronized buffer.
+   - Completion criterion: `and-pack` can consume an authoritative result without replaying the interview, or one authoritative blocker and exit condition can resume through `and-clarify` or `and-wayfind`.
 
-4. Synchronize the backend.
-   - At completion, pause, task switch, or handoff, append only the missing Clarification Notes receipt for the valid checkpoint.
-   - When no material decision occurred and no recovery buffer exists, skip an empty receipt and cleanup.
-   - When a blocker remains, write the current State Reason. When none remains, move `needs-info` to `needs-pack` after the receipt is authoritative.
-   - Verify each mutation. Retain recovery and `needs-info` when synchronization fails; after success, ask `and-interview-contract` to clean its matching buffer.
-   - Completion criterion: confirmed inputs and stage are authoritative, or one current blocker is authoritative and resumable.
-
-5. Report a receipt.
+4. Report a receipt.
    - Name the work record, decisions recorded, stage change, remaining blocker when any, and next skill.
-   - Keep the report short; do not copy the interview, recovery buffer, tracker body, or package draft.
-   - Completion criterion: the user can continue with `and-pack` or resolve the named blocker.
+   - Keep the report shorter than the durable note and leave interview detail in its authority.
+   - Completion criterion: the user can invoke the named next skill or satisfy the named blocker without replaying the interview.
 
 ## Clarification Note
 
@@ -59,27 +53,14 @@ Checkpoint: <recovery-buffer digest>
 Resolved decisions:
 - <decision and rationale>
 
-Glossary updates:
-- <none or artifact-ready update>
-
-ADR drafts:
-- <none or artifact-ready draft>
-
-Documentation updates:
-- <none or artifact-ready update>
-
-Acceptance implications:
-- <criteria or edge cases>
-
-Remaining blockers:
-- <none or one specific blocker>
-
 Next step:
 - <and-pack or the current State Reason route>
 ```
 
+Add `Required repository updates`, `Acceptance implications`, or `Remaining blocker` only when the confirmed result contains that package input. Omit absent sections instead of filling them with placeholders.
+
 ## Boundaries
 
-- Keep one bounded, currently enumerable decision space inside this stage. Route work outside that shape through `ask-andie`.
-- Keep repository and implementation artifacts unchanged; record required future changes as package inputs.
-- Stop after clarification state is synchronized; packing, claiming, implementation, closure, and merge belong downstream.
+- Keep one bounded, currently enumerable decision space inside this stage; route later-dependent fog to `and-wayfind`.
+- Keep repository and implementation artifacts unchanged, with required future changes represented only as package inputs.
+- Stop with synchronized clarification state; `and-pack` owns the next delivery-unit transition.

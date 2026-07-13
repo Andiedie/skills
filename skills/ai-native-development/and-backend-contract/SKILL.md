@@ -5,39 +5,25 @@ description: Use when an AND workflow skill needs to read or write workflow stat
 
 # AND Backend Contract
 
-Reference skill for loading the configured workflow state backend contract.
-
-Use it before an AND workflow skill reads, writes, validates, or reasons about workflow state. This skill loads the contract; it does not perform the workflow operation.
+Load the one backend contract a calling AND skill needs before it reads, writes, validates, or reasons about workflow state.
 
 ## Process
 
-1. Read and validate the repository's `.and/config.yml`.
-   - It must be a YAML mapping with `version: 1`.
-   - It must contain only `version` and `workflow_state_backend`.
-   - `workflow_state_backend` must be `github-native` or `markdown-file-based`.
-   - If missing, malformed, unsupported, extended, or ambiguous, route to `setup-and`.
-   - Completion criterion: one supported backend is known.
+1. Read `.and/config.yml` and validate it against the [Config Contract](backend-contract.md#config-contract). Route a missing, malformed, unsupported, or extended config to `setup-and`.
+   - Completion criterion: exactly one supported configured backend is known.
 
-2. Read [backend-contract.md](backend-contract.md).
-   - Use it for backend-neutral concepts, operations, relationship vocabulary, State Reason, receipt, lifecycle, and invariant rules.
-   - Completion criterion: the calling skill's operation is expressed in backend-neutral terms.
+2. In the [Backend-Neutral Operations](backend-contract.md#backend-neutral-operations), map every workflow-state action requested by the caller to its named operation, then load the concepts and [Cross-Backend Invariants](backend-contract.md#cross-backend-invariants) those operations use.
+   - Completion criterion: every workflow-state action in the caller has a backend-neutral operation plan.
 
-3. Read exactly one backend reference.
-   - For `github-native`, read [backends/github-native.md](backends/github-native.md).
-   - For `markdown-file-based`, read [backends/markdown-file-based.md](backends/markdown-file-based.md).
-   - Do not read the other backend unless doing setup, backend change design, sweep validation, or an explicit comparison.
-   - Completion criterion: the calling skill knows the configured representation for the operation it is about to perform.
+3. Load the same operations from the configured reference's Operation Index:
+   - [`github-native`](backends/github-native.md#operation-index)
+   - [`markdown-file-based`](backends/markdown-file-based.md#operation-index)
 
-4. Return to the calling workflow skill.
-   - Do not perform the operation here.
-   - Do not produce a separate user-facing receipt unless the user directly asked about backend rules.
-   - Completion criterion: the caller can continue with one backend-specific read, write, or validation plan.
+   Read both representations only for setup, backend-change design, sweep comparison, or an explicit cross-backend audit.
+   - Completion criterion: the caller can continue with one representation-specific plan covering every requested workflow-state action.
 
 ## Boundaries
 
-- Do not choose or switch the repository backend; `setup-and` owns that.
-- Do not mutate issues, files, labels, relationships, ownership, claims, branches, PRs, or lifecycle state.
-- Do not run the calling workflow stage.
-- Do not invent fields outside `.and/config.yml` v1 or the configured backend reference.
-- Do not maintain GitHub and markdown workflow state in parallel.
-- Do not treat implementation artifacts as workflow state.
+- `setup-and` owns backend selection and change; this skill accepts only a valid configured backend.
+- This skill returns control without performing the operation or emitting a stage receipt.
+- The configured reference is the sole representation used by the caller; the neutral contract remains the sole semantic authority.

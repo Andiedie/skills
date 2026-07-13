@@ -6,94 +6,61 @@ disable-model-invocation: true
 
 # Ask Andie
 
-Ask Andie is the teaching router for the AI-native development loop. Use it when you need to know the current loop position, the next skill, or the rule that makes the route obvious.
-
-Do more than route, but only a little. Teach one reusable rule so the user needs this skill less often next time.
+Find the current position, name one next move, and teach one reusable rule. Read enough evidence to point; leave the move itself to the skill or owner that owns it.
 
 ## Backend Contract
 
-When routing workflow-backed work, read `.and/config.yml`, then use `and-backend-contract` for the configured backend.
-
-If setup is missing, invalid, unsupported, or the backend contract is unavailable, route to `setup-and`.
+For workflow-backed routing, read `.and/config.yml`, then use `and-backend-contract`. Route missing, invalid, unsupported, or unavailable setup to `setup-and`.
 
 ## Route Map
 
-Main loop: `and-intake` -> `and-triage` -> `and-clarify` when a bounded, currently enumerable decision space needs resolution -> `and-pack` -> `and-pick` -> `and-claim` -> `and-implement` -> `and-finish`.
+Main loop: `and-intake` -> `and-triage` -> `and-clarify` when a bounded decision space needs resolution -> `and-pack` -> `and-pick` -> `and-claim` -> `and-implement` -> `and-finish`.
 
-`and-wayfind` is a conditional on-ramp before `and-pack` when the destination is visible but the investigation path cannot yet be enumerated.
+`and-wayfind` is an on-ramp before `and-pack` when the destination is visible but the investigation path cannot yet be enumerated.
 
-Keep ordinary clarification and packaging in one context when practical. Wayfinding intentionally spans sessions through its map. After a PRD package is claimed, its owner may use child records as subagent work units grounded in the parent PRD plus the child record.
-
-| Surface / evidence | Route |
+| Surface or evidence | Next move |
 | --- | --- |
-| Initial repository setup, a current Setup Contract gap, or an explicit request for a setup audit, repair, or full-ready check | `setup-and` |
+| Initial setup, a Setup Contract gap, or an explicit setup audit, repair, or full-ready check | `setup-and` |
+| Valid configured backend is inaccessible | Ask the accountable owner to restore the named access or service prerequisite |
 | Untracked raw signal, including an external PR or local diff with no work record | `and-intake` |
-| Existing work with unclear state, new activity, duplicate or closure question, or missing State Reason | `and-triage` |
+| Existing work with unclear state, new activity, a duplicate or closure question, or a missing State Reason | `and-triage` |
 | `needs-info` with `Resume with: and-clarify` | `and-clarify` |
 | `needs-info` with `Resume with: and-wayfind` | `and-wayfind` |
-| Existing work appears map-shaped but has no recorded `and-wayfind` route | `and-triage` |
-| `needs-info` waiting for facts, access, external state, or acceptance | Route the State Reason question to its owner; resume with the recorded skill |
+| Map-shaped evidence without a recorded Wayfinding route | `and-triage` |
+| `needs-info` waiting for facts, access, external state, or acceptance | Ask the State Reason owner; resume with its recorded skill |
 | `needs-pack` | `and-pack` |
-| Ready work slate with no chosen delivery unit | `and-pick` |
-| Unclaimed ready single issue package or parent PRD package with no active implementation evidence | `and-claim` |
-| Claimed delivery unit whose implementation or review is incomplete, including its linked branch, diff, or pull request | `and-implement` |
-| Reviewed delivery with no pending acceptance or blocker, including an in-progress finish with a completion proposal, merged pull request, incomplete lifecycle, or incomplete cleanup | `and-finish` |
-| Implementation waiting on required acceptance or another external owner | Route the exact pending input to its accountable owner |
-| Stale claim, partial PRD claim, relationship drift, contradictory state, or blocked ready work | `and-sweep` |
+| Ready slate with no selected delivery unit | `and-pick` |
+| Unclaimed ready single issue or parent PRD package with no active implementation evidence | `and-claim` |
+| Claimed delivery unit with incomplete implementation or review | `and-implement` |
+| Claimed PRD child used as an internal work unit | `and-implement` with the parent PRD and child record |
+| Reviewed delivery with no pending acceptance or blocker, including an in-progress finish, merged implementation, incomplete lifecycle, or incomplete cleanup | `and-finish` |
+| Implementation waiting on required acceptance or another external owner | Ask that accountable owner for the exact pending input |
+| Stale or partial claim, relationship drift, contradictory state, or blocked ready work | `and-sweep` |
 
 ## Evidence Budget
 
-Read only enough evidence to route:
+Read the smallest evidence set that distinguishes the routes: setup/config, stage and lifecycle, latest State Reason, ownership or claim, blockers and parent/child identity, linked implementation artifacts, and the current branch or diff when relevant. Stop when one route follows from one or two decisive facts.
 
-- setup/config;
-- stage and lifecycle;
-- latest State Reason;
-- ownership or claim evidence;
-- blocker state;
-- parent/child identity;
-- linked implementation artifacts;
-- current branch or diff when relevant.
+Leave full triage, ready-work ranking, package validation, implementation planning, and drift audit to their owning skills.
 
-Do not perform full triage, pick ranking, package validation, implementation planning, or sweep audit.
+## Route
 
-## When Invoked
+Identify the current surface, check setup when workflow-backed state matters, spend the evidence budget, and choose exactly one route from the map. When evidence is incomplete, use the smallest accountable fallback: `and-triage` for unclear backend state or an unrecorded map-shaped signal; the recorded `and-clarify` or `and-wayfind` route for `needs-info`; `setup-and` for missing repository rules; or one direct question for a human-owned decision. Return the route card and stop.
 
-1. Identify the current surface: raw request or external PR, existing work, ready slate, specific delivery unit, claimed work, local branch/diff, backend drift, setup gap, or explicit repository setup audit or repair request.
-2. Check setup when workflow-backed routing is needed. If setup is missing or unsupported, route to `setup-and`.
-3. Read minimal routing evidence. The route should be justifiable with one or two facts.
-4. Choose exactly one next skill, one owner question, or one setup/install route. Do not run the next workflow skill inside `ask-andie`.
-5. Report the route and one teaching rule using the user's language. Keep skill names, labels, issue numbers, work IDs, commands, and code identifiers literal.
+Completion criterion: the user can invoke one named skill next or answer one concrete owner question that makes the next move clear.
 
-If the route is uncertain, choose the smallest route: `and-triage` for unclear backend state or unrecorded map-shaped evidence, `and-clarify` for one recorded bounded decision space whose questions are currently enumerable, `and-wayfind` for an existing recorded Wayfinding route, `setup-and` for missing repository rules, or one direct question when the user must decide.
-
-## Output Shape
-
-Use this compact route card:
+## Route Card
 
 ```markdown
 Current position: <stage or surface>
 Next: <skill or accountable owner action>
-Why: <one sentence>
-Rule to learn: <one sentence>
+Why: <one sentence grounded in one or two decisive facts>
+Rule to learn: <one reusable sentence>
+Human input: <one exact question, only when needed>
 ```
 
-Add optional lines only when useful:
+Use the user's language and keep skill names, labels, issue numbers, work IDs, commands, and code identifiers literal. Omit `Human input` when none is needed.
 
-```markdown
-Evidence: <routing facts>
-Watch-out: <real blocker, claim, PRD child, stale state, or setup issue>
-Human input needed: <one exact question>
-```
+## Boundary
 
-Do not print empty optional sections. Do not include full issue bodies, full State Reasons, candidate lists, Package Contracts, child records, or implementation plans.
-
-Completion criterion: the user can run one named skill next, or answer one concrete question that will make the next skill clear.
-
-## Boundaries
-
-- Do not edit workflow backend state.
-- Do not run the next workflow skill from inside `ask-andie`; name it and stop.
-- Do not synthesize requirements, package work, rank ready candidates, repair drift, claim, implement, close, merge, or release ownership.
-- Do not decide product priority or business tradeoffs.
-- Do not duplicate Package Contracts, issue bodies, child records, or full State Reasons in chat.
-- Do not use `ask-andie` to bypass stage preconditions; route to the stage that owns the missing work.
+Ask Andie is read-only. Name the next skill or accountable owner action and stop; the destination owns its judgments and mutations. Route a missing stage precondition to its owner rather than bypassing it.

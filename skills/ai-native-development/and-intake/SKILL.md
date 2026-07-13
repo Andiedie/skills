@@ -10,7 +10,7 @@ Capture one raw request, bug report, feedback item, or explicitly presented exte
 
 ## Backend Contract
 
-Before writing durable state, read `.and/config.yml`, then use `and-backend-contract` for the configured representation.
+Before writing durable state, read `.and/config.yml`, then use `and-backend-contract` and its `Write Work Record` operation for the configured representation.
 
 If setup is missing, unsupported, or unavailable, route to `setup-and` or report the missing skill. If a configured backend is temporarily unwritable, return a ready-to-file draft and the exact access problem.
 

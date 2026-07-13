@@ -6,126 +6,70 @@ disable-model-invocation: true
 
 # AND Claim
 
-Claim records ownership for one executable delivery unit. It does not change scope: the claim unit must be one single issue package, or one parent PRD package plus all children.
-
-Treat invocation as authorization for an ordinary safe claim after validation.
+Claim records one owner for one whole executable delivery unit without changing scope. Invocation authorizes an ordinary safe claim after current evidence is validated.
 
 ## Backend Contract
 
 Before claiming, read `.and/config.yml`, then use `and-backend-contract`.
 
-Use the configured backend reference for reading ownership evidence, recording claims, and linking implementation artifacts. If setup is missing, unsupported, or the backend contract is unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
+Use `Read Delivery Unit` for the current source of truth, then `Record Ownership` for one logical claim and `Reference Implementation Artifact` when existing evidence must be linked. Record Ownership and the durable Claim receipt are one logical mutation; do not emit duplicate ownership evidence. The backend contract and configured reference own how current ownership, receipts, and implementation artifacts are represented and derived. If setup is missing, unsupported, or unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
 
-Do not infer backend assignees, comments, receipts, ownership fields, labels, or artifact links inside this skill.
-
-## Claim Unit
+## Atomic Claim Unit
 
 A claim unit is either:
 
-- a single issue package; or
-- a parent PRD package plus all children.
+- one single issue package; or
+- one parent PRD package plus all child slices.
 
-PRD children are internal execution slices, not public claim targets. If the user points at a child, resolve the parent PRD package and validate the whole package.
+If the user points at a PRD child, resolve and validate the parent delivery unit. Record ownership on the public delivery unit; for a PRD, one parent ownership record covers every child. Internal delegation may allocate child work, but it does not create child ownership or reduce the parent owner's responsibility.
 
 ## Claimability
 
-### Hard Gates
+The fresh `Read Delivery Unit` must show an open `ready-for-agent` public delivery unit with an executable Package Contract, coherent PRD structure, and no contradictory waiting state, open external blocker, current owner, or active implementation evidence that creates duplicate-work risk. The requested claim must preserve the published scope.
 
-Do not claim unless the delivery unit is:
+Route package or verification defects to `and-pack`, missing human or external input to `and-triage`, ownership, relationship, or artifact drift to `and-sweep`, and a target-selection problem to `and-pick`.
 
-- open;
-- `ready-for-agent`;
-- a public delivery unit;
-- free of contradictory waiting state;
-- free of open external blockers;
-- unclaimed;
-- free of active implementation evidence that creates duplicate-work risk.
+Implementation artifacts are evidence, not owner records. Existing non-conflicting evidence can be linked in the claim; evidence with unclear or competing ownership or intent must be reconciled before mutation.
 
-### Quality Gates
+## Confirmation
 
-Route instead of claiming when:
+Apply the claim without another confirmation when the target, claimant, whole-unit boundary, permission, and current ownership state are unambiguous.
 
-- scope or Package Contract is weak;
-- verification strategy is missing;
-- PRD child structure is broken;
-- ownership evidence is stale or contradictory;
-- the requested claim would change scope.
+Pause only when judgment or authority is missing: the target, claimant, or unit is ambiguous; ownership is existing, stale, partial, or contradictory; implementation evidence creates unresolved duplicate-work risk; backend access is unclear; or the write would overwrite unrelated maintainer text. Releasing or overriding ownership is a high-risk Sweep repair and requires explicit approval there.
 
-Use `and-pack` for broken package shape or verification, `and-triage` for missing human or external input, `and-sweep` for stale or contradictory ownership and relationship drift, and `and-pick` when a different target is needed.
-
-## Confirmation Gates
-
-Apply an ordinary claim without confirmation when the target, claimant, delivery-unit boundary, and ownership state are clear.
-
-Ask or route before applying ownership changes when:
-
-- the target is ambiguous;
-- the claimant is ambiguous;
-- the delivery-unit boundary is unclear;
-- existing ownership exists;
-- stale ownership must be released or overridden;
-- an active branch, draft PR, or PR creates duplicate-work risk;
-- backend permission or access is unclear;
-- applying the claim would overwrite unrelated maintainer text.
-
-Hard blockers cannot be made safe by confirmation. Open external blockers, PRD child claims, unready work, and scope-changing claims must route back.
+Confirmation cannot make unready, externally blocked, partial-PRD, or scope-changing work claimable. Route those defects to their owning stage.
 
 ## Process
 
-1. Resolve claim unit.
-   - Identify whether the target is a single issue package or PRD package.
-   - If following `and-pick`, compare the claim target to the pick report.
-   - If the user points at a PRD child, resolve the parent PRD package.
-   - Read parent and children for PRD packages.
-   - Read stage, lifecycle, ownership, blockers, relationships, and linked artifacts.
-   - Completion criterion: the complete delivery unit is named, and no child, parent, sibling, or related scope is hidden.
+1. **Resolve and validate.** Resolve the actor and complete claim unit, following a child to its parent when needed. If a Pick report exists, confirm the target matches it, but rely on a fresh `Read Delivery Unit`. Inspect material linked implementation evidence and apply Claimability.
+   - Completion criterion: one unchanged whole delivery unit and one claimant are known, and the unit is currently safe to claim.
 
-2. Validate claimability.
-   - Apply hard gates.
-   - Apply quality gates.
-   - Inspect ownership evidence and active implementation artifacts.
-   - Treat branches and PRs as implementation artifact evidence or duplicate-work risk, not as ownership source of truth.
-   - Route broken state to the right skill.
-   - Completion criterion: the claim is valid, or the report names the smallest route back to `and-pick`, `and-pack`, `and-sweep`, or `and-triage`.
+2. **Record atomic ownership.** Immediately re-read ownership and active implementation evidence, then record ownership once on the public delivery unit through the configured backend. The durable Claim receipt names every covered child for a PRD; do not write separate child claims. Link existing non-conflicting artifacts as evidence only.
+   - Completion criterion: the configured backend shows one owner for the whole delivery unit, with no separate child owner. If a backend mutation is partial, stop, report the exact state, and route the drift to `and-sweep`.
 
-3. Record claim.
-   - Record ownership through the configured backend reference.
-   - For a PRD package, the claim covers the parent and every child.
-   - Record child coverage in the claim record.
-   - Record internal delegation only as parent-owner delegation, not separate public ownership.
-   - Link existing branch or draft PR only as implementation artifact evidence.
-   - Do not invent backend fields or ownership labels outside the configured backend reference.
-   - Completion criterion: the configured backend shows one clear owner for the whole delivery unit.
+3. **Report the receipt.** Return the claim link or work ID, owner, whole unit, and `and-implement`. Mention existing implementation evidence only when it affects the handoff.
+   - Completion criterion: an implementation agent can start from the durable claim and backend source of truth without a second ownership interpretation.
 
-4. Report a receipt.
-   - Include claim link or work ID, owner, claim unit, source of truth, material ownership or blocker risk when any, and next skill: `and-implement`.
-   - Do not copy the full Package Contract, child record bodies, full claim record, implementation plan, or empty risk sections into chat.
-   - Completion criterion: an implementation agent can start `and-implement` from the claim and backend source of truth.
+## Claim Receipt
 
-## Claim Record
-
-Use this claim record through the configured backend reference:
+Record this content using the configured backend's receipt placement and append rules:
 
 ```markdown
 ## Claim
 
 Claimed by: <actor>
-Claim unit: <single issue package or PRD package>
-Scope owner: <single issue package or parent PRD>
-Children covered: <none or child record list>
-External blockers checked: <none or list>
-Existing ownership checked: <assignee, claim comment, claim receipt, or backend ownership record>
-Implementation artifacts checked: <branch, draft PR, active PR, or none>
-Internal delegation: <none or child slices delegated under this claim>
-Expected next step: <and-implement>
+Claim unit: <single package, or parent PRD plus every child ID>
+Previous ownership: <unclaimed on the immediate pre-write read>
+Implementation evidence: <none or non-conflicting artifact references>
+Internal delegation: <include only when present; parent owner remains authoritative>
+Next: `and-implement`
 ```
 
-Implementation artifacts are evidence, not owner records.
+The user-facing receipt is shorter:
 
-## Boundaries
-
-- Do not change package scope during claim.
-- Do not claim PRD children independently or partially claim a PRD package.
-- Do not claim unready, blocked, already claimed, ambiguous, or scope-changing work.
-- Do not release or override ownership without explicit approval.
-- Do not treat branches or PRs as ownership source of truth; treat them as implementation artifact evidence or duplicate-work risk.
+```markdown
+Claimed: <whole delivery unit>
+Owner: <actor>
+Source: <claim link or work ID>
+Next: `and-implement`
+```

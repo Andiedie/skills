@@ -8,9 +8,7 @@ Use this backend when GitHub issues are the authoritative workflow state.
 
 GitHub issues, labels, native relationships, comments, and assignees carry workflow state.
 
-Branches, commits, pull requests, CI, and review results are implementation artifacts. They may be referenced by workflow-state receipts, but they do not carry workflow state themselves.
-
-Do not create markdown shadow state under `.and/work` when this backend is selected.
+Branches, commits, pull requests, CI, and review results are linked from receipts as implementation artifacts.
 
 ## Canonical Identities
 
@@ -23,28 +21,24 @@ The canonical identity of a Wayfinding source map is therefore its repository id
 
 Canonical actor identity is the authenticated GitHub login, lowercased and without an `@` prefix. Resolve it from GitHub's authenticated-user endpoint. An open investigation is unclaimed with no assignee and has one owner with exactly one assignee; multiple assignees are ownership drift. Ownership belongs to the actor only when that sole assignee login matches it case-insensitively.
 
-## Capability Requirements
+## Setup Readiness
 
-GitHub-native requires:
+GitHub-native is ready when:
 
-- GitHub issues as workflow state;
-- labels for active stage state;
+- `.and/config.yml` selects `github-native` under the [Config Contract](../backend-contract.md#config-contract);
+- GitHub Issues is enabled and the repository is readable;
+- every fixed [stage](#stage-state), [`parent-prd`](#prd-package), and [Wayfinding](#labels) label exists;
+- the authenticated actor can create, edit, comment on, label, close, and reopen issues;
+- the authenticated actor can assign itself for investigation ownership;
 - native parent/sub-issue relationships for PRD package containment;
 - native blocked-by/blocking relationships for dependency order;
-- comments for receipts;
-- assignees or claim comments for delivery ownership;
-- assignees for investigation ownership, including permission to assign the authenticated actor.
+- both native relationship types are readable and writable.
 
-Wayfinding additionally requires the same native parent/sub-issue and blocked-by/blocking capabilities for maps and investigations, plus exactly-one-assignee investigation ownership.
+During setup audit, inspect repository identity, Issues availability, existing labels, authenticated-user identity, issue-write and self-assignment permissions, and both relationship capabilities. A successful read proves only read capability. Treat write capability as verified only through authoritative permission and role evidence or an approved reversible probe using the [Relationship API Recipes](#relationship-api-recipes).
 
-If native parent/sub-issue or blocked-by/blocking relationships are unavailable, do not emulate them with markdown task lists, labels, or comments. Route to `setup-and` to resolve GitHub capability or choose `markdown-file-based`.
+Missing labels are minimum-state gaps that `setup-and` may include in its write envelope. An unavailable, failed, or unverified required capability keeps this backend unready; `setup-and` reports the evidence and either a capability remedy or a decision to select `markdown-file-based`. Native relationship requirements have no fallback representation.
 
-## Config
-
-```yaml
-version: 1
-workflow_state_backend: github-native
-```
+Setup creates no sample issues or workflow records.
 
 ## Representation
 
@@ -65,60 +59,56 @@ workflow_state_backend: github-native
 | Investigation asset | Branch, commit, file, screenshot, or other evidence linked from the resolution comment. |
 | Dependency relationship | GitHub blocked-by/blocking relationship. |
 | External blocker | State Reason for `needs-info`, or explicit package note when it blocks execution after packaging. |
-| Ownership | Assignee plus claim comment, or claim comment where assignment is not appropriate. |
+| Ownership | Sole delivery assignee where appropriate plus append-only ownership receipts; the latest valid receipt records claim, release, or override and must agree with the assignee. |
 | Receipt | Issue comment on the work record whose operation it evidences. |
 | Implementation artifact | Branch, commit, PR, CI, or review link referenced by a receipt. |
 | Lifecycle outcome | GitHub closed state plus closing comment or close-reason label when the repository already uses one. |
 
-## Operations
+## Operation Index
 
-- Locate work: query GitHub issues by active stage labels, `parent-prd`, `wayfinder:map`, method label, assignee, relationship, and open or closed state.
-- Read delivery unit: read the single issue, or parent PRD plus native sub-issues and dependency relationships.
-- Write stage state: ensure exactly one active queue label on the top-level work issue and none on PRD children or investigations.
-- Write State Reason: append a comment headed `## State Reason`.
-- Chart Wayfinding map: rewrite the selected work issue as the map, set its map labels and State Reason, create investigation issues, then add native sub-issue and dependency relationships.
-- Resolve investigation: assign one frontier issue, record its resolution comment, close it, and update the map from freshly read state.
-- Publish package: update the issue body or parent PRD body with the Package Contract, create native sub-issues when needed, set relationships, and mark the delivery unit `ready-for-agent`.
-- Record ownership: set assignee when appropriate and append a claim comment.
-- Record receipt: append an issue comment.
-- Record lifecycle outcome: close the issue with completion evidence, or use an existing close-reason label/comment convention.
-- Finish delivery: merge the reviewed pull request first, then record completion evidence, remove active stage state, and close the delivery-unit issue.
+Use the [backend-neutral operation](../backend-contract.md#backend-neutral-operations) for semantics and the linked section here for GitHub representation.
+
+| Backend-neutral operation | GitHub representation |
+| --- | --- |
+| Locate Work | Query the [Stage State](#stage-state), [Package Shapes](#package-shapes), [Ownership](#ownership), [Wayfinding](#wayfinding), open or closed issue state, and [Sweep Checks](#sweep-checks). |
+| Read Work Record | Read the issue's [Representation](#representation), [State Reason](#state-reason), [Relationships](#relationships), and [Receipts](#receipts-and-implementation-artifacts). |
+| Write Work Record | [Raw Work Records](#raw-work-records). |
+| Resolve Canonical Identity | [Canonical Identities](#canonical-identities). |
+| Read Delivery Unit | [Package Shapes](#package-shapes), [Relationships](#relationships), [Ownership](#ownership), and [Receipts](#receipts-and-implementation-artifacts). |
+| Read Wayfinding Map | [Wayfinding](#wayfinding). |
+| Chart Wayfinding Map | [Chart A Map](#chart-a-map). |
+| Resolve Investigation | [Resolve One Investigation](#resolve-one-investigation). |
+| Hand Off Wayfinding Map | [Complete And Hand Off A Map](#complete-and-hand-off-a-map). |
+| Write Stage State | [Stage State](#stage-state). |
+| Write State Reason | [State Reason](#state-reason). |
+| Publish Package | [Package Shapes](#package-shapes) and [Relationships](#relationships). |
+| Write Relationships | [Relationships](#relationships) and [Relationship API Recipes](#relationship-api-recipes). |
+| Record Ownership | [Ownership](#ownership). |
+| Record Investigation Ownership | [Ownership](#ownership) and [Query The Frontier](#query-the-frontier). |
+| Record Receipt | [Receipts And Implementation Artifacts](#receipts-and-implementation-artifacts). |
+| Record Lifecycle Outcome | [Representation](#representation) and [Finish Delivery](#finish-delivery). |
+| Reference Implementation Artifact | [Receipts And Implementation Artifacts](#receipts-and-implementation-artifacts). |
+| Finish Delivery | [Finish Delivery](#finish-delivery). |
+| Audit Invariants | [Sweep Checks](#sweep-checks). |
+
+## Raw Work Records
+
+Create a new top-level issue with the caller-provided title and body, open lifecycle, and `needs-triage`. To update an identified issue, merge the caller-provided evidence into its body or comments while preserving its current labels, lifecycle, relationships, assignees, and receipts.
 
 ## Stage State
 
-Use the small active queue label set:
+Represent public stage state with this complete active queue label set:
 
 - `needs-triage`;
 - `needs-info`;
 - `needs-pack`;
 - `ready-for-agent`.
 
-PRD child issues do not carry active queue labels. They inherit the parent PRD delivery unit's stage state.
-
-Wayfinding investigations do not carry active queue labels. An active map uses `needs-info`; a clear map awaiting package publication uses `needs-pack`. A map never carries `ready-for-agent`.
-
-`parent-prd` is structural, not stage state.
-
-Closed work uses GitHub closed state, not a `closed` label.
-
-No other label is an AND active stage label.
+Apply exactly one to an open top-level work issue. For a PRD package, apply it to the parent; child issues carry none. Investigations carry none. Maps represent the neutral map stages with `needs-info` or `needs-pack`. `parent-prd` remains structural, and closed work uses GitHub closed state.
 
 ## State Reason
 
-When an open top-level work issue is in `needs-info`, append a comment with:
-
-```markdown
-## State Reason
-
-State: needs-info
-Cause: <missing-facts, decision-needed, access-needed, external-state, or acceptance-needed>
-Owner: <reporter, maintainer, human, agent, or external-system>
-Question: <one specific question, decision, permission, external event, or acceptance gate>
-Resume with: <and-triage, and-clarify, and-wayfind, or and-pack>
-Exit criteria: <what must be true before this work issue can leave needs-info>
-```
-
-State Reason comments are append-only. The latest State Reason supersedes earlier State Reasons. When a record leaves `needs-info`, append this tombstone so earlier reasons are no longer current:
+Represent the neutral [State Reason Contract](../backend-contract.md#state-reason-contract) as an append-only issue comment headed `## State Reason`. The latest State Reason supersedes earlier comments. When a record leaves `needs-info`, append this tombstone so earlier reasons are no longer current:
 
 ```markdown
 ## State Reason
@@ -130,13 +120,13 @@ A latest `State: cleared` comment means the record has no current State Reason.
 
 ## Relationships
 
-Use native GitHub relationships when available:
+Represent the neutral [relationship vocabulary](../backend-contract.md#relationship-vocabulary) with native GitHub relationships:
 
 - parent/sub-issue for PRD containment;
 - parent/sub-issue for map/investigation membership when the parent carries `wayfinder:map`;
 - blocked-by/blocking for execution dependencies.
 
-Do not duplicate native sub-issues with markdown task lists. The parent kind determines whether the relationship is PRD containment or map membership; never reinterpret one as the other. Do not use blocked-by to express either parent/child structure. A parent is not a blocker for its children merely because it is the parent.
+The parent kind determines whether a parent/sub-issue edge is PRD containment or map membership. Native edges are authoritative and have no markdown task-list, label, or comment duplicate. Blocked-by represents only dependency.
 
 Cross-PRD dependencies use native blocked-by/blocking relationships between delivery units or child records, depending on the actual execution dependency. Do not create fake parent-child links to express cross-package dependency.
 
@@ -248,21 +238,20 @@ The parent PRD is the public delivery unit. Child issues are internal execution 
 
 Record ownership on the delivery unit:
 
-- assignee when appropriate;
-- claim comment;
+- a claim sets the sole current assignee when appropriate and appends the caller-owned Claim receipt;
+- an approved release removes that assignee and appends the caller-owned repair receipt;
+- an approved override replaces that assignee and appends the caller-owned repair receipt;
 - linked branch or draft PR as implementation artifact evidence only.
 
-For PRD packages, the claim covers the parent PRD and all child issues.
+For PRD packages, each ownership transition applies to the parent and covers all child issues. Release and override authority comes from the backend-neutral `Record Ownership` operation; this representation does not grant it.
+
+Where assignment is appropriate, the current owner is the sole delivery assignee and the latest valid ownership receipt must agree with it. Where assignment is not appropriate, the latest valid receipt determines current ownership. A mismatch, multiple delivery assignees, or conflicting latest receipts is ownership drift.
 
 Investigation ownership is separate: assign only the open frontier investigation immediately before work. Do not assign the map as a claim, write a delivery Claim receipt, or treat investigation assignment as package ownership. Closing the investigation ends its active ownership.
 
 ## Receipts And Implementation Artifacts
 
-Workflow receipts are comments on the record whose operation they evidence:
-
-- State Reason, intake, triage, Wayfinding-exit, pack, claim, implementation, review, verification, and completion receipts live on the original top-level work issue or delivery unit;
-- investigation-publication and map-handoff receipts live on the map;
-- investigation resolution receipts live on the investigation; current ownership uses the assignee rules above.
+Workflow receipts are comments on the record whose operation they evidence. Top-level workflow-stage receipts live on the original top-level work issue or delivery unit, investigation-publication and map-handoff receipts live on the map, and investigation resolution receipts live on the investigation. The calling skill owns receipt content.
 
 Branches, commits, PRs, CI, and review results linked from delivery receipts are implementation artifacts. Evidence linked from an investigation resolution is an investigation asset. Neither replaces workflow state, ownership, or lifecycle outcome.
 
@@ -282,7 +271,7 @@ The map also carries `needs-info` or `needs-pack`. Each investigation carries ex
 
 ### Chart A Map
 
-Apply the backend-neutral Chart Wayfinding Map operation with these representations:
+Apply the backend-neutral [Chart Wayfinding Map](../backend-contract.md#chart-wayfinding-map) operation with these representations:
 
 - investigation-publication evidence is an issue comment on the selected source issue, including when publication intent precedes map promotion;
 - map promotion updates that same issue body to the five map sections, preserves material source evidence in Notes, a receipt, or GitHub history, and applies `wayfinder:map`, `needs-info`, and the `and-wayfind` State Reason;
@@ -299,7 +288,7 @@ List the map's open native sub-issues, retain those with one method label, and d
 
 ### Resolve One Investigation
 
-Apply the backend-neutral Resolve Investigation operation and the `and-wayfind` receipt content with these representations:
+Apply the backend-neutral [Resolve Investigation](../backend-contract.md#resolve-investigation) operation and the `and-wayfind` receipt content with these representations:
 
 - current ownership is the sole investigation assignee, and release removes only that assignee;
 - blockers are native blocked-by relationships;
@@ -312,7 +301,7 @@ Apply the backend-neutral Resolve Investigation operation and the `and-wayfind` 
 
 When no open investigations or in-scope fog remain, replace `needs-info` with `needs-pack` and clear the current State Reason with the append-only tombstone above.
 
-Apply the backend-neutral Hand Off Wayfinding Map operation with pending and completed map-handoff receipts as map comments and exact-key lookup over the hidden `<!-- and-map-handoff:<key> -->` marker in replacement issue bodies. The replacement body also links the source map. A replacement begins as a top-level issue in `needs-pack`; successful Package publication moves it to `ready-for-agent`, then removes the map's active stage and closes the map.
+Apply the backend-neutral [Hand Off Wayfinding Map](../backend-contract.md#hand-off-wayfinding-map) operation with pending and completed map-handoff receipts as map comments and exact-key lookup over the hidden `<!-- and-map-handoff:<key> -->` marker in replacement issue bodies. The replacement body also links the source map. A replacement begins as a top-level issue in `needs-pack`; successful Package publication moves it to `ready-for-agent`, then removes the map's active stage and closes the map.
 
 Resolved investigation issues remain closed planning evidence. A failed handoff leaves the map open and resumable.
 
@@ -322,11 +311,12 @@ The delivery-unit issue remains open with its active stage until the reviewed pu
 
 After GitHub records the pull request as merged and the target contains the merge result:
 
-1. append the `and-finish` completion receipt;
-2. remove the active queue label; and
-3. close exactly the completed delivery-unit issue.
+1. for a PRD package, close every contained child issue after verifying it belongs to the claimed package;
+2. append the `and-finish` completion receipt;
+3. remove the active queue label; and
+4. close the single package or parent PRD issue.
 
-Complete a parent PRD only after every child requirement covered by its claim is integrated. Leave merely related work unchanged.
+Complete a parent PRD only after every child requirement covered by its claim is integrated and every contained child is closed. Leave merely related work unchanged.
 
 If merge succeeds but receipt or lifecycle mutation fails, resume from the missing backend operation without repeating merge. Source-branch and worktree cleanup begins only after the issue's completion evidence, label removal, and closed state are verified.
 
@@ -334,7 +324,7 @@ If merge succeeds but receipt or lifecycle mutation fails, resume from the missi
 
 This walkthrough validates the representation defined in this reference. It introduces no additional workflow or schema rules.
 
-1. `setup-and` selects the [configuration](#config) and verifies its [capability requirements](#capability-requirements).
+1. `setup-and` writes the selected [Config Contract](../backend-contract.md#config-contract) value and verifies [Setup Readiness](#setup-readiness).
 2. `and-intake` creates the issue and applies its initial [stage state](#stage-state).
 3. `and-triage` changes stage or records the current [State Reason](#state-reason), and may produce the terminal outcome defined by the [representation](#representation).
 4. `and-clarify` records confirmed decisions as [receipts](#receipts-and-implementation-artifacts) and advances resolved work.
@@ -359,10 +349,11 @@ Check for:
 - parent PRD used as a blocker for children;
 - relationship emulation through markdown task lists, labels, or comments;
 - open external blockers on ready work;
-- stale or partial claims;
-- implementation artifacts used as ownership without assignee or claim comment;
+- stale, partial, or conflicting delivery ownership, including assignee/receipt mismatch or multiple delivery assignees;
+- implementation artifacts used as ownership without a valid ownership record;
 - merged delivery with missing completion evidence, an active stage label, or an open delivery-unit issue;
-- completed children with an open parent PRD;
+- completed children with an open parent PRD after Finish has ended;
+- completed parent PRD with an open child;
 - map missing `wayfinder:map`, carrying `ready-for-agent`, carrying delivery ownership evidence, or carrying neither `needs-info` nor `needs-pack` while open;
 - investigation with an active stage, missing or multiple method labels, missing map parent, or a parent that is not a map;
 - map sub-issue used as a PRD child or investigation reused as an implementation slice;

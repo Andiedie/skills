@@ -6,18 +6,22 @@ Use this backend when markdown files under `.and/work` are the authoritative wor
 
 ## Source Of Truth
 
-`.and/work` is the only workflow state source for this backend. GitHub issues are not request surfaces, mirrors, notification threads, or synchronization targets. Linked branches, commits, pull requests, CI, reviews, and investigation assets do not carry workflow state.
+Files under `.and/work` carry workflow state. Receipts link branches, commits, pull requests, CI, reviews, and investigation assets as evidence.
 
 During finish, terminal state prepared on a source branch is a proposal. It becomes authoritative only when the authorized target branch receives that proposal through the reviewed implementation pull request.
 
-## Config
+## Setup Readiness
 
-```yaml
-version: 1
-workflow_state_backend: markdown-file-based
-```
+Markdown-file-based is ready when:
 
-Version 1 config has exactly `version` and `workflow_state_backend`. Any additional workflow backend fields are invalid for v1.
+- `.and/config.yml` selects `markdown-file-based` under the [Config Contract](../backend-contract.md#config-contract);
+- `.and/work` exists as the only workflow-state store and can hold tracked repository writes;
+- the repository's Git common directory resolves for durable identity;
+- the effective repository `git config user.email` resolves the [canonical actor identity](#canonical-identities).
+
+During setup audit, inspect the config, Git common directory, effective Git email, `.and/work` path and permissions, and effective instructions for a competing workflow-state store. Existing GitHub issues are not competing state unless repository evidence designates them as a mirror or workflow source.
+
+A missing `.and/work` directory is a minimum-state gap that `setup-and` may include in its write envelope. Unresolvable Git identity, unavailable tracked writes, or an unverified required capability keeps this backend unready until `setup-and` reports and resolves the evidence. Setup creates the directory only, never sample work records; record-level drift belongs to `and-sweep`.
 
 ## Canonical Identities
 
@@ -35,6 +39,37 @@ Once a durable key appears in a receipt, retry reuses it instead of deriving ano
 
 Canonical actor identity is `git-email:<email>`, where `<email>` is the trimmed, lowercased effective `git config user.email` for the repository. Resolve it before reading or writing investigation ownership. Changing that value selects a different workflow actor; it does not transfer an existing claim. If it is unavailable, stop before ownership mutation and report the missing Git identity.
 
+## Operation Index
+
+Use the [backend-neutral operation](../backend-contract.md#backend-neutral-operations) for semantics and the linked section here for markdown representation.
+
+| Backend-neutral operation | Markdown representation |
+| --- | --- |
+| Locate Work | Scan [Storage](#storage), [Package Frontmatter](#package-frontmatter), [Wayfinding Frontmatter](#wayfinding-frontmatter), [Ownership](#ownership), and [Sweep Checks](#sweep-checks). |
+| Read Work Record | Read the record's frontmatter, [Body Sections](#body-sections), [State Reason](#state-reason), [Relationship Representation](#relationship-representation), and [Receipts](#receipts). |
+| Write Work Record | [Raw Work Records](#raw-work-records). |
+| Resolve Canonical Identity | [Canonical Identities](#canonical-identities) and [ID Rules](#id-rules). |
+| Read Delivery Unit | [Storage](#storage), [Package Frontmatter](#package-frontmatter), [Child Slice Frontmatter](#child-slice-frontmatter), [Relationship Representation](#relationship-representation), [Ownership](#ownership), and [Receipts](#receipts). |
+| Read Wayfinding Map | [Wayfinding Frontmatter](#wayfinding-frontmatter), [Body Sections](#body-sections), and [Wayfinding Operations](#wayfinding-operations). |
+| Chart Wayfinding Map | [Chart A Map](#chart-a-map). |
+| Resolve Investigation | [Resolve One Investigation](#resolve-one-investigation). |
+| Hand Off Wayfinding Map | [Complete And Hand Off A Map](#complete-and-hand-off-a-map). |
+| Write Stage State | [Package Frontmatter](#package-frontmatter) and [Wayfinding Frontmatter](#wayfinding-frontmatter). |
+| Write State Reason | [State Reason](#state-reason). |
+| Publish Package | [Package Frontmatter](#package-frontmatter), [Child Slice Frontmatter](#child-slice-frontmatter), [Body Sections](#body-sections), and [Relationship Representation](#relationship-representation). |
+| Write Relationships | [Relationship Representation](#relationship-representation). |
+| Record Ownership | [Ownership](#ownership). |
+| Record Investigation Ownership | [Ownership](#ownership) and [Query The Frontier](#query-the-frontier). |
+| Record Receipt | [Receipts](#receipts). |
+| Record Lifecycle Outcome | [Lifecycle Outcome](#lifecycle-outcome). |
+| Reference Implementation Artifact | [Implementation Artifacts](#implementation-artifacts). |
+| Finish Delivery | [Finish Delivery](#finish-delivery). |
+| Audit Invariants | [Sweep Checks](#sweep-checks). |
+
+## Raw Work Records
+
+Allocate the next stable top-level ID and create its `package.md` with `kind: delivery-unit`, `shape: raw`, `stage: needs-triage`, `lifecycle: open`, and the caller-provided body. To update an identified record, merge the caller-provided evidence into its body or receipts while preserving current frontmatter and prior receipts.
+
 ## Storage
 
 ```text
@@ -47,7 +82,7 @@ Canonical actor identity is `git-email:<email>`, where `<email>` is the trimmed,
         AND-0006-01.md
         AND-0006-02.md
       receipts/
-        grill-2026-07-07.md
+        clarification-2026-07-07.md
         claim-2026-07-07.md
         implementation-2026-07-07.md
     AND-0007/
@@ -234,9 +269,10 @@ Optional package frontmatter fields:
 
 - `state_reason`;
 - `external_blockers`;
+- `blocked_by`;
 - `children`.
 
-Do not add ownership fields, implementation artifact fields, GitHub issue mirror fields, branch fields, or PR fields to package frontmatter.
+Package frontmatter contains routing, lifecycle, containment, dependency, and current-blocker query state only. Ownership and implementation artifacts are represented in receipts; GitHub mirror identifiers have no representation in this backend.
 
 ## Child Slice Frontmatter
 
@@ -256,11 +292,11 @@ Child slices do not carry public queue stage state. They can carry lifecycle and
 
 ### Containment
 
-Parent package frontmatter lists `children`. Child slice frontmatter names `parent`. These are redundant indexes and must agree.
+Parent package frontmatter lists `children`; each child names `parent`. Both indexes must agree.
 
 ### Map Membership
 
-Map frontmatter lists `investigations`. Each investigation names `parent_map`. These redundant indexes must agree and are never represented through package `children` or child-slice `parent`.
+Map frontmatter lists `investigations`; each investigation names `parent_map`. Both indexes must agree. Package `children` and child-slice `parent` represent only PRD containment.
 
 ### Dependencies
 
@@ -271,7 +307,9 @@ blocked_by:
   - AND-0006-01
 ```
 
-Do not maintain a hand-written reverse `blocks` list.
+`blocked_by` is the only stored direction; `blocks` is derived.
+
+The field is valid on top-level delivery units, child slices, and investigations. Top-level and child dependencies may reference delivery work; investigation dependencies remain limited to their own map.
 
 Investigation `blocked_by` may reference only another investigation on the same map. A map is never a blocker merely because it is the parent.
 
@@ -285,23 +323,13 @@ Use `external_blockers` for missing access, third-party state, manual acceptance
 
 External blockers are not dependency relationships.
 
+Resolved external blockers leave current frontmatter and remain in receipts when materially relevant. Frontmatter represents current query state; receipts preserve history.
+
 ## State Reason
 
-`state_reason` stores the latest queryable State Reason only. Each material State Reason change must also be recorded as an append-only receipt so the history is not overwritten.
+Represent the neutral [State Reason Contract](../backend-contract.md#state-reason-contract) as `state_reason` frontmatter. It stores the latest queryable reason; each material change also appends a receipt.
 
 If `stage` is no longer `needs-info`, remove `state_reason` from frontmatter. The history remains in receipts.
-
-Ordinary work records use one specific missing input. A map uses one destination-level uncertainty with `resume_with: and-wayfind`; its changing sharp questions live in investigation records rather than `state_reason`.
-
-## External Blockers
-
-External blockers apply to a delivery unit. Each current blocker requires:
-
-- `owner`;
-- `description`;
-- `exit_criteria`.
-
-Resolved external blockers should be removed from current frontmatter and preserved in receipts when materially relevant. Current frontmatter is query state, not append-only history.
 
 ## Body Sections
 
@@ -325,7 +353,7 @@ Raw request records should use concise source sections:
 
 Packed delivery units should use the Package Contract body from `and-pack`.
 
-Store the map and investigation body schemas defined by [`and-wayfind`](../../and-wayfind/SKILL.md#map-and-investigation) in `map.md` and each investigation record. The detailed answer lives in one investigation resolution receipt. `Decisions so far` contains only a named relative link and one-line gist.
+Store the map and investigation body schemas defined by [`and-wayfind`](../../and-wayfind/SKILL.md#map-and-investigation) in `map.md` and each investigation record. The detailed answer lives in one investigation resolution receipt. `Decisions so far` contains one named relative link and one-line gist.
 
 Do not keep long raw request history in the main Package Contract after pack. Preserve source evidence in receipts or a short source section.
 
@@ -340,21 +368,9 @@ receipts/<operation>-YYYY-MM-DD.md
 receipts/<operation>-YYYY-MM-DD-2.md
 ```
 
-Use the stage or operation name, such as `triage`, `grill`, `pack`, `claim`, `implementation`, `review`, `verification`, `completion`, `rejection`, or `state-reason`. If the target filename exists, append `-2`, then `-3`, and so on. Do not overwrite existing receipts.
+Use the stage or operation name, such as `triage`, `clarification`, `pack`, `claim`, `implementation`, `review`, `verification`, `completion`, `rejection`, or `state-reason`. If the target filename exists, append `-2`, then `-3`, and so on. Do not overwrite existing receipts.
 
 Top-level Wayfinding receipts use operations such as `wayfinding-exit`, `investigation-publication`, and `map-handoff`. Investigation receipts live under that investigation's `receipts/` and use `claim`, `release`, or `resolution`.
-
-Use receipts for:
-
-- State Reason changes;
-- and-clarify decisions;
-- Wayfinding map chart, investigation claim and resolution, and map handoff;
-- pack publication;
-- claim;
-- implementation;
-- review;
-- verification;
-- completion or rejection.
 
 Implementation receipts may reference branches, commits, PRs, CI, and review results as implementation artifacts.
 
@@ -362,15 +378,15 @@ Receipt body shape is owned by the calling workflow skill.
 
 ## Ownership
 
-Ownership is receipt-only in this backend. Record claims as append-only receipts under `receipts/`.
+Ownership is receipt-only in this backend. Record claims and approved ownership repairs as append-only receipts under `receipts/`.
 
-The current owner is derived from ownership receipts. The latest valid ownership receipt determines ownership: claim sets the owner, release clears the owner, and override replaces the owner. Do not add ownership frontmatter fields to `package.md` or child slice files.
+The current owner is derived from ownership receipts. The latest valid ownership receipt determines ownership: claim sets the owner, an approved release clears the owner, and an approved override replaces the owner. Package and child frontmatter remain ownership-free.
 
 Investigation ownership is derived independently from the sequenced claim and release receipts defined by `and-wayfind`. The highest valid sequence determines current ownership. A claim applies only while the investigation is open, grants no delivery ownership, and does not assign the map. The same owner may resume across invocations; an explicit release receipt clears unfinished ownership after recovery or blocker evidence is preserved. Closing a resolved investigation ends active investigation ownership without a separate release.
 
 ## Implementation Artifacts
 
-Implementation artifacts are referenced in receipts. Do not add branch, commit, PR, CI, or review fields to package or child frontmatter.
+Implementation artifacts are referenced in receipts; package and child frontmatter contain workflow query state only.
 
 Investigation assets are referenced only from the resolution receipt with a link and `cleanup` or `promote-to-package` disposition. They are planning evidence, not implementation artifacts or workflow state.
 
@@ -395,7 +411,7 @@ A resolved investigation uses `lifecycle: completed` and requires one resolution
 
 After the opening grill proves that fog exists:
 
-Apply the backend-neutral Chart Wayfinding Map operation with these representations:
+Apply the backend-neutral [Chart Wayfinding Map](../backend-contract.md#chart-wayfinding-map) operation with these representations:
 
 - investigation-publication evidence is an append-only receipt under the selected top-level record, including when publication intent precedes renaming `package.md` to `map.md`;
 - map promotion renames that file, replaces delivery-unit frontmatter with map frontmatter, writes the five map sections, and preserves material source evidence in Notes and the interview checkpoint in the investigation-publication receipt;
@@ -409,7 +425,7 @@ Read the map's investigation list. Retain investigations whose lifecycle is open
 
 ### Resolve One Investigation
 
-Apply the backend-neutral Resolve Investigation operation and the `and-wayfind` receipt content with these representations:
+Apply the backend-neutral [Resolve Investigation](../backend-contract.md#resolve-investigation) operation and the `and-wayfind` receipt content with these representations:
 
 - investigation ownership is derived from append-only claim and release receipts under that investigation;
 - blockers are IDs in `blocked_by`;
@@ -422,13 +438,13 @@ Apply the backend-neutral Resolve Investigation operation and the `and-wayfind` 
 
 When no open investigation or in-scope fog remains, set the map stage to `needs-pack` and remove `state_reason`.
 
-Apply the backend-neutral Hand Off Wayfinding Map operation with append-only pending and completed map-handoff receipts and exact-key lookup over the hidden `<!-- and-map-handoff:<key> -->` marker in top-level package records. A replacement `package.md` begins in `needs-pack` with the source-map link; successful Package publication moves it to `ready-for-agent`, then removes the map stage and sets map lifecycle to `completed`.
+Apply the backend-neutral [Hand Off Wayfinding Map](../backend-contract.md#hand-off-wayfinding-map) operation with append-only pending and completed map-handoff receipts and exact-key lookup over the hidden `<!-- and-map-handoff:<key> -->` marker in top-level package records. A replacement `package.md` begins in `needs-pack` with the source-map link; successful Package publication moves it to `ready-for-agent`, then removes the map stage and sets map lifecycle to `completed`.
 
 ## Finish Delivery
 
 `and-finish` first creates or resolves the GitHub pull request for the reviewed source branch and authorized target. It then prepares the terminal state on that source branch:
 
-1. set the delivery unit's `lifecycle` to `completed` and remove its active `stage`;
+1. for a PRD package, set every contained child's `lifecycle` to `completed`, then set the parent's `lifecycle` to `completed` and remove its active `stage`; for a single package, complete that record and remove its active `stage`;
 2. append the `and-finish` completion receipt; and
 3. commit and push only that deterministic workflow-state proposal.
 
@@ -444,7 +460,7 @@ Source-branch and worktree cleanup begins only after target-branch completion is
 
 This walkthrough validates the representation defined in this reference. It introduces no additional workflow or schema rules.
 
-1. `setup-and` selects the [configuration](#config) and prepares the required [storage](#storage).
+1. `setup-and` writes the selected [Config Contract](../backend-contract.md#config-contract) value and verifies [Setup Readiness](#setup-readiness).
 2. `and-intake` follows the [ID rules](#id-rules) and creates a raw delivery-unit record with valid [package frontmatter](#package-frontmatter).
 3. `and-triage` records its result in frontmatter and [receipts](#receipts), including a [State Reason](#state-reason) or [lifecycle outcome](#lifecycle-outcome) when applicable.
 4. `and-clarify` preserves confirmed decisions in receipts and updates the current State Reason until work can advance.
@@ -477,9 +493,11 @@ Check for:
 - malformed external blockers;
 - stale external blockers whose exit criteria appears satisfied;
 - claimed delivery units with no claim receipt;
+- malformed, conflicting, or unauthorized delivery ownership receipts;
 - ownership frontmatter fields on package or child slice files;
 - implementation artifacts recorded in frontmatter instead of receipts;
 - terminal lifecycle on the authoritative target without matching completion evidence;
+- completed parent PRD with an open child, or completed child with an open parent after Finish has ended;
 - markdown-file-based work with GitHub issue mirror references;
 - work-record directory containing both `package.md` and `map.md`;
 - map with missing sections, invalid stage, `ready-for-agent`, stale `state_reason`, delivery ownership evidence, or inconsistent investigation index;

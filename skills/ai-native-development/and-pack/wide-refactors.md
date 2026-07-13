@@ -1,36 +1,32 @@
 # Wide Refactors
 
-Read this reference only when one mechanical change has a blast radius that prevents ordinary tracer-bullet vertical slices from landing green.
+Read this reference only when one mechanical change has a blast radius that prevents ordinary tracer-bullet slices from landing green.
 
-## Trigger
+## Gate
 
-All of these must be true:
+All three conditions must hold:
 
-- the work changes one shared representation, symbol, schema element, protocol, or other mechanical form;
-- the change fans across enough call sites or build units that changing the form breaks them together;
-- no ordinary end-to-end slice can isolate part of the change and remain green.
+- one shared representation, symbol, schema element, protocol, or other mechanical form changes;
+- its call sites or build units break together when that form changes; and
+- no narrow end-to-end slice can isolate part of the change and remain green.
 
-Large scope, cross-cutting product behavior, many touched files, or a desire for parallel work do not make a wide refactor. Use ordinary vertical slices whenever they can land green.
+Large or cross-cutting product work still uses ordinary vertical slices whenever they can land green.
 
-## Package Shape
+## Expand, Migrate, Contract
 
-1. **Expand**: add the new form beside the old one without breaking current behavior. Make the migration path explicit and verify both forms can coexist temporarily.
-2. **Migrate**: move callers in batches sized by the actual blast radius, such as a package, directory, subsystem, or build unit. Each batch is blocked by Expand. Prefer batches that remain green and can be verified independently.
-3. **Contract**: remove the old form after every migration batch is complete. Make this slice depend on all migration batches and verify that no old caller remains.
+1. **Expand**: add the new form beside the old without changing current behavior. Verify that both forms can coexist during migration.
+2. **Migrate**: move callers in batches sized by the real blast radius, such as a package, directory, subsystem, or build unit. Every batch depends on Expand and should remain green and independently verifiable.
+3. **Contract**: after every migration batch, remove the old form and verify that no old caller remains. Contract depends on all migration batches.
 
-The temporary coexistence introduced by Expand must be removed by Contract inside the same package.
+Publish containment and dependency through the configured backend. The package is complete only when temporary coexistence is gone and the affected system is green.
 
 ## Integration Exception
 
 When migration batches cannot remain green independently:
 
-- explain in the Package Contract why the blast radius makes independent green batches impossible;
+- explain the inseparable blast radius in the Package Contract;
 - run the affected slices on one integration branch under the parent package claim;
-- preserve the Expand, Migrate, and Contract dependency order;
-- add a final integrate-and-verify slice blocked by Contract, and promise a green result only at that slice.
+- preserve Expand, Migrate, and Contract order; and
+- add a final integrate-and-verify slice after Contract. This final slice is the promised green boundary.
 
-This exception changes the internal verification boundary, not the public claim unit. The parent package owner remains responsible for integration and final verification.
-
-## Relationships
-
-Publish containment and dependency edges through the configured backend. Do not repeat parent or blocked-by fields in child bodies.
+The exception changes internal verification, not the public claim unit. The parent package owner remains responsible for integration and final verification.

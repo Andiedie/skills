@@ -6,104 +6,70 @@ disable-model-invocation: true
 
 # AND Pack
 
-Pack turns `needs-pack` work into one executable delivery unit: either a single issue package or a PRD package. It publishes the Package Contract and is the only AND workflow skill that creates `ready-for-agent` work.
+Pack synthesizes confirmed work into one executable delivery unit and publishes its Package Contract. It is the only AND workflow skill that creates `ready-for-agent` work.
 
-For ordinary work, the source record becomes the package. For a clear Wayfinding map, Pack creates a separate delivery unit and completes the map only after that new Package Contract is authoritative.
+Ordinary source work becomes its package. A clear Wayfinding map hands off to one separate package; the map and its investigations remain planning evidence.
 
-## Backend Contract
+## Backend Authority
 
-Before packaging, read `.and/config.yml`, then use `and-backend-contract`.
+Before reading or writing workflow state, read `.and/config.yml` and use `and-backend-contract`. Follow the configured backend for the `Publish Package`, `Write Relationships`, `Write Stage State`, `Write State Reason`, and `Hand Off Wayfinding Map` operations. Pack owns Package Contract and Map Handoff receipt content; the backend authorities own representation, identity, relationships, lifecycle mechanics, and any operation-specific recovery they define.
 
-Use the configured backend reference for all reads and writes. If setup is missing, unsupported, or the backend contract is unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
+If the configured authority is missing, unsupported, or inaccessible, stop and route to `setup-and` or ask the user to install the missing skill.
 
-Do not infer backend labels, frontmatter, child identifiers, containment, dependency, receipt, lifecycle, or stage-state mechanics inside this skill.
+## Contract Standard
 
-## Package Shapes
+A package is either:
 
-- **Single issue package**: one delivery-unit record carries the complete Package Contract and `ready-for-agent`; no child records are created.
-- **PRD package**: the parent PRD carries the complete Package Contract and `ready-for-agent`; child records are internal execution slices for progress, ordering, delegation, and acceptance tracking.
+- a **single issue package**, where one work record carries the complete Package Contract; or
+- a **PRD package**, where the parent carries the same complete Package Contract and child slices provide internal progress, ordering, delegation, and acceptance boundaries.
 
-Both shapes require the same contract strength. A single issue package is not a lighter specification; it simply does not need child slices.
+Both shapes have equal contract strength. For either shape:
 
-## Package Contract Quality Bar
+- Treat the published Package Contract as the implementation source of truth; source text and discussion remain context.
+- Synthesize confirmed facts and decisions. Pack does not run a product interview.
+- Describe current and desired behavior, not an implementation procedure.
+   - Write a comprehensive, numbered user-story list whose coverage determines its length: include every distinct actor, mode, edge case, failure, and acceptance path. Use `As an <actor>, I want <feature>, so that <benefit>.`
+- Name key interfaces, types, commands, config shapes, API payloads, domain terms, and architectural decisions when they constrain delivery.
+- Record confirmed implementation, documentation, and testing decisions, including the highest practical verification seam and relevant prior art.
+- Make acceptance criteria behavioral, concrete, and independently verifiable. Include out of scope.
+- Use file paths only as evidence or location hints. Include a decision-rich snippet only when it expresses a confirmed state machine, reducer, schema, type, or payload decision more precisely than prose.
 
-- The published package is the implementation contract; original issue text and chat are context.
-- Synthesize confirmed facts and decisions. Do not run a product interview inside `and-pack`.
-- Write behavioral contracts, not implementation procedures.
-- Name key interfaces, types, commands, config shapes, API payloads, domain terms, and architectural decisions when they define the contract.
-- Avoid file paths and line numbers unless they are evidence or location hints.
-- Acceptance criteria, verification strategy, and out of scope are required.
-- User stories must be numbered and use `As an <actor>, I want <feature>, so that <benefit>.`
-- Use story counts as coverage guidance, not a word-count target: simple single issue package 1-3, normal single issue package 3-6, PRD package 6-12, larger PRD package more than 12 only when distinct actors, modes, edge cases, or acceptance paths require it.
-- Documentation proposals from clarification or Wayfinding must become package requirements, acceptance criteria, or child slices. Do not apply them locally during pack.
-- Decision-rich snippets may be included only when they express a confirmed decision more precisely than prose, such as a state machine, reducer shape, schema, type shape, or API payload shape. Keep only the contract-bearing excerpt.
-
-## Stop Routes
-
-Stop when a correct package needs missing human judgment, reporter facts, permission, external access, acceptance input, or a structured decision interview.
-
-When backend edits are safe, route the work to `needs-info` through the configured backend and record a State Reason with `Cause`, `Owner`, `Question`, `Resume with`, and `Exit criteria`.
-
-Route unresolved product, domain, architecture, naming, or testing decisions through `and-triage` so the authoritative route can be selected. Use the accountable owner for reporter facts, access, external state, or acceptance input.
-
-Use `and-wayfind` when the source map still has an open investigation or in-scope fog. Do not resolve or reinterpret map uncertainty while packaging.
-
-Do not ask the blocker in chat from inside `and-pack`; record the blocker and stop.
+The contract is complete only when an implementation agent can begin without replaying the discussion and every story is covered by behavioral acceptance and a verification path.
 
 ## Process
 
-1. Load source of truth.
-   - Read the work body, comments or receipts, latest State Reason, triage notes, `and-clarify` notes, existing PRD or package, containment and dependency relationships, blockers, linked implementation artifacts, and attachments.
-   - Read relevant code, tests, docs, domain glossary, architectural decision records, and backend conventions only when they materially affect the package.
-   - When the source is a Wayfinding map, read its destination, decision pointers, every investigation resolution relevant to delivery, fog, out-of-scope boundary, asset dispositions, and existing handoff evidence.
-   - When the selected record carries a map-handoff key or source-map link, resolve that map and resume its handoff instead of treating the replacement as ordinary work.
-   - Completion criterion: the pack notes can name current behavior, desired behavior, constraints, confirmed decisions, unknowns, blockers, verification path, and source map when any.
+1. **Gather the complete source.**
+   - Read the work body, comments and receipts, latest State Reason, triage and clarification decisions, existing package text, relationships, blockers, implementation artifacts, and attachments.
+   - Inspect code, tests, docs, the domain glossary, ADRs, and backend conventions only where they change the contract.
+   - For a Wayfinding source, use `Read Wayfinding Map` and `Hand Off Wayfinding Map` to recover its destination, decisions, resolved investigations, fog, scope boundary, linked assets, and any interrupted handoff. A replacement carrying a handoff key resumes that source map.
+   - Completion criterion: every desired behavior is grounded in a source fact or confirmed decision, every remaining unknown is explicit, and current behavior, constraints, verification clues, blockers, and handoff state are known.
 
-2. Check package blockers.
-   - Verify facts locally before asking.
-   - Distinguish unknown facts from human judgment.
-   - Route unresolved decision work to `and-triage`; do not choose its clarification method inside Pack.
-   - Route missing facts, access, external state, or acceptance input to the accountable owner.
-   - Do not continue with guessed decisions.
-   - For a Wayfinding source, require `needs-pack`, no open investigation, no in-scope fog, one durable resolution per completed investigation, and a cleanup or promotion disposition for each linked temporary asset.
-   - For a Wayfinding source, use the backend contract's Hand Off Wayfinding Map operation to recover any partial or competing handoff before package allocation.
-   - Completion criterion: either no blocker remains, or the backend/report names the blocker, owner, resume skill, exit criteria, and where `and-pack` should resume.
+2. **Resolve blockers, verification, and shape.**
+   - Verify discoverable facts locally. Missing human judgment, reporter facts, permission, access, external state, acceptance input, or a required testing decision blocks packaging.
+   - Route product, domain, architecture, naming, or testing judgment through `and-triage`. Route other missing input to its accountable owner. Use `Write Stage State` to route the work to `needs-info`, record the wait with `Write State Reason`, then stop.
+   - A Wayfinding source returns to `and-wayfind` while any investigation or in-scope fog remains. Proceed only when it carries `needs-pack`, every completed investigation has a durable resolution, and every linked asset has a cleanup or Package-promotion disposition. Use the handoff operation to detect an incomplete or competing replacement before allocating work.
+   - Choose the highest practical verification seam. Use a single issue when one record is a sufficient delivery and verification boundary; use a PRD when internal slices are needed for progress, ordering, delegation, or acceptance.
+   - Completion criterion: either one durable blocker names its owner, resume authority, and exit criteria with no ready publication, or no unresolved input remains and exactly one verification seam and package shape are justified. A map also meets every eligibility condition above and is free of competing handoffs.
 
-3. Choose package shape.
-   - Use a single issue package when one work record can carry the complete Package Contract.
-   - Use a PRD package when child slices are needed for progress, ordering, delegation, or acceptance tracking.
-   - Choose by delivery boundary and verification needs, not by rough size alone.
-   - Completion criterion: exactly one package shape is chosen for a reason tied to delivery boundary and verification, or the work is routed back with the missing decision.
+3. **Write the contract and slices.**
+   - Use the Package Contract template for both shapes. For a PRD, write child slices with the PRD Child Slice template and a separate dependency graph.
+   - Default to tracer-bullet children: each is a narrow, complete path through the affected system that is demoable or verifiable on its own. Containment expresses package structure; dependency expresses actual execution order.
+   - If prefactoring is needed, make it an explicit implementation decision or the first child.
+   - A wide refactor is available only when one mechanical form fans out so broadly that no ordinary vertical slice can land green. When all parts of that trigger hold, read [wide-refactors.md](wide-refactors.md).
+   - Child slices may be delegated under the parent claim, while the parent remains the public pick and claim target.
+   - For a Wayfinding source, link the source map in `Further Notes` and translate every promoted investigation asset into a requirement, decision, acceptance criterion, documentation update, or child slice.
+   - Completion criterion: the Package Contract meets the Contract Standard, and every child maps to parent stories, key interfaces, behavioral acceptance, dependency intent, and a declared verification path.
 
-4. Draft the Package Contract.
-   - Use the Package Contract template for both single issue packages and PRD parents.
-   - For PRD packages, create child slices with the PRD Child Slice template.
-   - By default, child slices must be tracer-bullet vertical slices: narrow, complete paths through the system that are demoable or verifiable on their own.
-   - A wide refactor is possible only when one mechanical change has a blast radius that prevents ordinary vertical slices from landing green. When and only when that trigger is present, read [wide-refactors.md](wide-refactors.md) and use its package shape.
-   - Do not use wide-refactor guidance merely because work is large, cross-cutting, or touches many files.
-   - If prefactoring is needed, make it an explicit implementation decision or the first child slice.
-   - Child slices may be independently grabbable by subagents working under the parent PRD claim, but the parent PRD remains the public pick and claim target.
-   - For a Wayfinding source, include a named source-map link in `Further Notes` and translate every promoted investigation asset into an explicit requirement, acceptance criterion, documentation update, or child slice.
-   - Completion criterion: an implementation agent can start from the package without replaying the discussion, and every child slice maps to parent stories, acceptance, and verification.
+4. **Publish safely.**
+   - Invocation authorizes publication from confirmed workflow state. Confirm only an ambiguous mutation target, overwrite of unrelated maintainer text, unclear backend authority or access, or unconfirmed human judgment.
+   - Publish ordinary work in its existing record with `Publish Package`. Supply the full contract, ordered child bodies, semantic containment and dependency graph, and verification expectations; let the configured backend represent the operation. If publication is partial or ambiguous, stop with the exact observed state and route it to `and-sweep` before retrying Pack.
+   - For a clear map, run `Hand Off Wayfinding Map` with the Map Handoff receipt. Publish one separate replacement package and keep investigations as planning evidence.
+   - Completion criterion: the backend expresses exactly one executable delivery unit with the correct ready state, containment, dependencies, and no unresolved blocker or contradictory workflow state. A map handoff also has one verified replacement, complete Package promotion and asset disposition, and a completed source map; an interrupted map handoff remains recoverable and a competing handoff remains non-executable.
 
-5. Publish through the configured backend.
-   - Treat invocation as authorization to publish a package from confirmed workflow state.
-   - Ask before publishing only when the target work is ambiguous, publishing would overwrite unrelated maintainer text, backend permissions or access are unclear, or the package requires an unconfirmed human judgment.
-   - Publish ordinary work in its existing record. For a Wayfinding source, use the backend contract's Hand Off Wayfinding Map operation with the Map Handoff receipt below and the configured backend representation. Append a pending receipt before allocating the sole replacement, then append a completed receipt with its identity after handoff verification. Never reuse investigations as PRD children.
-   - Complete every Package promotion and authorized throwaway-asset cleanup required by the handoff operation before making the replacement ready and completing the map.
-   - Set public ready state only on the delivery unit.
-   - Write containment and dependency relationships through the backend reference.
-   - Publish child work in dependency order when backend identifiers are needed.
-   - Do not duplicate backend containment relationships in package body text.
-   - Resume an incomplete Wayfinding publication through the same handoff operation.
-   - Completion criterion: the configured backend expresses one executable delivery unit with no contradictory stage, containment, dependency, blocker, ownership-neutral metadata, competing map handoff, or unpromoted temporary investigation asset.
-
-6. Report a receipt.
-   - Include package link or work ID, package shape, state change, source map and handoff result when present, PRD child count and order summary when present, blocker when blocked, verification path, and next skill.
-   - Name `and-pick` when the package is ready.
-   - For a blocked route, name the unresolved input and stop without naming `and-pick`.
-   - Do not copy the full Package Contract, full child bodies, full acceptance checklist, pack working notes, or tracker body back into chat.
-   - Completion criterion: the user knows what was published, where it lives, and whether the next step is `and-pick` or a blocker route.
+5. **Return a short receipt.**
+   - Report the package link or ID, shape, state change, verification path, and next skill. For a PRD, include child count and dependency-order summary. For a map, include the source and handoff result.
+   - Name `and-pick` only for ready work. For a blocked route, name the missing input and its resume authority.
+   - Completion criterion: the user knows what changed, where the authoritative package lives, and the exact next route without receiving a duplicate Package Contract or child bodies in chat.
 
 ## Templates
 
@@ -143,7 +109,7 @@ Summary: <one-line behavior change>
 
 ## Acceptance Criteria
 
-- [ ] <criterion>
+- [ ] <behavioral, independently verifiable criterion>
 
 ## Out of Scope
 
@@ -165,13 +131,17 @@ Summary: <one-line behavior change>
 
 - <interfaces, types, commands, config shapes, or domain terms>
 
+## Dependency intent
+
+<why execution must wait, or none; publish relationship edges through the configured backend>
+
 ## Acceptance criteria
 
-- [ ] <criterion>
+- [ ] <behavioral, independently verifiable criterion>
 
 ## Verification
 
-<test seam or verification strategy>
+<highest practical test seam or verification strategy>
 
 ## Documentation / domain updates
 
@@ -182,29 +152,23 @@ Summary: <one-line behavior change>
 
 ### Map Handoff Receipt
 
-Use only when packaging a clear Wayfinding map:
+Use only with `Hand Off Wayfinding Map` for a clear map:
+
+Use operation namespace `and-pack-map-handoff:v1` with the backend contract's durable-workflow identity algorithm. The handoff operation owns pending/completed evidence, exact-key recovery, and retry behavior.
 
 ```markdown
 ## Map Handoff
 
 Source map: <link or work ID>
-Handoff key: <deterministic SHA-256 key>
+Handoff key: <backend-contract key>
 Handoff: <pending or completed>
 Replacement package: <pending or link/work ID>
 Package shape: <single issue or PRD package>
 Ready state verified: <yes or pending reason>
-Assets promoted: <none or list>
-Assets cleaned: <none, list, or pending reason>
-Map completion: <completed or exact remaining operation>
+Asset disposition: <none, promoted/cleaned list, or pending reason>
+Map result: <completed or exact remaining operation>
 ```
 
-Derive the handoff key from the source map's durable-workflow identity with namespace `and-pack-map-handoff:v1`, then use this receipt with the backend contract's Hand Off Wayfinding Map operation. The pending and completed receipts for one handoff reuse the same key; they are one operation, not competing handoffs.
+## Boundary
 
-## Boundaries
-
-- Do not claim or implement work.
-- Do not publish ready work while required decisions, acceptance criteria, verification strategy, or delivery boundary are missing.
-- Do not silently change confirmed scope.
-- Do not make PRD children public pick or claim targets.
-- Do not duplicate backend relationship representation in package bodies.
-- Do not convert a map in place, reuse investigations as implementation slices, close a map before replacement package authority, or create a second package when handoff evidence already identifies one.
+Pack ends at one published or durably blocked delivery unit. Scope comes from confirmed inputs; `and-pick` and downstream skills own claim and implementation. Public readiness and ownership stay on the single package or PRD parent, while child slices remain internal. The configured backend is the sole relationship representation. A Wayfinding map stays a planning record and hands off to a separate package; its investigations never become delivery slices.
