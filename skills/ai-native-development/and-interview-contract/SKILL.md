@@ -7,7 +7,11 @@ description: Apply AND interview evidence, recovery, domain-modeling, and artifa
 
 Shared reference for AND decision interviews. It makes confirmed results recoverable and ready for the calling workflow skill's next mutation without owning interview cadence or workflow state.
 
-The calling workflow skill owns its target, GitHub mutations, receipts, stage, and lifecycle. `grilling` owns question cadence. This contract owns evidence quality, local recovery, workflow-safe domain modeling, and compact structured output.
+The calling workflow skill owns its target, synchronization boundaries, GitHub mutations, receipts, stage, and lifecycle. `grilling` owns question cadence. This contract owns evidence quality, local recovery, workflow-safe domain modeling, and compact structured output.
+
+## Interview Continuation
+
+The one-question waits required by `grilling` stay inside the active interview. Keep confirmed results in local recovery, preserve current GitHub workflow state, and continue when the next answer arrives.
 
 ## Inputs
 
@@ -116,7 +120,9 @@ For `chart-map`, insert `## Investigation candidates` and `## Remaining fog` imm
 
 After reading authoritative GitHub state, scan the workflow-skill directory and classify buffers by their header identity before validating matching content. Select only the exact workflow, repository, and work-record identity regardless of its topic label; a title change does not relocate a live buffer. No match permits lazy creation, one match resumes it, and multiple matches stop as a recovery conflict without merging or deleting content. A buffer attributable to the current identity whose structure or checkpoint is malformed stops recovery. Preserve an unidentifiable or different-identity malformed file and report it as a diagnostic warning without selecting, overwriting, deleting, or allowing it to block unrelated work. A valid different identity at the preferred basename uses the numeric collision rule above.
 
-On resume, reconcile the matching buffer with newer GitHub state. Treat it as synchronized only when the corresponding GitHub receipt contains the same valid checkpoint; retain unsynchronized confirmed content and surface a conflict before continuing. When the sole match is a legacy digest-named buffer, keep it in place while creating the current semantic path without replacement and copying the complete buffer. Verify that the new file's bytes and checkpoint match the legacy buffer before deleting the legacy path. If creation, copying, verification, or legacy deletion fails, roll back only the new migration copy, retain the legacy buffer, and stop before workflow advancement. If rollback cannot be verified, retain both paths and report a recovery conflict. Never rewrite either path until migration completes, and never dual-write later confirmations.
+On continuation or resume, reconcile the matching buffer with newer GitHub state. A corresponding GitHub receipt with the same valid checkpoint marks it synchronized. Otherwise, the buffer is pending interview progress: carry it forward while current authoritative GitHub evidence remains compatible. Materially incompatible newer authoritative GitHub evidence creates a recovery conflict; retain the buffer and stop before workflow mutation.
+
+When the sole match is a legacy digest-named buffer, keep it in place while creating the current semantic path without replacement and copying the complete buffer. Verify that the new file's bytes and checkpoint match the legacy buffer before deleting the legacy path. If creation, copying, verification, or legacy deletion fails, roll back only the new migration copy, retain the legacy buffer, and stop before workflow advancement. If rollback cannot be verified, retain both paths and report a recovery conflict. Never rewrite either path until migration completes, and never dual-write later confirmations.
 
 Create the buffer lazily after the first materially confirmed result. Rewrite the complete cumulative structure after each later material confirmation and recompute its checkpoint. Keep partial reasoning, ordinary dialogue, credentials, and unconfirmed recommendations out of it.
 
