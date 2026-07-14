@@ -33,7 +33,7 @@ Uncertainty whose next sharp questions depend on research, a prototype, a task, 
    - Completion criterion: every package blocker in the bounded decision space is resolved with allowed evidence, or the result contains one precise resumable blocker or destination-level Wayfinding uncertainty.
 
 3. Synchronize the result.
-   - Receive one complete result from `and-interview-contract`. At completion, pause, task switch, or handoff, append only the missing Clarification Notes receipt for its valid checkpoint.
+   - Receive one complete result from `and-interview-contract` and synchronize it only at completion, an explicit session pause, task switch, or handoff by appending the missing Clarification Notes receipt for its valid checkpoint.
    - With no material confirmation and no recovery buffer, skip the empty receipt. When a blocker or fog remains, keep `needs-info` and write its precise current State Reason; move to `needs-pack` only after the resolved receipt is authoritative.
    - Verify every mutation. On failure, retain the recovery buffer and pre-advance stage; after success, clean only the matching synchronized buffer.
    - Completion criterion: `and-pack` can consume an authoritative result without replaying the interview, or one authoritative blocker and exit condition can resume through `and-clarify` or `and-wayfind`.
