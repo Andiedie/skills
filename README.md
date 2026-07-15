@@ -76,6 +76,10 @@ It includes:
 
 - `install-skills`: install, update, inspect, and troubleshoot `npx skills` managed skills.
 
+### Personal Utilities
+
+- `progress-title`: keep the current Codex task title aligned with evidence-based progress for an AND delivery unit.
+
 ## AND Runtime Dependencies
 
 The AI-native development loop builds on [Matt Pocock's skills repository](https://github.com/mattpocock/skills). Thanks to Matt Pocock and the repository's contributors for the engineering workflows this package composes with.

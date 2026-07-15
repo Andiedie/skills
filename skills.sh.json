@@ -19,6 +19,13 @@
       ]
     },
     {
+      "title": "Personal Utilities",
+      "description": "Personal helpers for keeping Agent work concise and visible.",
+      "skills": [
+        "progress-title"
+      ]
+    },
+    {
       "title": "AI-Native Development",
       "description": "Workflow skills for turning ambiguous signals into verified software changes.",
       "skills": [
