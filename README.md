@@ -78,7 +78,7 @@ It includes:
 
 ### Personal Utilities
 
-- `progress-title`: keep the current Codex task title aligned with evidence-based progress for an AND delivery unit.
+- `progress-title`: keep the current Codex task title aligned with the active stage and evidence-based progress throughout AND work.
 
 ## AND Runtime Dependencies
 
