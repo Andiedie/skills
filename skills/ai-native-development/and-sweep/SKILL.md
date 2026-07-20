@@ -14,7 +14,7 @@ Sweep audits GitHub workflow state for drift that can make delivery unsafe. Ever
 
 ## Workflow Contract
 
-Use `and-workflow-contract` before auditing, then read [sweep-checks.md](../and-workflow-contract/sweep-checks.md).
+Use `and-workflow-contract` before auditing, then read [sweep-checks.md](../and-workflow-contract/sweep-checks.md). Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) when the selected scope contains reviewed implementation or Finish evidence.
 
 Use `Locate Work`, `Read Work Record` or `Read Delivery Unit`, and `Audit Invariants`, then apply the direct Sweep checklist. Those authorities own exact state, relationship, ownership, receipt, lifecycle, Wayfinding, and representation checks; Sweep owns finding classification and repair control.
 
@@ -32,7 +32,7 @@ Apply every relevant workflow invariant and Sweep Check. The required domains ar
 
 - stage, State Reason, and lifecycle;
 - package shape, relationships, dependencies, and external blockers;
-- whole-unit ownership, stale or conflicting claims, implementation artifacts, and duplicate-work risk;
+- whole-unit ownership, stale or conflicting claims, implementation artifacts, deployment handoffs, and duplicate-work risk;
 - Wayfinding maps, investigations, handoff, and temporary assets;
 - completion evidence and GitHub representation.
 

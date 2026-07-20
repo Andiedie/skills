@@ -14,6 +14,8 @@ Check for:
 - open external blockers on ready work;
 - stale, partial, or conflicting delivery ownership, including assignee/receipt mismatch or multiple delivery assignees;
 - implementation artifacts used as ownership without a valid ownership record;
+- reviewed implementation handed to Finish whose latest Implementation receipt lacks one authoritative Deployment disposition for its reviewed head, or whose disposition is stale or internally contradictory;
+- a `custom` Deployment disposition with a missing, stale, incomplete, or contradictory Deployment Manifest, or a `none` or `standard` disposition that incorrectly includes a Manifest;
 - merged delivery missing completion evidence, retaining an active stage, or remaining open;
 - a parent closed while a contained child remains open, or Finish ending with completed children and an open parent;
 - an open map missing `wayfinder:map`, carrying `ready-for-agent` or delivery ownership, or carrying neither `needs-info` nor `needs-pack`;

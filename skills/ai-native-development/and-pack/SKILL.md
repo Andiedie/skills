@@ -30,23 +30,24 @@ Both shapes have equal contract strength. For either shape:
 - Describe current and desired behavior, not an implementation procedure.
    - Write a comprehensive, numbered user-story list whose coverage determines its length: include every distinct actor, mode, edge case, failure, and acceptance path. Use `As an <actor>, I want <feature>, so that <benefit>.`
 - Name key interfaces, types, commands, config shapes, API payloads, domain terms, and architectural decisions when they constrain delivery.
-- Record confirmed implementation, documentation, and testing decisions, including the highest practical verification seam and relevant prior art.
+- Record confirmed implementation, documentation, testing, and deployment decisions, including the highest practical verification seam and relevant prior art.
+- Record confirmed target-environment, DDL or DML, rollout-order, mixed-version, recovery, and stable-runbook constraints when they affect safe implementation. Pack records `none known` when no constraint is confirmed; it does not predict the final Deployment disposition.
 - Make acceptance criteria behavioral, concrete, and independently verifiable. Include out of scope.
 - Use file paths only as evidence or location hints. Include a decision-rich snippet only when it expresses a confirmed state machine, reducer, schema, type, or payload decision more precisely than prose.
 
-The contract is complete only when an implementation agent can begin without replaying the discussion and every story is covered by behavioral acceptance and a verification path.
+The contract is complete only when an implementation agent can begin without replaying the discussion, every story is covered by behavioral acceptance and a verification path, and every deployment-constraint category records a confirmed constraint or `none known`.
 
 ## Process
 
 1. **Gather the complete source.**
    - Read the work body, comments and receipts, latest State Reason, triage and clarification decisions, existing package text, relationships, blockers, implementation artifacts, and attachments.
-   - Inspect code, tests, docs, the domain glossary, ADRs, and GitHub workflow conventions only where they change the contract.
+   - Inspect code, tests, docs, runbooks, the domain glossary, ADRs, and GitHub workflow conventions only where they change the contract.
    - For a Wayfinding source, use `Read Wayfinding Map` and `Hand Off Wayfinding Map` to recover its destination, decisions, resolved investigations, fog, scope boundary, linked assets, and any interrupted handoff. A replacement carrying a handoff key resumes that source map.
    - Completion criterion: every desired behavior is grounded in a source fact or confirmed decision, every remaining unknown is explicit, and current behavior, constraints, verification clues, blockers, and handoff state are known.
 
 2. **Resolve blockers, verification, and shape.**
-   - Verify discoverable facts locally. Missing human judgment, reporter facts, permission, access, external state, acceptance input, or a required testing decision blocks packaging.
-   - Route product, domain, architecture, naming, or testing judgment through `and-triage`. Route other missing input to its accountable owner. Use `Write Stage State` to route the work to `needs-info`, record the wait with `Write State Reason`, then stop.
+   - Verify discoverable facts locally. Missing human judgment, reporter facts, permission, access, external state, acceptance input, or a testing or deployment decision required for safe implementation blocks packaging.
+   - Route product, domain, architecture, naming, testing, rollout, or deployment-risk judgment through `and-triage`. Route other missing input to its accountable owner. Use `Write Stage State` to route the work to `needs-info`, record the wait with `Write State Reason`, then stop.
    - A Wayfinding source returns to `and-wayfind` while any investigation or in-scope fog remains. Proceed only when it carries `needs-pack`, every completed investigation has a durable resolution, and every linked asset has a cleanup or Package-promotion disposition. Use the handoff operation to detect an incomplete or competing replacement before allocating work.
    - Choose the highest practical verification seam. Use a single issue when one record is a sufficient delivery and verification boundary; use a PRD when internal slices are needed for progress, ordering, delegation, or acceptance.
    - Completion criterion: either one durable blocker names its owner, resume authority, and exit criteria with no ready publication, or no unresolved input remains and exactly one verification seam and package shape are justified. A map also meets every eligibility condition above and is free of competing handoffs.
@@ -58,7 +59,7 @@ The contract is complete only when an implementation agent can begin without rep
    - A wide refactor is available only when one mechanical form fans out so broadly that no ordinary vertical slice can land green. When all parts of that trigger hold, read [wide-refactors.md](wide-refactors.md).
    - Child slices may be delegated under the parent claim, while the parent remains the public pick and claim target.
    - For a Wayfinding source, link the source map in `Further Notes` and translate every promoted investigation asset into a requirement, decision, acceptance criterion, documentation update, or child slice.
-   - Completion criterion: the Package Contract meets the Contract Standard, and every child maps to parent stories, key interfaces, behavioral acceptance, dependency intent, and a declared verification path.
+   - Completion criterion: the Package Contract meets the Contract Standard, and every child maps to parent stories, key interfaces, behavioral acceptance, dependency intent, deployment contribution, and a declared verification path.
 
 4. **Publish safely.**
    - Invocation authorizes publication from confirmed workflow state. Confirm only an ambiguous mutation target, overwrite of unrelated maintainer text, unclear GitHub authority or access, or unconfirmed human judgment.
@@ -107,6 +108,15 @@ Summary: <one-line behavior change>
 - Prior art:
 - Manual, visual, or operational acceptance:
 
+## Deployment Constraints
+
+- Target environments: <confirmed constraints or none known>
+- DDL / DML / backfills: <confirmed constraints and identifiers, or none known>
+- Configuration / secrets / infrastructure / external systems: <confirmed constraints or none known>
+- Rollout order / compatibility: <confirmed constraints or none known>
+- Rollback / forward-fix: <confirmed constraints or none known>
+- Stable runbook: <link or none known>
+
 ## Acceptance Criteria
 
 - [ ] <behavioral, independently verifiable criterion>
@@ -146,6 +156,10 @@ Summary: <one-line behavior change>
 ## Documentation / domain updates
 
 - <glossary, ADR, context, README, runbook, or none>
+
+## Deployment Contribution
+
+<confirmed data, configuration, infrastructure, external-system, or ordering contribution to the parent deployment handoff, or none known>
 
 ## Out of scope
 ```

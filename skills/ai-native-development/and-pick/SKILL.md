@@ -28,7 +28,7 @@ If the user points at a PRD child, evaluate its parent delivery unit. Child-to-c
 After `Read Delivery Unit`, a candidate must pass both gates:
 
 - **State gate:** it is an open `ready-for-agent` public delivery unit with no current owner, open external blocker, contradictory public state, or active implementation evidence that creates duplicate-work risk.
-- **Package gate:** its Package Contract supports implementation without guessing, including current and desired behavior, bounded scope, acceptance criteria, verification strategy, out of scope, and coherent parent/child structure for a PRD package.
+- **Package gate:** its Package Contract supports implementation without guessing, including current and desired behavior, bounded scope, acceptance criteria, verification strategy, deployment constraints, out of scope, and coherent parent/child structure for a PRD package.
 
 Route a failed package gate to `and-pack`, missing human or external input to `and-triage`, and state, relationship, ownership, or artifact drift to `and-sweep`. Pick does not repair a candidate.
 

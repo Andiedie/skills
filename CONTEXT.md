@@ -77,12 +77,20 @@ The receipt or linked proof that explains why a delivery unit reached its lifecy
 _Avoid_: Stage state
 
 **Receipt**:
-Append-only evidence written by a workflow stage, such as interview decisions, Wayfinding progress, pack publication, claim, implementation, review, verification, completion, rejection, or follow-up.
+Append-only evidence written by a workflow stage, such as interview decisions, Wayfinding progress, pack publication, claim, implementation, review, verification, deployment handoff, completion, rejection, or follow-up.
 _Avoid_: Package contract, mutable status field
 
 **Implementation artifact**:
 A Git branch, commit, pull request, test result, or review result produced while implementing a delivery unit; it can be referenced as evidence but does not carry workflow state.
 _Avoid_: AND workflow state, package contract
+
+**Deployment disposition**:
+The reviewed-head-bound classification in the latest Implementation receipt that says whether rollout is none, standard, or custom.
+_Avoid_: Deployment status, Deployment Manifest
+
+**Deployment Manifest**:
+The package-wide operational handoff included only for a custom Deployment disposition; it is not environment state or deployment evidence.
+_Avoid_: Deployment disposition, release status, deployment receipt, runbook
 
 **External blocker**:
 A blocker outside the work record graph, such as missing access, third-party state, or human acceptance, recorded separately from native dependency relationships.

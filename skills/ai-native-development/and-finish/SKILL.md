@@ -10,11 +10,11 @@ Finish is a resumable transaction: publish one reviewed delivery unit through on
 
 ## Runtime Contracts
 
-Use `and-workflow-contract` for the delivery unit, ownership, receipts, active stage, and lifecycle outcome. Route incomplete setup to `setup-and`; stop before mutation when the Git remote does not identify one GitHub repository.
+Use `and-workflow-contract` for the delivery unit, ownership, receipts, active stage, lifecycle outcome, and `Read Deployment Handoff`. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) when resolving and revalidating the implementation handoff. Route incomplete setup to `setup-and`; stop before mutation when the Git remote does not identify one GitHub repository.
 
 ## Preconditions
 
-Before merge, the current actor owns or is delegated one open `ready-for-agent` delivery unit whose Implementation receipt identifies a committed reviewed head, verification, and clean review. Required acceptance must be complete and no external blocker may remain. On resume after merge, the pull request and GitHub evidence must identify the same original scope and actor.
+Before merge, the current actor owns or is delegated one open `ready-for-agent` delivery unit whose latest Implementation receipt identifies a committed reviewed head, verification, clean review, and authoritative Deployment disposition for that head, plus a complete Deployment Manifest when the disposition is `custom`. Required acceptance must be complete and no external blocker may remain. On resume after merge, the pull request and GitHub evidence must identify the same original scope and actor.
 
 Route stale implementation or review evidence to `and-implement`, contract defects to `and-pack`, and ownership, relationship, stage, or lifecycle drift to `and-sweep`.
 Report pending acceptance as a wait for its recorded owner without mutation.
@@ -22,17 +22,19 @@ Report pending acceptance as a wait for its recorded owner without mutation.
 ## Process
 
 1. **Resolve the transaction.**
-   - Read the complete delivery unit, claim, contract, every PRD child, Implementation receipt, verification, review, acceptance, blockers, relationships, and linked artifacts.
-   - Resolve the actor, source branch and worktree, reviewed head, fixed point, GitHub repository, default branch, explicit target when any, merge policy, and one matching open or merged pull request.
+   - Read the complete delivery unit, claim, contract, every PRD child, Implementation receipt, Deployment disposition, its Deployment Manifest when `custom`, verification, review, acceptance, blockers, relationships, and linked artifacts.
+   - Resolve the actor, source branch and worktree, reviewed head, implementation-handoff permalink, fixed point, GitHub repository, default branch, explicit target when any, merge policy, and one matching open or merged pull request.
    - Prove the actor can push, create or update and merge the pull request, and complete GitHub workflow state. Match pull requests by repository, source, and target; multiple or mismatched matches are ambiguity, not permission to create another.
-   - Completion criterion: scope, owner, source, reviewed head, repository, target evidence, capabilities, and pull-request identity are unambiguous.
+   - Completion criterion: scope, owner, source, reviewed head, deployment handoff, repository, target evidence, capabilities, and pull-request identity are unambiguous.
 
 2. **Prove delivery readiness.**
    - Before merge, verify the claim still covers the complete executable package, no blocker is open, and the reviewed head exists on the source branch.
    - Inspect the fixed-point diff and commits after the reviewed head. The source worktree must be clean, every PRD child integrated, and no unreviewed implementation or scope change may follow the reviewed head.
+   - Apply the shared deployment-handoff selection and validation rules to the latest Implementation receipt. Rely on Implement's exhaustive inspection rather than reconstructing the disposition or Manifest from the diff.
+   - Preserve deployment prerequisites for the deployment owner rather than treating them as completed or executing them in Finish.
    - On post-merge resume, prove the recorded pull-request head contains the reviewed head and the authorized target contains the merge result.
    - Inspect cleanup candidates for unrelated changes or unique commits.
-   - Completion criterion: the complete reviewed unit is ready to publish or resume, and every cleanup candidate is classified as safe or retained.
+   - Completion criterion: the complete reviewed unit and its authoritative operational handoff are ready to publish or resume, and every cleanup candidate is classified as safe or retained.
 
 3. **Authorize once.**
    - Recover the target from a merged pull request, explicit user instruction, or authoritative repository policy. Recover the merge method from the same evidence or the single enabled GitHub method.
@@ -41,14 +43,14 @@ Report pending acceptance as a wait for its recorded owner without mutation.
    - Completion criterion: one target and one merge method authorize the whole remaining transaction.
 
 4. **Prepare one pull request.**
-   - Reuse the sole matching pull request, or push the source and create one against the authorized target. Reference the delivery unit without an auto-close keyword.
+   - Reuse the sole matching pull request, or push the source and create one against the authorized target. Reference the delivery unit and implementation-handoff permalink without an auto-close keyword or duplicated handoff body.
    - Make the pull request ready after its final head is known.
    - Completion criterion: exactly one ready or merged pull request represents the complete delivery unit.
 
 5. **Revalidate the final head.**
-   - Immediately before merge, re-read the delivery unit, claim, acceptance, blockers, contract, source worktree, remote branch, pull request, checks, reviews, conflicts, target, and cleanup candidates.
-   - Prove the final head equals the reviewed implementation head. Prove required checks and reviews apply to that head and are successful, no blocking review or conflict remains, and GitHub reports it mergeable.
-   - Report a genuine external wait without claiming completion. Route a changed head or implementation defect back to `and-implement` and verify the source still represents open work.
+   - Immediately before merge, re-read the delivery unit, claim, acceptance, blockers, contract, Implementation receipt, Deployment disposition, its Deployment Manifest when `custom`, source worktree, remote branch, pull request, checks, reviews, conflicts, target, and cleanup candidates.
+   - Reapply the shared deployment-handoff head-binding and form validation to the final head. Prove required checks, reviews, acceptance, and blocker evidence apply to that head and are successful, no blocking review or conflict remains, and GitHub reports it mergeable.
+   - Report a genuine external wait without claiming completion. Route a changed head, stale or defective deployment handoff, or implementation defect back to `and-implement`; route a deployment contract defect to `and-pack`; and verify the source still represents open work.
    - Completion criterion: the current pull-request head is safe to merge, or one precise wait or owning route is named.
 
 6. **Merge exactly once.**
@@ -68,8 +70,8 @@ Report pending acceptance as a wait for its recorded owner without mutation.
    - Completion criterion: all proven-safe source artifacts are gone and the clean target is synchronized, or every retained artifact has one exact reason.
 
 9. **Report the result.**
-   - Report delivery unit, pull request, target, merge, lifecycle, cleanup, and the one remaining operation when any.
-   - Completion criterion: delivery, completion, and cleanup status are each clear without copying contracts, logs, or diffs.
+   - Report delivery unit, pull request, target, merge, lifecycle, Deployment disposition and implementation-handoff permalink, cleanup, and the one remaining operation when any.
+   - Completion criterion: delivery, operational handoff, completion, and cleanup status are each clear without copying contracts, manifests, logs, or diffs.
 
 ## Completion Receipt
 
@@ -83,6 +85,7 @@ Reviewed implementation head: <full commit SHA>
 Target: <repository and branch>
 Delivery evidence: <merge commit and pull request>
 Verification / review: <linked evidence>
+Deployment handoff: <none|standard|custom and Implementation receipt permalink>
 Lifecycle outcome: completed
 ```
 
@@ -92,5 +95,6 @@ Cleanup follows authoritative completion and is reported separately.
 
 - Finish the whole claimed unit through its one authorized pull request; PRD children are not separate finish targets.
 - Consume reviewed evidence and route implementation, CI, conflict, or scope defects to their owner.
+- Preserve the Deployment disposition and conditional Manifest as an operational handoff; Finish neither executes deployment actions nor claims an environment is deployed.
 - Preserve active workflow state until the workflow contract's completion point.
 - Clean only artifacts proven to belong exclusively to the completed delivery unit.

@@ -10,7 +10,7 @@ Close, wait, or send one authoritative GitHub work record to Pack. Ground the ro
 
 ## Workflow Contract
 
-Use `and-workflow-contract` before reading or writing workflow state. If repository setup or the contract is unavailable, route to `setup-and` or report the missing skill.
+Use `and-workflow-contract` before reading or writing workflow state. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) only when the route turns on whether reviewed implementation has an authoritative Deployment disposition and, for `custom`, a complete Deployment Manifest. If repository setup or the contract is unavailable, route to `setup-and` or report the missing skill.
 
 The workflow contract owns stage, State Reason, lifecycle, relationship, and receipt representation.
 
@@ -36,7 +36,7 @@ An explicit authorized route instruction supplies the human judgment; ground onl
    - Completion criterion: exactly one target is selected, or the run ends with no in-scope work or a short attention list awaiting selection.
 
 2. Ground the route.
-   - Read the record, current stage and lifecycle, latest State Reason, material comments or receipts, ownership, relationships and blockers, linked implementation artifacts, attachments, and prior triage notes.
+   - Read the record, current stage and lifecycle, latest State Reason, material comments or receipts, ownership, relationships and blockers, linked implementation artifacts, the Deployment disposition and conditional Manifest when reviewed implementation exists, attachments, and prior triage notes.
    - Follow evidence into code, tests, docs, domain notes, or architecture decisions only where the route turns on it.
    - Check duplicates by concept, existing implementation, and relevant recorded rejections or out-of-scope decisions.
    - For a bug, make a proportionate reproduction attempt from the reporter's steps.
@@ -45,7 +45,7 @@ An explicit authorized route instruction supplies the human judgment; ground onl
 
 3. Choose one route.
 
-   - A record with a published Package Contract, claim, or implementation evidence is not an ordinary closure candidate. Preserve its state: route an unclaimed ready unit to `and-pick` or the selected unit to `and-claim`, claimed or incomplete implementation to `and-implement`, reviewed or merged delivery to `and-finish`, and contradictory evidence to `and-sweep`.
+   - A record with a published Package Contract, claim, or implementation evidence is not an ordinary closure candidate. Preserve its state: route an unclaimed ready unit to `and-pick` or the selected unit to `and-claim`; route claimed or incomplete implementation, including reviewed implementation with a missing or stale Deployment disposition or required custom Manifest, to `and-implement`; route reviewed or merged delivery with an authoritative deployment handoff to `and-finish`; and route contradictory evidence to `and-sweep`.
 
    | Route | Use when |
    | --- | --- |

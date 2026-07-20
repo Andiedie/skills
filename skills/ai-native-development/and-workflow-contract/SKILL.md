@@ -7,7 +7,7 @@ description: Use when an AND skill needs to read, write, validate, or reason abo
 
 GitHub Issues, labels, native relationships, comments, and assignees are the authoritative workflow state for the AND delivery loop. Branches, commits, pull requests, CI, and review results are implementation artifacts linked from that state.
 
-Use this contract before an AND workflow skill reads or mutates workflow state. The calling skill owns its stage behavior and receipt content; this contract owns shared concepts, GitHub representation, operations, and invariants.
+Use this contract before an AND workflow skill reads or mutates workflow state. The calling skill owns its stage behavior and receipt wrapper; this contract owns shared concepts, named shared-artifact schemas, GitHub representation, operations, and invariants.
 
 ## Source Of Truth
 
@@ -18,6 +18,8 @@ Use this contract before an AND workflow skill reads or mutates workflow state. 
 | Stage state | One active queue label on an open top-level issue. |
 | State Reason | Latest issue comment headed `## State Reason`. |
 | Package Contract | Body of the single issue package or parent PRD issue. |
+| Deployment disposition | The `Deployment:` line in the latest `## Implementation` receipt, when its receipt head matches the current source or recorded pull-request head under the deployment-handoff selection rules. |
+| Deployment Manifest | `## Deployment Manifest` in that same receipt only when the Deployment disposition is `custom`, with its head bound under the deployment-handoff selection rules. |
 | Containment relationship | Native parent/sub-issue relationship under a parent carrying `parent-prd`. |
 | Map relationship | Native parent/sub-issue relationship under a parent carrying `wayfinder:map`. |
 | Dependency relationship | Native blocked-by/blocking relationship. |
@@ -39,6 +41,8 @@ Repository files may describe the workflow but do not carry package state, owner
 | Stage state | The active queue position of an open top-level work record. |
 | State Reason | The structured current reason a top-level work record is waiting in `needs-info`. |
 | Package Contract | The implementation source of truth published by `and-pack`. |
+| Deployment disposition | The reviewed-head-bound classification that says whether the complete delivery unit needs no rollout, only a stable runbook, or package-specific deployment instructions. |
+| Deployment Manifest | The package-specific operational handoff required only for a `custom` Deployment disposition. |
 | Wayfinding map | A shared planning index that holds a destination, decisions, fog, and scope until work can be packaged. It is not a delivery unit. |
 | Investigation | One sharp question under a Wayfinding map, sized for one Agent session and carrying no public stage. |
 | Fog | In-scope uncertainty that cannot yet be phrased as a sharp investigation question. |
@@ -97,6 +101,7 @@ Missing labels are repairable setup gaps. An unavailable or unverified native ca
 | Record Receipt | [Receipts](#receipts-and-implementation-artifacts). |
 | Record Lifecycle Outcome | [Lifecycle](#lifecycle). |
 | Reference Implementation Artifact | [Receipts](#receipts-and-implementation-artifacts). |
+| Read Deployment Handoff | [Deployment Handoff](deployment-handoff.md). |
 | Finish Delivery | [Finish Delivery](#finish-delivery). |
 | Audit Invariants | [sweep-checks.md](sweep-checks.md). |
 
@@ -191,11 +196,13 @@ An assignee on a receipt-only unit, an assignee/receipt mismatch, multiple deliv
 
 ## Receipts And Implementation Artifacts
 
-Receipts are append-only comments on the record whose operation they evidence. Top-level stage receipts live on the original top-level issue or delivery unit; map publication and handoff receipts live on the map; investigation resolutions live on the investigation. The calling skill owns receipt content.
+Receipts are append-only comments on the record whose operation they evidence. Top-level stage receipts live on the original top-level issue or delivery unit; map publication and handoff receipts live on the map; investigation resolutions live on the investigation. The calling skill owns its receipt wrapper and stage-specific fields; this contract owns any named shared-artifact schema embedded in that receipt.
 
-Use receipts for material turning points: State Reason changes, clarification decisions, Wayfinding publication and resolution, package publication, claim and approved ownership repair, implementation, review, verification, lifecycle outcome, and follow-up work.
+Use receipts for material turning points: State Reason changes, clarification decisions, Wayfinding publication and resolution, package publication, claim and approved ownership repair, implementation, review, verification, deployment handoff, lifecycle outcome, and follow-up work.
 
 Branches, commits, pull requests, CI, and reviews are implementation artifacts linked from receipts. Investigation assets remain planning evidence unless a Package Contract promotes them. Neither kind of artifact replaces workflow state or ownership.
+
+The latest `## Implementation` receipt is the sole deployment-handoff candidate; an incomplete or mismatched latest receipt never falls back to an older one. Read [deployment-handoff.md](deployment-handoff.md) for disposition selection, the conditional Manifest schema, head binding, and consumption rules. A newer implementation head requires a new reviewed receipt and disposition, plus a new Manifest when the disposition is `custom`; deployment evidence does not replace or mutate either artifact.
 
 ## Lifecycle
 
@@ -223,6 +230,8 @@ Complete a parent only after every claimed child requirement is integrated and e
 - Containment, map membership, dependency, external blocker, and State Reason retain distinct meanings.
 - An unresolved external blocker makes a delivery unit unpickable.
 - Implementation artifacts are evidence rather than workflow state or ownership.
+- Every reviewed implementation handed to Finish has one authoritative Deployment disposition bound to its reviewed head.
+- A `custom` disposition has exactly one authoritative Deployment Manifest in the same receipt; `none` and `standard` dispositions have none.
 - Lifecycle outcomes are terminal rather than active queue state.
 - A completed delivery unit has implementation on its authorized target and completion evidence in GitHub.
 - Delivery cleanup follows authoritative lifecycle completion.
@@ -231,5 +240,5 @@ Complete a parent only after every claimed child requirement is integrated and e
 
 - This skill defines and locates shared workflow rules; it does not run a workflow stage.
 - `setup-and` owns missing readiness prerequisites; workflow skills route incomplete repository readiness there.
-- Calling skills own their decisions, confirmation gates, receipt bodies, and user-facing reports.
+- Calling skills own their decisions, confirmation gates, receipt wrappers, stage-specific fields, and user-facing reports; this contract owns named shared-artifact schemas.
 - Keep every normative rule in one authority and load conditional mechanics only at the branch that needs them.

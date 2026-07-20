@@ -39,8 +39,8 @@ Observe -> Decide -> Clarify -> Pack -> Claim -> Implement -> Close/Learn
 | Clarify | Which bounded, currently enumerable decision space or other required input blocks a correct package? | Confirmed input or one explicit unresolved question. |
 | Pack | What complete delivery unit can an Agent execute? | A single issue package or PRD package. |
 | Claim | Who owns the whole delivery unit? | One recorded owner and an unchanged scope. |
-| Implement | What change satisfies the package? | An isolated, verified, and reviewed implementation. |
-| Close/Learn | What proves completion, and what follows from it? | A lifecycle outcome, completion evidence, and any new signal. |
+| Implement | What change satisfies the package, and what does that reviewed change require at deployment time? | An isolated, verified, and reviewed implementation with a Deployment disposition and, only for `custom`, a Deployment Manifest. |
+| Close/Learn | What proves delivery completion, what operational handoff remains, and what follows from it? | A lifecycle outcome, completion evidence, a linked deployment handoff, and any new signal. |
 
 This is a loop rather than a one-way assembly line. A later stage can reveal that an earlier assumption was wrong, but the correction returns to the stage that owns it. Packaging does not improvise a missing product decision, and implementation does not privately rewrite the package.
 
@@ -111,11 +111,13 @@ A PRD package is still claimed as one unit. Its owner may delegate child slices,
 
 ## Durable Handoffs
 
-GitHub is the source of truth for the loop. It keeps the current work record, Wayfinding map when any, State Reason, Package Contract, relationships, owner, and evidence recoverable when sessions or Agents change.
+GitHub is the source of truth for the loop. It keeps the current work record, Wayfinding map when any, State Reason, Package Contract, relationships, owner, reviewed-head-bound deployment handoff, and evidence recoverable when sessions or Agents change.
 
 Before implementation, work moves through a small queue: `needs-triage`, `needs-info`, `needs-pack`, and `ready-for-agent`. These states describe where pre-execution uncertainty remains; they are not implementation progress states. The [workflow contract](../and-workflow-contract/SKILL.md) defines their meaning, GitHub representation, and invariants.
 
 Branches, commits, pull requests, CI, and reviews are implementation artifacts. They provide evidence about delivery, while GitHub Issues continue to hold the package, ownership, and lifecycle outcome.
+
+The latest Implementation receipt always carries a lightweight Deployment disposition: `none` for no environment rollout, `standard` for a rollout fully covered by a named stable runbook, or `custom` when package-specific instructions are needed. Only `custom` adds a full Deployment Manifest covering environments, data or configuration changes, ordered actions, prerequisites, compatibility, recovery, and verification. Finish validates and links this handoff but does not execute deployment or treat pending environment rollout as incomplete code delivery.
 
 Each stage leaves only the durable evidence needed to continue the work. Temporary reasoning and interview transcripts stay out of long-lived state unless they become a decision, blocker, requirement, or completion result.
 

@@ -13,7 +13,7 @@ Keep each surface focused on one audience and purpose.
 | `docs/skills.md` | Someone choosing a skill | Task-oriented routing and skill usage. |
 | `AGENTS.md` | An Agent maintaining this package | Design balances, authority boundaries, and maintenance checks. |
 | `and-workflow-contract/SKILL.md` | An AND workflow author | Shared concepts, GitHub representation, operations, and invariants. |
-| `and-workflow-contract/*.md` | An Agent on a conditional contract path | Relationship API, Wayfinding, or sweep mechanics needed only for that operation. |
+| `and-workflow-contract/*.md` | An Agent on a conditional contract path | Shared artifact schemas or operation mechanics needed only for that path. |
 | `<skill>/SKILL.md` | An Agent running that skill | Runtime behavior, preconditions, side effects, stop routes, and output contract. |
 | Skill sibling references | An Agent on a conditional path | Detailed guidance that is needed only for that path. |
 
