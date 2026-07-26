@@ -10,7 +10,7 @@ Claim records one owner for one whole executable delivery unit without changing 
 
 ## Workflow Contract
 
-Use `and-workflow-contract` before claiming.
+Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) and [delivery-units.md](../and-workflow-contract/delivery-units.md) for `Read Delivery Unit`, `Record Ownership`, and `Reference Implementation Artifact` before claiming.
 
 Use `Read Delivery Unit` for the current source of truth, then `Record Ownership` for one logical claim and `Reference Implementation Artifact` when existing evidence must be linked. Record Ownership and the durable Claim receipt are one logical mutation; do not emit duplicate ownership evidence. The workflow contract owns how current ownership, receipts, and implementation artifacts are represented and derived. If repository setup or the contract is unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
 

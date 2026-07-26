@@ -10,7 +10,7 @@ Capture one raw request, bug report, feedback item, or explicitly presented exte
 
 ## Workflow Contract
 
-Use `and-workflow-contract` and its `Write Work Record` operation before writing durable state.
+Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) for `Locate Work` and `Write Work Record` before writing durable state.
 
 If repository setup or the contract is unavailable, route to `setup-and` or report the missing skill. If GitHub is temporarily unwritable, return a ready-to-file draft and the exact access problem.
 

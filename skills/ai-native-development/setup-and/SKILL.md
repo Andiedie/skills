@@ -12,7 +12,7 @@ Audit and configure one repository to run the AND delivery loop with GitHub as i
 
 Repository setup is conformant when:
 
-- the repository satisfies `and-workflow-contract` [Setup Readiness](../and-workflow-contract/SKILL.md#setup-readiness);
+- the repository satisfies `Read Setup Readiness` from [setup-readiness.md](../and-workflow-contract/setup-readiness.md);
 - every directory containing Agent instructions follows the Agent Instruction Policy below;
 - no observed GitHub workflow-state contradiction makes stage, relationship, ownership, or lifecycle meaning ambiguous.
 
@@ -25,7 +25,7 @@ External skill readiness and the next-skill receipt are report results rather th
 Work outward from observable evidence:
 
 - Resolve the target repository from an explicit target, current checkout, and Git remotes. More than one plausible repository is a decision, and no GitHub repository is a setup blocker.
-- Use `and-workflow-contract` to inspect Issues availability, required labels, issue-write and self-assignment permission, and native relationship capability.
+- Use `and-workflow-contract` and load [setup-readiness.md](../and-workflow-contract/setup-readiness.md) for `Read Setup Readiness`: inspect Issues availability, required labels, issue-write and self-assignment permission, and native relationship capability. Load [wayfinding.md](../and-workflow-contract/wayfinding.md#representation) when Wayfinding is installed.
 - Read [relationship-api.md](../and-workflow-contract/relationship-api.md) before interpreting native relationship responses or planning a reversible capability probe.
 - Inspect existing GitHub workflow state for contradictions that a setup write must preserve and route to `and-sweep` rather than overwrite. An unresolved contradiction keeps repository conformance incomplete.
 - Scan every `AGENTS.md` and `CLAUDE.md` outside dependency, generated, and VCS directories. Classify each containing directory, resolve symlinks, and follow references only far enough to determine effective workflow rules.

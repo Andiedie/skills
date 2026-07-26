@@ -10,7 +10,7 @@ Clarify one bounded human decision space whose package-blocking questions can al
 
 ## Workflow Contract
 
-Use `and-workflow-contract` for the target, receipts, State Reason, and stage mutation. If setup is incomplete or `and-workflow-contract`, `and-interview-contract`, or `grilling` is unavailable, route to `setup-and` or installation with the exact missing dependency.
+Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) for `Read Work Record`, `Resolve Canonical Identity`, `Write State Reason`, and `Write Stage State`; use the kernel's `Record Receipt` representation for clarification receipts. If setup is incomplete or `and-workflow-contract`, `and-interview-contract`, or `grilling` is unavailable, route to `setup-and` or installation with the exact missing dependency.
 
 ## When To Use
 

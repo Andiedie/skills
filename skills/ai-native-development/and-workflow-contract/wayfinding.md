@@ -49,7 +49,9 @@ The detailed answer lives only in the investigation resolution. The map and huma
 
 ## Read A Map
 
-Read the map destination, Notes, decision pointers, fog, out-of-scope boundary, current stage and State Reason, native sub-issues, dependencies, owners, resolutions, and linked assets. Derive the frontier from current investigation state rather than storing a second list.
+Begin with the map identity, lifecycle, stage, latest State Reason pointer, and each native investigation's identity, lifecycle, method label, blocker state, assignee, latest resolution pointer, and asset link. Expand the map's destination, Notes, decision pointers, fog, and out-of-scope boundary when charting, resolving, publishing, or handing off can change them. Expand a complete investigation resolution or asset only when that investigation or decision is selected; do not preload unrelated resolutions or raw relationship metadata.
+
+Derive the frontier from current investigation state rather than storing a second list.
 
 The frontier is the map's open investigations with exactly one method label, no open blocker, and no assignee. Preserve native child order when choosing the first item.
 
