@@ -12,6 +12,39 @@ Use this for installing and updating Agent Skills through `npx skills`.
 - Ask for scope when the user did not specify `global` or `project`.
 - Preserve unrelated local skill files and lock mismatches. Report them instead of rewriting around them.
 
+### Cache-Corruption Retry
+
+Use this only when command output confirms local npm cache corruption. Do not use it for normal runs or unrelated failures, and attempt at most one retry.
+
+Run the failed command in a subshell so the retry owns both its temporary cache and its cleanup traps:
+
+```bash
+(
+  retry_cache_dir="$(mktemp -d)" || {
+    printf 'Failed to create isolated npm retry cache.\n' >&2
+    exit 1
+  }
+
+  cleanup_retry_cache() {
+    retry_exit_code=$?
+    trap - EXIT HUP INT TERM
+    if ! rm -rf -- "$retry_cache_dir"; then
+      printf 'Failed to remove npm retry cache: %s\n' "$retry_cache_dir" >&2
+    fi
+    exit "$retry_exit_code"
+  }
+
+  trap cleanup_retry_cache EXIT
+  trap 'exit 129' HUP
+  trap 'exit 130' INT
+  trap 'exit 143' TERM
+
+  NPM_CONFIG_CACHE="$retry_cache_dir" <same npx command>
+)
+```
+
+Replace `<same npx command>` with only the failed install or update command, preserving its scope, targets, and flags. The command's original result remains authoritative. If temporary-directory allocation fails, stop without retrying. If cleanup fails, report the exact residual path in addition to the command result. Never delete the default npm cache, use a fixed or shared retry path, or retain a failed retry cache intentionally.
+
 ## Install Contract
 
 - Use the exact install commands in this workflow for default installs.
@@ -77,13 +110,7 @@ npx --yes skills add <source> --agent codex --skill <skill...> -y
 npx --yes skills add <source> --agent claude-code --skill <skill...> -y
 ```
 
-If the local npm cache is broken, rerun the same command with a temporary cache:
-
-```bash
-NPM_CONFIG_CACHE=/private/tmp/skills-npx-cache npx --yes skills add <source> ...
-```
-
-Clean that temporary cache after the install succeeds.
+If the command output confirms local npm cache corruption, apply the common Cache-Corruption Retry to that same install command.
 
 Completion criterion: the command output shows the requested global or project agent paths installed.
 
@@ -178,13 +205,7 @@ Project selected:
 npx --yes skills update <skill...> -p
 ```
 
-If the local npm cache is broken, rerun the same command with a temporary cache:
-
-```bash
-NPM_CONFIG_CACHE=/private/tmp/skills-npx-cache npx --yes skills update ...
-```
-
-Clean that temporary cache after the update succeeds.
+If the command output confirms local npm cache corruption, apply the common Cache-Corruption Retry to that same update command.
 
 Completion criterion: every target scope either completed or failed with captured output, including the updated count or the no-update result.
 
