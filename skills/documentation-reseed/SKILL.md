@@ -13,6 +13,21 @@ Reseed the documentation system, not just the files. Old prose and old locations
 
 Clear ordinary docs out of the way so the old structure stops shaping the new one. Preserve only durable context that future agents cannot safely recover from code alone.
 
+## Instruction Authority
+
+Use the effective instructions for the current host and task before applying this Skill's defaults or deciding whether to ask a question. Consume the host's resolved instruction set; do not recreate a universal system, developer, user, repository, or Skill precedence table here.
+
+Resolve each relevant rule interaction once:
+
+- Follow an effective rule that constrains a Skill default without asking the user to choose again.
+- Compose compatible effective requirements with the reseed workflow.
+- Ask one focused question only when an applicable peer-rule conflict, human-owned product or scope decision, or execution premise remains unresolved.
+- When an effective constraint conflicts with a required reseed invariant, stop before the conflicting mutation. Report the exact constraint, invariant, and last safe state, and name only options that would require separate authorization, such as changing scope or invoking `documentation-maintenance`.
+
+An explicit user direction changes behavior only when the host treats it as part of the effective instructions. A question cannot create authority to bypass an instruction that remains binding. Required reseed invariants include an owned backup, protected discovery, complete ledger accounting, the clean-deck pause, explicit continuation, safe resume, semantic parity, and final validation.
+
+Apply this same authority rule during initial preflight and whenever continuation re-reads local rules. Keep the normative rule here rather than duplicating a second conflict algorithm in either path.
+
 ## Related Skills
 
 - Use `documentation-maintenance` for write/delete/keep rules, source-of-truth choices, docs-as-code handling, semantic rewrite guards, and final-response shape.
@@ -50,11 +65,11 @@ Read local documentation conventions before applying this workflow's defaults:
 
 Run `git status --short`.
 
-Treat this skill as the controlling reseed workflow. Treat local documentation rules as repo-specific constraints and evidence. If a local rule conflicts with this workflow, pause and ask the user to choose; do not silently override either one.
+Apply **Instruction Authority** to the discovered rules before using a default or changing the repository. This Skill controls the reseed mechanics that the effective instructions leave open. If a required reseed invariant is blocked, leave the repository untouched by reseed and report the blocker; do not silently switch to a narrower task.
 
 If the task is only a local documentation edit, stop using this skill and use `documentation-maintenance`.
 
-Completion criterion: dirty worktree state is known, local documentation rules are known, the task really needs a full reseed, the reseed workspace is selected, and conflicts between local rules and this workflow are resolved by the user.
+Completion criterion: dirty worktree state is known, local documentation rules have been resolved through **Instruction Authority**, the task really needs a full reseed, the reseed workspace is selected, and every required invariant can proceed under the effective instructions. A blocker ends preflight before reseed mutation with the exact constraint, invariant, last safe state, and separately authorized options reported.
 
 ### 2. Inventory And Clear Deck
 
@@ -97,15 +112,19 @@ Report a short checkpoint receipt with:
 
 The user may inspect the clean deck, run setup, make another intentional change, or continue immediately. Keep the receipt neutral unless the user already named an intervening operation. Rebuild, harvest, pruning, and final validation begin only after explicit continuation.
 
-On continuation, reopen the same workspace and compare current paths, hashes, and `git status` with the checkpoint fingerprint. Re-read local documentation rules, agent entrypoints, and docs indexes. Give every post-checkpoint delta one disposition in `ledger.md`:
+On continuation, reopen the same workspace and compare current paths, hashes, and `git status` with the checkpoint fingerprint. Re-read local documentation rules, agent entrypoints, and docs indexes. Reapply **Instruction Authority** before any delta disposition advances the run. A changed local-rule file still receives one of the existing delta dispositions based on its role in the repository; that disposition does not change the rule's authority.
+
+Give every post-checkpoint delta one disposition in `ledger.md`:
 
 - **baseline:** the user named the intervening operation or confirms the output belongs in the rebuilt documentation system;
 - **unrelated:** preserve it without treating it as reseed input;
 - **ambiguous:** keep status `awaiting-continuation`, report the exact delta, and ask one focused question before continuing.
 
-New or changed baseline files remain in place instead of moving into `moved-docs/`. Set the reseed status back to `active` and the next step to `4` only after every delta has a non-ambiguous disposition, then continue without another confirmation.
+New or changed baseline files remain in place instead of moving into `moved-docs/`. Set the reseed status back to `active` and the next step to `4` only after every delta has a non-ambiguous disposition and the effective instructions permit every remaining reseed invariant, then continue without another confirmation.
 
-Completion criterion: the run is durably paused with a complete checkpoint receipt, or the user has explicitly continued and the same workspace records a disposition for every post-checkpoint delta with no ambiguity remaining.
+If an effective constraint blocks a remaining invariant, preserve the same workspace and checkpoint fingerprint, keep the status `awaiting-continuation` and the next step at `3`, and report the exact blocker and separately authorized options. Do not repeat or reverse completed move or backup work, set the run to `active`, advance Step 4, or silently switch to a narrower task.
+
+Completion criterion: the run is durably paused with a complete checkpoint receipt; the user has explicitly continued and the same workspace records a disposition for every post-checkpoint delta with no ambiguity or authority blocker remaining; or a resumed run remains safely at the checkpoint with its blocker and last safe state reported.
 
 ### 4. Rebuild Discoverability
 
