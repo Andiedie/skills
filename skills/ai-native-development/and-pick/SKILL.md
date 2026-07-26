@@ -10,7 +10,7 @@ Pick recommends one claimable delivery unit from ready work. It is read-only: fi
 
 ## Workflow Contract
 
-Use `and-workflow-contract` before reading ready work.
+Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) and [delivery-units.md](../and-workflow-contract/delivery-units.md) for `Locate Work` and `Read Delivery Unit` before reading ready work.
 
 Use `Locate Work` to build the slate and `Read Delivery Unit` before recommending a candidate. The workflow contract owns stage, lifecycle, relationship, ownership, receipt, and implementation-artifact representation. If repository setup or the contract is unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
 

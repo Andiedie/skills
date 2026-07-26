@@ -12,7 +12,7 @@ Ordinary source work becomes its package. A clear Wayfinding map hands off to on
 
 ## Workflow Authority
 
-Use `and-workflow-contract` for `Publish Package`, `Write Relationships`, `Write Stage State`, `Write State Reason`, and `Hand Off Wayfinding Map`. Read [wayfinding.md](../and-workflow-contract/wayfinding.md) for map handoff and [relationship-api.md](../and-workflow-contract/relationship-api.md) before native relationship mutation. Pack owns Package Contract and Map Handoff receipt content; the workflow contract owns representation, identity, relationships, lifecycle mechanics, and operation recovery.
+Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) for `Read Work Record`, `Resolve Canonical Identity`, `Write Stage State`, and `Write State Reason`, and with [delivery-units.md](../and-workflow-contract/delivery-units.md) for `Publish Package` and `Record Receipt`. Read [wayfinding.md](../and-workflow-contract/wayfinding.md) directly for `Hand Off Wayfinding Map` and [relationship-api.md](../and-workflow-contract/relationship-api.md) before `Write Relationships`. Pack owns Package Contract and Map Handoff receipt content; the workflow contract owns representation, identity, relationships, lifecycle mechanics, and operation recovery.
 
 If GitHub workflow state or the contract is unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
 

@@ -10,7 +10,7 @@ Finish is a resumable transaction: publish one reviewed delivery unit through on
 
 ## Runtime Contracts
 
-Use `and-workflow-contract` for the delivery unit, ownership, receipts, active stage, lifecycle outcome, and `Read Deployment Handoff`. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) when resolving and revalidating the implementation handoff. Route incomplete setup to `setup-and`; stop before mutation when the Git remote does not identify one GitHub repository.
+Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) and [delivery-units.md](../and-workflow-contract/delivery-units.md) for `Read Delivery Unit`, `Finish Delivery`, `Record Receipt`, and `Record Lifecycle Outcome`. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) directly for `Read Deployment Handoff` when resolving and revalidating the implementation handoff. Route incomplete setup to `setup-and`; stop before mutation when the Git remote does not identify one GitHub repository.
 
 ## Preconditions
 

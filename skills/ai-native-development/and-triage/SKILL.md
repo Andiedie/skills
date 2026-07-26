@@ -10,7 +10,7 @@ Close, wait, or send one authoritative GitHub work record to Pack. Ground the ro
 
 ## Workflow Contract
 
-Use `and-workflow-contract` before reading or writing workflow state. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) only when the route turns on whether reviewed implementation has an authoritative Deployment disposition and, for `custom`, a complete Deployment Manifest. If repository setup or the contract is unavailable, route to `setup-and` or report the missing skill.
+Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) for `Locate Work`, `Read Work Record`, `Write Stage State`, `Write State Reason`, and `Record Lifecycle Outcome`; use the kernel's `Record Receipt` representation for Triage Notes. Invoke `Read Delivery Unit` and add [delivery-units.md](../and-workflow-contract/delivery-units.md) only when current package, blocker, ownership, receipt, or implementation evidence can decide the route. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) only when the route turns on whether reviewed implementation has an authoritative Deployment disposition and, for `custom`, a complete Deployment Manifest. If repository setup or the contract is unavailable, route to `setup-and` or report the missing skill.
 
 The workflow contract owns stage, State Reason, lifecycle, relationship, and receipt representation.
 

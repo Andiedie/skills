@@ -12,7 +12,7 @@ Wayfinding plans. The pull to implement is evidence that the map has reached its
 
 ## Runtime Contracts
 
-Use `and-workflow-contract` for workflow state and read [wayfinding.md](../and-workflow-contract/wayfinding.md) for map, investigation, ownership, resolution, and handoff operations. Read [relationship-api.md](../and-workflow-contract/relationship-api.md) before native relationship mutation.
+Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) for `Read Work Record`, `Resolve Canonical Identity`, `Write Stage State`, and `Write State Reason`. Read [wayfinding.md](../and-workflow-contract/wayfinding.md) directly for `Read Wayfinding Map`, `Chart Wayfinding Map`, `Record Investigation Ownership`, `Resolve Investigation`, and `Hand Off Wayfinding Map`. Read [relationship-api.md](../and-workflow-contract/relationship-api.md) before `Write Relationships`.
 
 Use `and-interview-contract` for charting and every human-in-the-loop (HITL) investigation. It owns evidence, recovery, workflow-safe domain modeling, and compact interview output while `grilling` owns interview cadence. Verify only the dependencies reached by this invocation: charting and grilling need both skills; prototype also needs `prototype`; research needs `research`; a HITL task needs the interview pair; an unattended (AFK) task needs only the skills named by the task or map Notes. Route an unavailable dependency to installation with its exact name.
 

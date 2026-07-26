@@ -10,7 +10,7 @@ Find the current position, name one next move, and teach one reusable rule. Read
 
 ## Workflow Contract
 
-Use `and-workflow-contract` when routing depends on GitHub workflow state. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) only when reviewed implementation evidence has a missing, stale, or contradictory Deployment disposition or required custom Manifest. Route incomplete repository setup or an unavailable contract to `setup-and`.
+Use `and-workflow-contract` when routing depends on GitHub workflow state. Start `Locate Work` with [work-records.md](../and-workflow-contract/work-records.md); add [delivery-units.md](../and-workflow-contract/delivery-units.md) only when package, blocker, ownership, receipt, or implementation evidence can decide the route. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) only when reviewed implementation evidence has a missing, stale, or contradictory Deployment disposition or required custom Manifest. Route incomplete repository setup or an unavailable contract to `setup-and`.
 
 ## Route Map
 

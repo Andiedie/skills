@@ -10,7 +10,7 @@ Implement the complete claimed delivery unit from its GitHub Package Contract. W
 
 ## Runtime Contracts
 
-Use `and-workflow-contract` for the delivery unit, ownership, relationships, blockers, receipts, and `Read Deployment Handoff`. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) before finalizing the reviewed implementation handoff. Route incomplete setup or a missing contract to `setup-and`.
+Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) and [delivery-units.md](../and-workflow-contract/delivery-units.md) for `Read Delivery Unit`, `Record Receipt`, and `Reference Implementation Artifact`. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) directly for `Read Deployment Handoff` before finalizing the reviewed implementation handoff. Route incomplete setup or a missing contract to `setup-and`.
 
 Real `tdd` and `code-review` skills are required. If either is unavailable, name the missing skill and stop with the documented installation route. Give `tdd` the Package Contract's agreed seam as confirmed input where test-first work is practical. Use `code-review` against the retained fixed point with the complete Package Contract and every acceptance-bearing PRD child supplied as the Spec.
 
