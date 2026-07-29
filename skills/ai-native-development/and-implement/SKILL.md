@@ -10,7 +10,7 @@ Implement the complete claimed delivery unit from its GitHub Package Contract. W
 
 ## Runtime Contracts
 
-Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) and [delivery-units.md](../and-workflow-contract/delivery-units.md) for `Read Delivery Unit`, `Record Receipt`, and `Reference Implementation Artifact`. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) directly for `Read Deployment Handoff` before finalizing the reviewed implementation handoff. Route incomplete setup or a missing contract to `setup-and`.
+Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) and [delivery-units.md](../and-workflow-contract/delivery-units.md) for `Read Delivery Unit`, `Record Receipt`, and `Reference Implementation Artifact`. Read [local-cleanup.md](../and-workflow-contract/local-cleanup.md) directly before creating a worktree-owned local resource and again before finalizing its reviewed handoff. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) directly for `Read Deployment Handoff` before that handoff. Route incomplete setup or a missing contract to `setup-and`.
 
 Real `tdd` and `code-review` skills are required. If either is unavailable, name the missing skill and stop with the documented installation route. Give `tdd` the Package Contract's agreed seam as confirmed input where test-first work is practical. Use `code-review` against the retained fixed point with the complete Package Contract and every acceptance-bearing PRD child supplied as the Spec.
 
@@ -18,7 +18,7 @@ Real `tdd` and `code-review` skills are required. If either is unavailable, name
 
 Begin only when the current actor owns or is delegated the complete open `ready-for-agent` delivery unit and no external blocker remains. A PRD claim covers its parent and every child.
 
-Route an unready or unowned unit to the smallest upstream AND skill. If the current head already has clean implementation evidence and an authoritative Deployment disposition, plus a complete Deployment Manifest when that disposition is `custom`, route to `and-finish`. If implementation and review are clean but the disposition or required custom Manifest is missing or stale, resume at deployment classification and handoff; route a linked non-authoritative finish proposal to `and-finish` before implementation resumes.
+Route an unready or unowned unit to the smallest upstream AND skill. If the current head already has clean implementation evidence, authoritative Deployment and Cleanup dispositions, a complete Deployment Manifest when Deployment is `custom`, and complete typed items when Cleanup is `required`, route to `and-finish`. If implementation and review are clean but either handoff is missing or stale, resume at handoff classification; route a linked non-authoritative finish proposal to `and-finish` before implementation resumes.
 
 ## Process
 
@@ -34,8 +34,10 @@ Route an unready or unowned unit to the smallest upstream AND skill. If the curr
 
 3. **Implement the contract.**
    - Plan from the Package Contract and PRD dependencies. Internal delegation remains under the parent claim owner.
+   - When this path creates a worktree-owned local resource, load the shared cleanup authority before creation. Give every delegated creator a supported typed ownership identity, or require it to remove unsupported resources before the final handoff.
    - Use `tdd` at the agreed seam where practical. Work incrementally, run focused tests and typechecking regularly, then run the full relevant suite once the delivery unit is complete.
    - Apply required documentation or domain updates. Keep the diff within the claimed contract.
+   - On abort before a valid final handoff, clean and verify every owned resource or append the exact residual and resume evidence required by the shared cleanup authority.
    - Route an incorrect boundary, unclear verification requirement, or new human judgment to its owning stage instead of changing scope locally.
    - Completion criterion: code, tests, and required docs satisfy every parent and child requirement, or one evidenced upstream blocker is named.
 
@@ -45,17 +47,20 @@ Route an unready or unowned unit to the smallest upstream AND skill. If the curr
    - Fix in-scope implementation findings, update the scoped commit, rerun relevant verification, and review the same complete diff again. Route contract defects to `and-pack`; route human-owned judgments through the current State Reason owner or `and-triage` when no decision route exists.
    - Completion criterion: Standards and Spec review are clean, or every remaining finding is explicitly outside scope or human-owned.
 
-5. **Classify deployment and synthesize a custom Manifest when needed.**
+5. **Classify deployment and local cleanup handoffs.**
    - After the review is clean, apply the shared Deployment Handoff inspection standard to the complete fixed-point diff, Package Contract, every PRD child, migrations, data scripts, configuration, infrastructure, documentation, and stable runbooks.
    - Bind one Deployment disposition to the reviewed implementation head. Choose `none`, `standard`, or `custom` only after every deployment-affecting surface has been inspected. Any shared custom trigger requires `custom` and a complete Deployment Manifest; `none` and `standard` use only their one-line disposition and must not include a Manifest.
    - If inspection exposes missing in-scope implementation or documentation, return to implementation, repeat verification and review, then regenerate the handoff for the new head.
    - Route a missing contract decision to `and-pack` and a new human-owned rollout or risk judgment through its current State Reason owner or `and-triage`. For a custom Manifest, link every pre-merge requirement to its existing acceptance or external-blocker authority; keep later external actions as deployment prerequisites with their owner and required evidence.
    - Completion criterion: one disposition bound to the reviewed head accounts for the whole delivery unit without unowned ambiguity or unstated deployment-affecting surfaces, and `custom` additionally has one complete Manifest covering every custom trigger.
+   - Account for every local-resource creator. Record Cleanup `none` as a backend-neutral attestation when no worktree-owned resource remains; do not create an identity or query a runtime for that form. Otherwise record Cleanup `required` with each surviving supported typed item. Remove unsupported or unowned resources before handoff.
+   - If inspection exposes missing ownership or a silent residual, return to implementation or cleanup, then regenerate both handoffs for any new reviewed head.
+   - Completion criterion: both dispositions are bound to the reviewed head, Cleanup `none` has no backend dependency, Cleanup `required` has complete typed items, and only Deployment `custom` has a Manifest.
 
 6. **Record the handoff.**
    - Verify every delivery-unit change is committed on the isolated branch and append the Implementation receipt to the delivery-unit issue.
-   - Include the Deployment disposition in the same receipt and include a complete Deployment Manifest only for `custom`. Link the branch, reviewed head, pull request, CI, and review evidence when they exist. Leave PR delivery, lifecycle completion, deployment execution, and cleanup to their owning stages.
-   - Completion criterion: implementation and its reviewed-head-bound deployment handoff are committed, verified, reviewed, and recoverable from one GitHub receipt, or routed back with the smallest blocker.
+   - Include both dispositions in the same receipt, typed cleanup items only for Cleanup `required`, and a Deployment Manifest only for Deployment `custom`. Link the branch, reviewed head, pull request, CI, review, and cleanup evidence when they exist. Leave PR delivery, lifecycle completion, deployment execution, and valid handed-off terminal cleanup to their owning stages.
+   - Completion criterion: implementation and both reviewed-head-bound handoffs are committed, verified, reviewed, and recoverable from one GitHub receipt, or routed back with the smallest blocker.
 
 ## Implementation Receipt
 
@@ -77,17 +82,19 @@ Docs / domain updates:
 Remaining blockers:
 - <none or blocker>
 Deployment: <none — reason | standard — environments; stable runbook link | custom — see Deployment Manifest below>
+Cleanup: <complete form from local-cleanup.md>
 Next step:
 - <and-finish, acceptance owner, or route back>
 
 <for `custom` only: complete `## Deployment Manifest` form from deployment-handoff.md>
+<for Cleanup `required` only: complete typed cleanup items from local-cleanup.md>
 ```
 
-Report only the worktree, branch, reviewed head, pull request when any, verification and review result, Deployment disposition, Manifest link when `custom`, blocker when any, and next step.
+Report only the worktree, branch, reviewed head, pull request when any, verification and review result, Deployment and Cleanup dispositions, typed cleanup items or Deployment Manifest link when required, blocker when any, and next step.
 
 ## Boundaries
 
 - Keep implementation in the claimed delivery unit and its isolated worktree.
 - Use the GitHub Package Contract, not chat, pick, or claim summaries, as the Spec.
 - Keep parent ownership unchanged when delegating PRD children internally.
-- Let `and-finish` own pull-request delivery, terminal lifecycle state, and cleanup.
+- Let `and-finish` own pull-request delivery, terminal lifecycle state, and valid handed-off terminal cleanup; Implement owns every creator until its resource is absent or validly handed off.
