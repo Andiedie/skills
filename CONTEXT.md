@@ -80,6 +80,10 @@ _Avoid_: Stage state
 Append-only evidence written by a workflow stage, such as interview decisions, Wayfinding progress, pack publication, claim, implementation, review, verification, deployment handoff, completion, rejection, or follow-up.
 _Avoid_: Package contract, mutable status field
 
+**Repository knowledge disposition**:
+The explicit result of a completed Clarify or Wayfind decision's authority test: `Required` lists each durable update's target, change, and reason; `None` explains why no long-lived repository update is needed. Its absence means unclassified, not `None`.
+_Avoid_: Documentation status, implicit no-doc
+
 **Implementation artifact**:
 A Git branch, commit, pull request, test result, or review result produced while implementing a delivery unit; it can be referenced as evidence but does not carry workflow state.
 _Avoid_: AND workflow state, package contract

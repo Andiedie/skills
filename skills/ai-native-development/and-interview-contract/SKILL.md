@@ -50,37 +50,31 @@ Sharpen the domain model inside the supplied interview boundary while leaving re
 
 ### Choose The Authoritative Home
 
-Start with purposeful omission: a confirmed decision needs no repository-document output unless future readers must consult a durable authority beyond this delivery unit.
+Classify every completed decision by whether future readers need a durable authority beyond this delivery unit.
 
 - Use the Package Contract for delivery-local scope, behavior, acceptance, and reversible implementation choices.
 - Return a required `CONTEXT.md` update when a project-specific, implementation-independent term must govern future work. General programming concepts stay in their existing technical authorities.
 - Return a required ADR draft only when the decision is hard to reverse, surprising without context, and the result of a real tradeoff. All three conditions must hold.
 - Return another required repository-document update when a stable interface, operational rule, or project fact has an established authoritative home outside the Package Contract.
 
-When no existing authority fits a required durable update, propose the smallest new artifact. File creation remains lazy and belongs to implementation. When no category passes these tests, return no repository update.
+When a durable update has no established home, propose the smallest useful artifact. File creation remains lazy and belongs to implementation. When every decision stays delivery-local or already has sufficient authority, return a reasoned `None`.
 
 ### Artifact-Ready Outputs
 
-Emit only categories that pass the authority test. For a canonical term, record:
+Return exactly one disposition for a result containing confirmed decisions:
 
 ```markdown
-Target: <existing or proposed CONTEXT.md path>
-
-**<Preferred term>**:
-<One or two sentence implementation-independent definition.>
-_Avoid_: <ambiguous or rejected alternatives, when relevant>
+Repository knowledge disposition: Required
+- Target: <existing or proposed authoritative repository document>
+  Change: <precise durable change>
+  Why: <why future readers need this authority beyond the delivery unit>
 ```
-
-For an ADR, record:
 
 ```markdown
-Proposed title: <short decision title>
-Target: <existing or proposed ADR directory>
-Draft: <one to three sentences stating the context, decision, and why>
-Relevant options or consequences: <only when they add durable value>
+Repository knowledge disposition: None — <authority-test reason>
 ```
 
-For another documentation update, record the target document and section, the precise content to add or replace, and why that document is authoritative.
+A Required disposition contains one or more items; Required and None are mutually exclusive. For `CONTEXT.md`, make the Change an implementation-independent definition with preferred language. For an ADR, include the proposed title and concise context, decision, and tradeoff. For another document, identify the authoritative section and content. A result containing only an unresolved blocker remains unclassified.
 
 ### Boundaries
 
@@ -116,7 +110,9 @@ Checkpoint: <digest>
 ## Current unresolved question
 ```
 
-For `chart-map`, insert `## Investigation candidates` and `## Remaining fog` immediately before `## Current unresolved question`. When present, add `## Required repository updates` and then `## Acceptance implications` in that order after `## Confirmed result`. Every added section stays inside the checkpoint range.
+When `## Confirmed result` contains a completed decision, insert `## Repository knowledge disposition` immediately after it. Put any `## Acceptance implications` after the disposition.
+
+For `chart-map`, insert `## Investigation candidates` and `## Remaining fog` immediately before `## Current unresolved question`. A chart that publishes a map remains unclassified, while a no-map Wayfinding Exit includes the disposition. Every added section stays inside the checkpoint range.
 
 After reading authoritative GitHub state, scan the workflow-skill directory and classify buffers by their header identity before validating matching content. Select only the exact workflow, repository, and work-record identity regardless of its topic label; a title change does not relocate a live buffer. No match permits lazy creation, one match resumes it, and multiple matches stop as a recovery conflict without merging or deleting content. A buffer attributable to the current identity whose structure or checkpoint is malformed stops recovery. Preserve an unidentifiable or different-identity malformed file and report it as a diagnostic warning without selecting, overwriting, deleting, or allowing it to block unrelated work. A valid different identity at the preferred basename uses the numeric collision rule above.
 
@@ -136,7 +132,7 @@ Return one complete, compact result. Its primary output is:
 - `chart-map`: confirmed destination and scope, currently sharp investigation candidates with methods and dependencies, and any remaining fog;
 - `resolve-investigation`: one durable answer with required evidence and asset disposition, or one precise remaining blocker.
 
-Include repository updates or acceptance implications only when they are confirmed package inputs under the workflow-safe domain-modeling rules. Leave absent categories out of the result.
+A resolved `clarify-decision`, `resolve-investigation`, or no-map Wayfinding Exit with confirmed decisions includes the complete repository knowledge disposition. A blocker-only result and a chart that publishes investigations remain unclassified. Include acceptance implications when they are confirmed package inputs.
 
 A chart result is complete while multiple investigations and fog remain. It leaves every investigation open and package readiness unset.
 
@@ -150,7 +146,7 @@ The contract is complete when:
 
 - every fact and human-owned decision required by the current interview objective has an allowed source;
 - every material result is recoverable with a valid checkpoint;
-- required package-ready outputs preserve exact confirmed meaning and absent artifact categories are omitted;
+- every completed decision result carries one repository knowledge disposition, including in its HITL checkpoint;
 - `clarify-decision` resolves one bounded decision space with confirmed decisions and rationale, or returns one precise blocker or destination-level `and-wayfind` route;
 - `chart-map` has a confirmed destination, scope, first visible frontier, and explicit remaining fog without resolving an investigation;
 - `resolve-investigation` has one durable answer or one precise blocker;

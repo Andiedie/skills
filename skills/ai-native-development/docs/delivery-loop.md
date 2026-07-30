@@ -123,6 +123,14 @@ The receipt also carries a backend-neutral Cleanup disposition. `none` attests t
 
 Each stage leaves only the durable evidence needed to continue the work. Temporary reasoning and interview transcripts stay out of long-lived state unless they become a decision, blocker, requirement, or completion result.
 
+## Repository Knowledge
+
+Clarify and Wayfind leave repository files unchanged while recording one repository knowledge disposition for each completed decision. `Required` names the durable updates a future implementation must apply; `None` gives the authority-test reason that no update is needed.
+
+The authoritative home advances with delivery: the decision receipt before Pack, the Package Contract after Pack, and the merged repository document after delivery. Pack preserves source links, and Implement maps each Required item to the reviewed diff. A discovery that changes the disposition returns to the stage that owns it.
+
+This keeps planning recoverable without publishing unclaimed decisions as project knowledge. See [Stage repository knowledge through delivery](adr/0002-stage-repository-knowledge-through-delivery.md) for the decision and tradeoff.
+
 ## Feedback And Completion
 
 The loop preserves correctness by making route-backs explicit:
@@ -142,3 +150,4 @@ Closure can produce a new signal: a follow-up requirement, a documentation need,
 - Use the [skills guide](skills.md) to choose the next workflow skill.
 - Use the [workflow contract](../and-workflow-contract/SKILL.md) for workflow-state concepts, GitHub representation, operations, and invariants.
 - Read the [Wayfinding records ADR](adr/0001-separate-wayfinding-records-from-delivery-units.md) for the map-to-package boundary.
+- Read the [repository knowledge ADR](adr/0002-stage-repository-knowledge-through-delivery.md) for the decision-to-document authority chain.
