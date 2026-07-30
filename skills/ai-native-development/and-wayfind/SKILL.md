@@ -82,6 +82,7 @@ Use this path for an existing map. An investigation argument is optional.
 3. Resolve it.
    - A durable resolution skips method execution and proceeds to the missing close or map advance. Otherwise invoke the recorded method and zoom into linked evidence as needed.
    - For HITL, supply objective `resolve-investigation` and the investigation's canonical identity to `and-interview-contract`. The investigation stays open until the human supplies the required response.
+   - A durable answer carries one repository knowledge disposition. AFK work applies the same authority test directly; HITL work uses the disposition covered by its checkpoint.
    - The current owner keeps unfinished ownership with its blocker or recovery evidence. An explicit abandonment may release only that investigation after preserving the reason.
    - Without a durable answer, report one precise recoverable blocker and stop before map advance.
    - Completion criterion: one durable answer exists with required evidence and asset disposition, or the invocation has stopped with one recoverable blocker.
@@ -111,7 +112,8 @@ Use this append-only receipt when the opening grill proves that map state is unn
 Chart key: <deterministic chart key>
 Checkpoint: <interview checkpoint>
 Confirmed result:
-<destination, scope, decisions and rationale, plus only required repository updates or acceptance implications>
+<destination, scope, decisions, and rationale>
+Repository knowledge disposition: <Required items or None — reason from and-interview-contract>
 Target stage: <needs-info or needs-pack>
 Target State Reason:
 <the complete State Reason when target stage is needs-info, or `State: cleared`>
@@ -146,9 +148,13 @@ Checkpoint: <interview checkpoint when HITL; omit for AFK>
 Answer:
 <durable answer>
 
+Repository knowledge disposition: <Required items or None — reason from and-interview-contract>
+
 Assets:
 - <link and cleanup or Package-promotion disposition, or none>
 ```
+
+The disposition begins with a completed Wayfinding Exit or Investigation Resolution. Investigation Publication remains the planning intent.
 
 ## Boundaries
 

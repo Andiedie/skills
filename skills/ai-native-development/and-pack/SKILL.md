@@ -31,6 +31,7 @@ Both shapes have equal contract strength. For either shape:
    - Write a comprehensive, numbered user-story list whose coverage determines its length: include every distinct actor, mode, edge case, failure, and acceptance path. Use `As an <actor>, I want <feature>, so that <benefit>.`
 - Name key interfaces, types, commands, config shapes, API payloads, domain terms, and architectural decisions when they constrain delivery.
 - Record confirmed implementation, documentation, testing, and deployment decisions, including the highest practical verification seam and relevant prior art.
+- Preserve the source permalink and repository knowledge disposition of each completed Clarify or Wayfind result. Required items are cumulative across sources; None does not cancel them.
 - Record confirmed target-environment, DDL or DML, rollout-order, mixed-version, recovery, and stable-runbook constraints when they affect safe implementation. Pack records `none known` when no constraint is confirmed; it does not predict the final Deployment disposition.
 - Make acceptance criteria behavioral, concrete, and independently verifiable. Include out of scope.
 - Use file paths only as evidence or location hints. Include a decision-rich snippet only when it expresses a confirmed state machine, reducer, schema, type, or payload decision more precisely than prose.
@@ -42,12 +43,13 @@ The contract is complete only when an implementation agent can begin without rep
 1. **Gather the complete source.**
    - Read the work body, comments and receipts, latest State Reason, triage and clarification decisions, existing package text, relationships, blockers, implementation artifacts, and attachments.
    - Inspect code, tests, docs, runbooks, the domain glossary, ADRs, and GitHub workflow conventions only where they change the contract.
-   - For a Wayfinding source, use `Read Wayfinding Map` and `Hand Off Wayfinding Map` to recover its destination, decisions, resolved investigations, fog, scope boundary, linked assets, and any interrupted handoff. A replacement carrying a handoff key resumes that source map.
+   - For a Wayfinding source, use `Read Wayfinding Map` and `Hand Off Wayfinding Map` to recover its destination, decisions, complete investigation resolutions, fog, scope boundary, linked assets, and any interrupted handoff. A replacement carrying a handoff key resumes that source map.
    - Completion criterion: every desired behavior is grounded in a source fact or confirmed decision, every remaining unknown is explicit, and current behavior, constraints, verification clues, blockers, and handoff state are known.
 
 2. **Resolve blockers, verification, and shape.**
    - Verify discoverable facts locally. Missing human judgment, reporter facts, permission, access, external state, acceptance input, or a testing or deployment decision required for safe implementation blocks packaging.
    - Route product, domain, architecture, naming, testing, rollout, or deployment-risk judgment through `and-triage`. Route other missing input to its accountable owner. Use `Write Stage State` to route the work to `needs-info`, record the wait with `Write State Reason`, then stop.
+   - A post-cutover missing, conflicting, or stale disposition blocks publication and routes back through the source's Clarify or Wayfind stage. A confirmed path-only relocation may update the target when meaning stays unchanged. Completed historical records keep their existing form. A still-open historical source may be mechanically promoted when it already states Required updates or a reasoned no-doc conclusion; other omissions remain unclassified.
    - A Wayfinding source returns to `and-wayfind` while any investigation or in-scope fog remains. Proceed only when it carries `needs-pack`, every completed investigation has a durable resolution, and every linked asset has a cleanup or Package-promotion disposition. Use the handoff operation to detect an incomplete or competing replacement before allocating work.
    - Choose the highest practical verification seam. Use a single issue when one record is a sufficient delivery and verification boundary; use a PRD when internal slices are needed for progress, ordering, delegation, or acceptance.
    - Completion criterion: either one durable blocker names its owner, resume authority, and exit criteria with no ready publication, or no unresolved input remains and exactly one verification seam and package shape are justified. A map also meets every eligibility condition above and is free of competing handoffs.
@@ -99,7 +101,8 @@ Summary: <one-line behavior change>
 
 ## Documentation / Domain Updates
 
-- <glossary, ADR, context, README, runbook, or none>
+- Source: <upstream permalink or direct confirmed source>
+  Repository knowledge disposition: <Required with Target / Change / Why items, or None — reason>
 
 ## Testing / Verification Decisions
 
@@ -128,6 +131,8 @@ Summary: <one-line behavior change>
 
 ### PRD Child Slice
 
+When a PRD assigns a documentation contribution, the child inherits the parent item and source unchanged. The parent remains the complete authority.
+
 ```markdown
 ## What to build
 
@@ -155,7 +160,7 @@ Summary: <one-line behavior change>
 
 ## Documentation / domain updates
 
-- <glossary, ADR, context, README, runbook, or none>
+- <assigned parent documentation item and source, unchanged; or none assigned>
 
 ## Deployment Contribution
 

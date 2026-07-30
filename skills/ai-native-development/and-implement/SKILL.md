@@ -36,7 +36,9 @@ Route an unready or unowned unit to the smallest upstream AND skill. If the curr
    - Plan from the Package Contract and PRD dependencies. Internal delegation remains under the parent claim owner.
    - When this path creates a worktree-owned local resource, load the shared cleanup authority before creation. Give every delegated creator a supported typed ownership identity, or require it to remove unsupported resources before the final handoff.
    - Use `tdd` at the agreed seam where practical. Work incrementally, run focused tests and typechecking regularly, then run the full relevant suite once the delivery unit is complete.
-   - Apply required documentation or domain updates. Keep the diff within the claimed contract.
+   - Apply required documentation or domain updates. For each Required item, retain its source, target, and reviewed diff evidence for the Implementation receipt. For None, retain its source and reason.
+   - Before applying a Required item, re-read its target authority. Integrate compatible edits on the latest baseline and include them in complete-diff review; route semantic conflicts to `and-pack`.
+   - Route a disputed disposition or new durable repository knowledge to `and-pack` before changing the contract.
    - On abort before a valid final handoff, clean and verify every owned resource or append the exact residual and resume evidence required by the shared cleanup authority.
    - Route an incorrect boundary, unclear verification requirement, or new human judgment to its owning stage instead of changing scope locally.
    - Completion criterion: code, tests, and required docs satisfy every parent and child requirement, or one evidenced upstream blocker is named.
@@ -44,7 +46,7 @@ Route an unready or unowned unit to the smallest upstream AND skill. If the curr
 4. **Review the complete diff.**
    - Commit the scoped review candidate so no relevant change exists only in the working tree.
    - Verify the fixed point still resolves, then invoke `code-review` with that fixed point and the complete GitHub Package Contract as Spec.
-   - Fix in-scope implementation findings, update the scoped commit, rerun relevant verification, and review the same complete diff again. Route contract defects to `and-pack`; route human-owned judgments through the current State Reason owner or `and-triage` when no decision route exists.
+   - Fix in-scope implementation findings, update the scoped commit, rerun relevant verification, and review the same complete diff again. Spec review checks each documentation item against its source, Package entry, and diff. Route contract defects to `and-pack`; route human-owned judgments through the current State Reason owner or `and-triage` when no decision route exists.
    - Completion criterion: Standards and Spec review are clean, or every remaining finding is explicitly outside scope or human-owned.
 
 5. **Classify deployment and local cleanup handoffs.**
@@ -78,7 +80,7 @@ Verification:
 Review:
 - <code-review result or pending with reason>
 Docs / domain updates:
-- <updated, not required, or pending>
+- <source, target, and reviewed diff evidence for each Required item; or source and reason for None>
 Remaining blockers:
 - <none or blocker>
 Deployment: <none — reason | standard — environments; stable runbook link | custom — see Deployment Manifest below>
