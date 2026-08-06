@@ -22,6 +22,7 @@
       "title": "Personal Utilities",
       "description": "Personal helpers for keeping Agent work concise and visible.",
       "skills": [
+        "codex-executor",
         "progress-title"
       ]
     },
