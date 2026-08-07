@@ -11,7 +11,7 @@ The calling workflow skill owns its target, synchronization boundaries, GitHub m
 
 ## Interview Continuation
 
-The one-question waits required by `grilling` stay inside the active interview. Keep confirmed results in local recovery, preserve current GitHub workflow state, and continue when the next answer arrives.
+Waiting and continuation follow the cadence provided by the current `grilling` behavior. Keep confirmed results in local recovery, preserve current GitHub workflow state, and continue when the human responds. The recovery buffer may hold one or multiple unresolved inputs; their count does not define the next `grilling` turn.
 
 ## Inputs
 
@@ -94,7 +94,7 @@ Use one disposable local buffer for confirmed interview results between GitHub w
 - Name a new buffer `<work-record-number>-<short-topic-title>.md`, such as `74-恢复缓冲区文件名.md`. The basename is a compact label, never recovery identity. Re-read the directory immediately before creating the file and create it without replacement. When another valid identity occupies that basename or wins a creation race, re-scan and use the lowest available numeric suffix such as `-2` rather than a digest; never overwrite an existing buffer.
 - Derive the `<workflow-skill>:v1` operation key only when diagnosing recovery or locating a legacy `<key>.md` buffer. Do not create new digest-named buffers or expose the key in routine tool output, logs, receipts, or user-facing responses; refer to the compact basename unless exact diagnostic evidence is required.
 - A materially confirmed result changes package scope, canonical terminology, architecture, acceptance, required documentation, chart destination or scope, or the durable answer to an investigation.
-- The checkpoint is the SHA-256 hash of the buffer from `## Confirmed result` through `## Current unresolved question`, with LF line endings and exactly one final newline.
+- The checkpoint is the SHA-256 hash of the buffer from `## Confirmed result` through `## Current unresolved inputs`, with LF line endings and exactly one final newline.
 
 Use this shape:
 
@@ -107,12 +107,12 @@ Work record: <GitHub issue identity>
 Checkpoint: <digest>
 
 ## Confirmed result
-## Current unresolved question
+## Current unresolved inputs
 ```
 
 When `## Confirmed result` contains a completed decision, insert `## Repository knowledge disposition` immediately after it. Put any `## Acceptance implications` after the disposition.
 
-For `chart-map`, insert `## Investigation candidates` and `## Remaining fog` immediately before `## Current unresolved question`. A chart that publishes a map remains unclassified, while a no-map Wayfinding Exit includes the disposition. Every added section stays inside the checkpoint range.
+For `chart-map`, insert `## Investigation candidates` and `## Remaining fog` immediately before `## Current unresolved inputs`. A chart that publishes a map remains unclassified, while a no-map Wayfinding Exit includes the disposition. Every added section stays inside the checkpoint range.
 
 After reading authoritative GitHub state, scan the workflow-skill directory and classify buffers by their header identity before validating matching content. Select only the exact workflow, repository, and work-record identity regardless of its topic label; a title change does not relocate a live buffer. No match permits lazy creation, one match resumes it, and multiple matches stop as a recovery conflict without merging or deleting content. A buffer attributable to the current identity whose structure or checkpoint is malformed stops recovery. Preserve an unidentifiable or different-identity malformed file and report it as a diagnostic warning without selecting, overwriting, deleting, or allowing it to block unrelated work. A valid different identity at the preferred basename uses the numeric collision rule above.
 

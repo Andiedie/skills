@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # AND Wayfind
 
-A destination is visible, but the way there is still in fog. Wayfinding charts a shared map, then resolves one investigation per session until the route is clear enough for `and-pack`.
+A destination is visible, but the way there is still in fog. Wayfinding charts a shared map, then resolves investigations until the route is clear enough for `and-pack`. Independent Research investigations may advance in parallel when that is useful, while their workflow state and settlement remain separate.
 
 Wayfinding plans. The pull to implement is evidence that the map has reached its package handoff.
 
@@ -27,7 +27,7 @@ Research and prototype assets live in a dedicated investigation branch/worktree.
 
 ## Process
 
-Choose exactly one path per invocation. `Chart A Map` handles a routed non-map record and its incomplete initial outcome. `Work Through A Map` handles an existing map. Charting stops after publication, and map work stops after one investigation or one recovered mutation.
+Choose exactly one path per invocation. `Chart A Map` handles a routed non-map record and its incomplete initial outcome. `Work Through A Map` handles an existing map. Charting stops after publication. Map work stops after one recovered mutation, one non-Research investigation, or one selected set of independent Research investigations.
 
 ### Chart A Map
 
@@ -73,32 +73,33 @@ Use this path for an existing map. An investigation argument is optional.
    - Before frontier selection, recover pending later investigation publication or a durable resolution missing close or map projection through the corresponding workflow operation. Finish only missing effects, verify and report the recovered map state, then stop.
    - Completion criterion: current destination, frontier, fog, and relevant prior decisions are known without loading every investigation in full.
 
-2. Choose and claim one investigation.
-   - A named investigation must belong to the map, be open and unblocked, and be unclaimed or already owned by the current actor. Otherwise resume the first eligible investigation owned by the actor, then the first unclaimed frontier investigation in native child order.
-   - Re-read blockers before resuming owned work. A newly blocked investigation stops this invocation with the changed frontier.
-   - Claim only unclaimed work, then re-read membership, lifecycle, blockers, method, and ownership. An ownership race returns to the current frontier. Ordinary eligibility changes stop with the changed state and frontier; malformed relationships or method state route to `and-sweep`.
-   - Completion criterion: exactly one eligible investigation is selected and owned by the current actor for this invocation; the map and delivery ownership remain unchanged.
+2. Choose and claim investigation work.
+   - A named investigation selects only that investigation. It must belong to the map, be open and unblocked, and be unclaimed or already owned by the current actor. Otherwise resume the first eligible investigation owned by the actor, then the first unclaimed frontier investigation in native child order.
+   - When the frontier offers several useful Research investigations with no dependency between them, the Agent may select and claim more than one. Only independent Research investigations may be selected together. The Agent chooses a mechanism suited to the current environment; subagents are optional execution capacity, not an AND dependency. Serial research remains valid when parallel execution is unavailable or not useful.
+   - Apply eligibility, ownership, evidence, resolution, asset disposition, and recovery separately to each investigation. Re-read blockers before resuming owned work; a newly blocked investigation is excluded without changing the eligibility of the others.
+   - Claim each selected unclaimed investigation separately, then re-read its membership, lifecycle, blockers, method, and ownership. An ownership race excludes only the affected investigation. Ordinary eligibility changes preserve the changed state and current frontier; malformed relationships or method state route to `and-sweep`.
+   - Completion criterion: one eligible investigation or one independent Research set is selected, every selected investigation is owned by the current actor, and map and delivery ownership remain unchanged.
 
-3. Resolve it.
-   - A durable resolution skips method execution and proceeds to the missing close or map advance. Otherwise invoke the recorded method and zoom into linked evidence as needed.
+3. Resolve the selected work.
+   - A durable resolution on a selected investigation skips its method execution and proceeds to the missing close or map advance. Otherwise invoke each recorded method separately and zoom into its linked evidence as needed. Selected Research methods may run concurrently, but they never share one answer or asset.
    - For HITL, supply objective `resolve-investigation` and the investigation's canonical identity to `and-interview-contract`. The investigation stays open until the human supplies the required response.
    - A durable answer carries one repository knowledge disposition. AFK work applies the same authority test directly; HITL work uses the disposition covered by its checkpoint.
    - The current owner keeps unfinished ownership with its blocker or recovery evidence. An explicit abandonment may release only that investigation after preserving the reason.
-   - Without a durable answer, report one precise recoverable blocker and stop before map advance.
-   - Completion criterion: one durable answer exists with required evidence and asset disposition, or the invocation has stopped with one recoverable blocker.
+   - A failure or interruption in one investigation does not invalidate completed work from another. Record one precise recoverable blocker for each selected investigation without a durable answer and leave it open; completed investigations may still advance.
+   - Completion criterion: every selected investigation has either one durable answer with required evidence and asset disposition or one precise recoverable blocker.
 
-4. Advance the map.
-   - Apply the workflow contract's Resolve Investigation operation with the complete answer, re-reading the map immediately before mutation. The durable resolution and HITL checkpoint precede close and map projection.
-   - Project one linked, named gist into `Decisions so far`, or one linked reason into `Out of scope` when the answer lies beyond the Destination.
-   - Publish newly sharp investigations through Chart Wayfinding Map with batch key `<source-investigation-key>:batch` and stable confirmed-order keys such as `<source-investigation-key>:N01`. Resume only that batch's publication history; route competing intent or mismatched content to `and-sweep`.
-   - Remove graduated fog, update invalidated investigations, and move beyond-destination findings to `Out of scope`.
+4. Advance the map for completed investigations.
+   - Apply the workflow contract's Resolve Investigation operation separately for each complete answer, re-reading the map immediately before each mutation. Never combine resolution receipts or asset dispositions. The durable resolution and HITL checkpoint precede that investigation's close and map projection.
+   - For each answer, project one linked, named gist into `Decisions so far`, or one linked reason into `Out of scope` when the answer lies beyond the Destination.
+   - Publish newly sharp investigations through Chart Wayfinding Map with batch key `<source-investigation-key>:batch` and stable confirmed-order keys such as `<source-investigation-key>:N01`. Resume only that source investigation's batch history; route competing intent or mismatched content to `and-sweep`.
+   - Remove graduated fog, update invalidated investigations, and move beyond-destination findings to `Out of scope` while preserving unresolved selected investigations and newer concurrent map changes.
    - When no open investigation or in-scope fog remains, move the map to `needs-pack` and clear the current State Reason; otherwise preserve `needs-info` and an accurate `Resume with: and-wayfind` State Reason.
-   - Re-read after mutation. Preserve newer concurrent changes and require the durable resolution's named pointer or out-of-scope reason. Report an incomplete projection and stop with the resolution authoritative; the next invocation recovers it before frontier selection.
-   - Clean synchronized interview recovery after the complete map advance verifies.
-   - Completion criterion: the authoritative map reflects the answer, current frontier, remaining fog, and clear-or-resume state without resolving a second investigation.
+   - Re-read after each mutation. Preserve newer concurrent changes and require each durable resolution's named pointer or out-of-scope reason. Report an incomplete projection with that resolution authoritative; the next invocation recovers it before frontier selection.
+   - Clean each synchronized interview recovery only after its complete map advance verifies.
+   - Completion criterion: the authoritative map reflects every advanced answer, the current frontier, remaining fog, and clear-or-resume state; unfinished investigations retain their independent recovery state.
 
 5. Report the work receipt.
-   - Name the map, resolved investigation or blocker, new frontier or clear state, relevant asset disposition, and next `and-wayfind` or `and-pack`.
+   - Name the map, resolved investigations and blockers, new frontier or clear state, each relevant asset disposition, and next `and-wayfind` or `and-pack`.
    - Leave full answers and record bodies in their durable authority.
    - Completion criterion: the user can resume the named frontier or package the clear map without reconstructing the investigation.
 
