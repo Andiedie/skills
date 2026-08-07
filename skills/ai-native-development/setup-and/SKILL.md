@@ -16,7 +16,7 @@ Repository setup is conformant when:
 - every directory containing Agent instructions follows the Agent Instruction Policy below;
 - no observed GitHub workflow-state contradiction makes stage, relationship, ownership, or lifecycle meaning ambiguous.
 
-External skill readiness and the next-skill receipt are report results rather than repository conformance conditions. When the user explicitly requests full readiness, missing external skills make that result incomplete while repository conformance remains separate.
+External skill availability and the next-skill receipt are report results rather than repository conformance conditions. Missing external skills make environment availability incomplete while repository conformance remains separate.
 
 ## Process
 
@@ -29,11 +29,11 @@ Work outward from observable evidence:
 - Read [relationship-api.md](../and-workflow-contract/relationship-api.md) before interpreting native relationship responses or planning a reversible capability probe.
 - Inspect existing GitHub workflow state for contradictions that a setup write must preserve and route to `and-sweep` rather than overwrite. An unresolved contradiction keeps repository conformance incomplete.
 - Scan every `AGENTS.md` and `CLAUDE.md` outside dependency, generated, and VCS directories. Classify each containing directory, resolve symlinks, and follow references only far enough to determine effective workflow rules.
-- Check `and-workflow-contract`, `and-interview-contract`, `grilling`, `research`, `prototype`, `tdd`, and `code-review` separately as [Environment Readiness](#environment-readiness).
+- Check `and-workflow-contract`, `and-interview-contract`, `grilling`, `research`, `prototype`, `tdd`, and `code-review` separately as [Environment Availability](#environment-availability).
 
 The audit is read-only. A write capability that cannot be proven from authoritative permission and role evidence remains unverified until an approved envelope authorizes a reversible probe.
 
-Completion criterion: every Setup Contract condition has evidence, a gap, or one named unresolved decision, and environment readiness is known.
+Completion criterion: every Setup Contract condition has evidence, a gap, or one named unresolved decision, and environment availability is known.
 
 ### 2. Resolve Genuine Decisions
 
@@ -85,7 +85,7 @@ Run the same assessment against the same repository after writes.
 
 - Verify every Setup Contract condition from current evidence.
 - Verify that a second apply would be a no-op.
-- Report repository conformance separately from environment and full readiness.
+- Report repository conformance separately from environment availability.
 - Name changed files and GitHub actions, remaining blockers, missing-skill install commands, and exactly one next workflow skill.
 - Route back to `setup-and` rather than downstream when any conformance condition remains unsatisfied.
 
@@ -133,9 +133,11 @@ This repository uses the AND delivery loop.
 - Use the installed `ai-native-development` skills and `and-workflow-contract` for workflow rules.
 ```
 
-## Environment Readiness
+## Environment Availability
 
 Check `and-workflow-contract`, `and-interview-contract`, `grilling`, `research`, `prototype`, `tdd`, and `code-review` from the session skill list or documented skill-list command. Report `unverified` when neither establishes availability.
+
+Availability proves discovery only; it does not establish version or semantic compatibility.
 
 Missing skills do not authorize installation. When installation is requested, use the owning repository and known Agent targets:
 
@@ -154,12 +156,11 @@ After a successful apply, report:
 Repository setup: conformant
 Workflow state: GitHub ready
 Changed: <files and GitHub actions, or none>
-Environment readiness: <ready | missing or unverified skills>
-Full readiness: <ready | incomplete, only when requested>
+Environment availability: <available | missing or unverified skills>
 Next: <one AND workflow skill>
 ```
 
-Before writes, list the target repository, exact file actions, exact GitHub actions, environment readiness, and any blocker. Omit empty groups and passed-condition inventories from the default report.
+Before writes, list the target repository, exact file actions, exact GitHub actions, environment availability, and any blocker. Omit empty groups and passed-condition inventories from the default report.
 
 ## Boundaries
 
