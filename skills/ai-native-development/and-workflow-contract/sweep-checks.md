@@ -2,6 +2,8 @@
 
 Read this checklist only when `and-sweep` audits GitHub workflow state.
 
+An Implementation receipt that omits Cleanup is the valid no-handoff path. Sweep must not report that absence as drift or query a resource runtime to validate it.
+
 Check for:
 
 - multiple active queue labels on one top-level issue;
@@ -15,6 +17,7 @@ Check for:
 - stale, partial, or conflicting delivery ownership, including assignee/receipt mismatch or multiple delivery assignees;
 - implementation artifacts used as ownership without a valid ownership record;
 - reviewed implementation handed to Finish whose latest Implementation receipt lacks one authoritative Deployment disposition for its reviewed head, or whose disposition is stale or internally contradictory;
+- a present `Cleanup: required` handoff that is malformed, head-stale, incomplete, or contradicted by explicit GitHub evidence; route the finding to the owning implementation or finish stage without backend-specific interpretation or cleanup;
 - a `custom` Deployment disposition with a missing, stale, incomplete, or contradictory Deployment Manifest, or a `none` or `standard` disposition that incorrectly includes a Manifest;
 - merged delivery missing completion evidence, retaining an active stage, or remaining open;
 - a parent closed while a contained child remains open, or Finish ending with completed children and an open parent;

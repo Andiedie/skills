@@ -36,7 +36,7 @@ An explicit authorized route instruction supplies the human judgment; ground onl
    - Completion criterion: exactly one target is selected, or the run ends with no in-scope work or a short attention list awaiting selection.
 
 2. Ground the route.
-   - Read the record, current stage and lifecycle, latest State Reason, material comments or receipts, ownership, relationships and blockers, linked implementation artifacts, the Deployment and Cleanup dispositions and any content they require when reviewed implementation exists, attachments, and prior triage notes.
+   - Read the record, current stage and lifecycle, latest State Reason, material comments or receipts, ownership, relationships and blockers, linked implementation artifacts, the Deployment disposition and any present Cleanup handoff or content it requires when reviewed implementation exists, attachments, and prior triage notes.
    - Follow evidence into code, tests, docs, domain notes, or architecture decisions only where the route turns on it.
    - Check duplicates by concept, existing implementation, and relevant recorded rejections or out-of-scope decisions.
    - For a bug, make a proportionate reproduction attempt from the reporter's steps.
@@ -45,7 +45,7 @@ An explicit authorized route instruction supplies the human judgment; ground onl
 
 3. Choose one route.
 
-   - A record with a published Package Contract, claim, or implementation evidence is not an ordinary closure candidate. Preserve its state: route an unclaimed ready unit to `and-pick` or the selected unit to `and-claim`; route claimed or incomplete implementation, including a missing, stale, or contradictory Deployment or Cleanup disposition, or missing content required by one, to `and-implement`; route reviewed or merged delivery with authoritative dispositions to `and-finish`; and route contradictory evidence to `and-sweep`.
+   - A record with a published Package Contract, claim, or implementation evidence is not an ordinary closure candidate. Preserve its state: route an unclaimed ready unit to `and-pick` or the selected unit to `and-claim`; route claimed or incomplete implementation, including a missing, stale, or contradictory Deployment disposition, a malformed, stale, or contradictory present Cleanup handoff, or missing content required by one, to `and-implement`; route reviewed or merged delivery with an authoritative Deployment disposition and any valid required Cleanup handoff to `and-finish`; and route contradictory evidence to `and-sweep`.
 
    | Route | Use when |
    | --- | --- |

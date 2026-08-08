@@ -39,8 +39,8 @@ Observe -> Decide -> Clarify -> Pack -> Claim -> Implement -> Close/Learn
 | Clarify | Which bounded, currently enumerable decision space or other required input blocks a correct package? | Confirmed input or one explicit unresolved question. |
 | Pack | What complete delivery unit can an Agent execute? | A single issue package or PRD package. |
 | Claim | Who owns the whole delivery unit? | One recorded owner and an unchanged scope. |
-| Implement | What change satisfies the package, what does it require at deployment time, and which worktree-owned local resources remain? | An isolated, verified, and reviewed implementation with Deployment and Cleanup dispositions. |
-| Close/Learn | What proves delivery completion, which handed-off local resources were reclaimed, and what follows from it? | A lifecycle outcome, completion evidence, linked handoffs, verified typed cleanup, and any new signal. |
+| Implement | What change satisfies the package, what does it require at deployment time, and which worktree-owned local resources remain? | An isolated, verified, and reviewed implementation with a Deployment disposition and an optional typed Cleanup handoff. |
+| Close/Learn | What proves delivery completion, which handed-off local resources were reclaimed, and what follows from it? | A lifecycle outcome, completion evidence, linked handoffs, verified typed cleanup when handed off, and any new signal. |
 
 This is a loop rather than a one-way assembly line. A later stage can reveal that an earlier assumption was wrong, but the correction returns to the stage that owns it. Packaging does not improvise a missing product decision, and implementation does not privately rewrite the package.
 
@@ -111,7 +111,7 @@ A PRD package is still claimed as one unit. Its owner may delegate child slices,
 
 ## Durable Handoffs
 
-GitHub is the source of truth for the loop. It keeps the current work record, Wayfinding map when any, State Reason, Package Contract, relationships, owner, reviewed-head-bound Deployment and Cleanup dispositions, and evidence recoverable when sessions or Agents change.
+GitHub is the source of truth for the loop. It keeps the current work record, Wayfinding map when any, State Reason, Package Contract, relationships, owner, the reviewed-head-bound Deployment disposition and any Cleanup handoff, and evidence recoverable when sessions or Agents change.
 
 Before implementation, work moves through a small queue: `needs-triage`, `needs-info`, `needs-pack`, and `ready-for-agent`. These states describe where pre-execution uncertainty remains; they are not implementation progress states. The [workflow contract](../and-workflow-contract/SKILL.md) defines their meaning, GitHub representation, and invariants.
 
@@ -119,7 +119,7 @@ Branches, commits, pull requests, CI, and reviews are implementation artifacts. 
 
 The latest Implementation receipt always carries a lightweight Deployment disposition: `none` for no environment rollout, `standard` for a rollout fully covered by a named stable runbook, or `custom` when package-specific instructions are needed. Only `custom` adds a full Deployment Manifest covering environments, data or configuration changes, ordered actions, prerequisites, compatibility, recovery, and verification. Finish validates and links this handoff but does not execute deployment or treat pending environment rollout as incomplete code delivery.
 
-The receipt also carries a backend-neutral Cleanup disposition. `none` attests that no worktree-owned local resource remains and does not require access to Docker or another runtime. `required` carries only cleanup items whose type has shared ownership, deletion, and verification rules; Docker Compose projects and AND-labeled Docker objects are the initial supported types. After delivery becomes authoritative, Finish reclaims those items before removing recovery-bearing source worktrees or branches. Local cleanup neither changes deployment classification nor proves an environment rollout.
+The receipt carries a Cleanup handoff only when a supported worktree-owned local resource survives for Finish. Omit Cleanup when no owned resource remains; omission requires no cleanup identity or Docker (or other runtime) access. `required` carries only cleanup items whose type has shared ownership, deletion, and verification rules; Docker Compose projects and AND-labeled Docker objects are the initial supported types. After delivery becomes authoritative, Finish reclaims handed-off items before removing recovery-bearing source worktrees or branches. Local cleanup neither changes deployment classification nor proves an environment rollout.
 
 Each stage leaves only the durable evidence needed to continue the work. Temporary reasoning and interview transcripts stay out of long-lived state unless they become a decision, blocker, requirement, or completion result.
 
@@ -141,7 +141,7 @@ The loop preserves correctness by making route-backs explicit:
 - Failed implementation verification returns to Implement unless it exposes a package defect.
 - A completed, duplicate, rejected, or superseded delivery unit receives a terminal lifecycle outcome with evidence.
 
-For a reviewed implementation with no pending acceptance or blocker, `and-finish` is the Close/Learn action. It delivers the implementation through one authorized GitHub pull request, records completion on the delivery-unit issue, verifies required typed local cleanup, and only then cleans proven-safe Git delivery artifacts. Review remains part of implementation evidence rather than being rerun during finish.
+For a reviewed implementation with no pending acceptance or blocker, `and-finish` is the Close/Learn action. It delivers the implementation through one authorized GitHub pull request, records completion on the delivery-unit issue, performs typed local cleanup only for an explicit required handoff, and only then cleans proven-safe Git delivery artifacts. Review remains part of implementation evidence rather than being rerun during finish.
 
 Closure can produce a new signal: a follow-up requirement, a documentation need, a newly discovered bug, or a lesson that changes future packages. That signal starts another loop instead of quietly expanding the completed delivery unit.
 

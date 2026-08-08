@@ -32,7 +32,7 @@ Apply every relevant workflow invariant and Sweep Check. The required domains ar
 
 - stage, State Reason, and lifecycle;
 - package shape, relationships, dependencies, and external blockers;
-- whole-unit ownership, stale or conflicting claims, implementation artifacts, Deployment and Cleanup dispositions, and duplicate-work risk;
+- whole-unit ownership, stale or conflicting claims, implementation artifacts, the Deployment disposition and any present `Cleanup: required` handoff, and duplicate-work risk; an omitted Cleanup field is the valid no-handoff path;
 - Wayfinding maps, investigations, handoff, and temporary assets;
 - completion evidence and GitHub representation.
 
