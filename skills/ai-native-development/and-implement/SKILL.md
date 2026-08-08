@@ -45,7 +45,7 @@ Route an unready or unowned unit to the smallest upstream AND skill. If the curr
 
 4. **Review the complete diff.**
    - Commit the scoped review candidate so no relevant change exists only in the working tree.
-   - Verify the fixed point still resolves, then invoke `code-review` with that fixed point and the complete GitHub Package Contract as Spec.
+   - Verify the fixed point still resolves, then invoke the repository-owned `code-review` with that fixed point and the complete GitHub Package Contract plus every acceptance-bearing PRD child supplied as the Spec.
    - Fix in-scope implementation findings, update the scoped commit, rerun relevant verification, and review the same complete diff again. Spec review checks each documentation item against its source, Package entry, and diff. Route contract defects to `and-pack`; route human-owned judgments through the current State Reason owner or `and-triage` when no decision route exists.
    - Completion criterion: Standards and Spec review are clean, or every remaining finding is explicitly outside scope or human-owned.
 

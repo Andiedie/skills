@@ -143,6 +143,7 @@ Missing skills do not authorize installation. When installation is requested, us
 
 ```bash
 npx --yes skills add Andiedie/skills -g --skill and-workflow-contract and-interview-contract --agent <known-target...>
+npx --yes skills add Andiedie/skills -g --skill code-review --agent <known-target...>
 npx --yes skills add mattpocock/skills -g --skill <missing-matt-skill...> --agent <known-target...>
 ```
 
