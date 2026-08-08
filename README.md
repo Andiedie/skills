@@ -79,6 +79,7 @@ It includes:
 ### Personal Utilities
 
 - `codex-executor`: delegate bounded execution work to a user-selected Codex CLI profile while the parent Agent keeps planning and review.
+- `luna-executor`: delegate bounded execution work to the configured Luna worker while the parent Agent keeps judgment and review.
 - `progress-title`: keep the current Codex task title aligned with the active stage and evidence-based progress throughout AND work.
 
 ## AND Runtime Dependencies
