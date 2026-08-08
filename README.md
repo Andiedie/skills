@@ -107,7 +107,7 @@ npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill gril
 
 ## Current Personal Skills
 
-Snapshot from my local skill environment on 2026-07-11. This is a factual personal inventory, not an AND requirement or installation recommendation.
+Snapshot from my local skill environment on 2026-08-08. This is a factual personal inventory, not an AND requirement or installation recommendation.
 
 ### Managed by `npx skills`
 
@@ -116,8 +116,8 @@ Snapshot from my local skill environment on 2026-07-11. This is a factual person
 | [Andiedie/cd2-skills](https://github.com/Andiedie/cd2-skills) | `cd2` |
 | [Andiedie/loopmark](https://github.com/Andiedie/loopmark) | `loopmark` |
 | [Andiedie/openlist-skills](https://github.com/Andiedie/openlist-skills) | `openlist` |
-| [Andiedie/skills](https://github.com/Andiedie/skills) | `and-claim`, `and-clarify`, `and-finish`, `and-implement`, `and-intake`, `and-pack`, `and-pick`, `and-sweep`, `and-triage`, `and-workflow-contract`, `ask-andie`, `documentation-maintenance`, `documentation-reseed`, `install-skills`, `normalize-agent-instructions`, `setup-and` |
-| [mattpocock/skills](https://github.com/mattpocock/skills) | `ask-matt`, `code-review`, `codebase-design`, `diagnosing-bugs`, `domain-modeling`, `grill-me`, `grill-with-docs`, `grilling`, `handoff`, `implement`, `improve-codebase-architecture`, `prototype`, `research`, `scaffold-exercises`, `setup-matt-pocock-skills`, `tdd`, `teach`, `to-spec`, `to-tickets`, `triage`, `wayfinder`, `writing-for-agents` |
+| [Andiedie/skills](https://github.com/Andiedie/skills) | `and-claim`, `and-clarify`, `and-finish`, `and-implement`, `and-intake`, `and-interview-contract`, `and-pack`, `and-pick`, `and-sweep`, `and-triage`, `and-wayfind`, `and-workflow-contract`, `ask-andie`, `code-review`, `codex-executor`, `documentation-maintenance`, `install-skills`, `luna-executor`, `normalize-agent-instructions`, `progress-title`, `setup-and` |
+| [mattpocock/skills](https://github.com/mattpocock/skills) | `codebase-design`, `diagnosing-bugs`, `domain-modeling`, `grilling`, `handoff`, `improve-codebase-architecture`, `prototype`, `research`, `scaffold-exercises`, `tdd`, `teach`, `writing-for-agents` |
 | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | `web-design-guidelines`, `writing-guidelines` |
 | [vercel-labs/skills](https://github.com/vercel-labs/skills) | `find-skills` |
 
@@ -129,9 +129,11 @@ Snapshot from my local skill environment on 2026-07-11. This is a factual person
 | Codex local and system skills | `imagegen`, `playwright`, `playwright-interactive` |
 | Codex browser plugin | `browser:control-in-app-browser` |
 | Codex Chrome plugin | `chrome:control-chrome` |
+| Codex Cloudflare plugin | `cloudflare:agents-sdk`, `cloudflare:building-ai-agent-on-cloudflare`, `cloudflare:building-mcp-server-on-cloudflare`, `cloudflare:cloudflare`, `cloudflare:durable-objects`, `cloudflare:sandbox-sdk`, `cloudflare:web-perf`, `cloudflare:workers-best-practices`, `cloudflare:wrangler` |
 | Codex Computer Use plugin | `computer-use:computer-use` |
 | Codex GitHub plugin | `github:github`, `github:gh-address-comments`, `github:gh-fix-ci`, `github:yeet` |
 | Codex primary runtime plugins | `documents:documents`, `pdf:pdf`, `presentations:Presentations`, `spreadsheets:Spreadsheets`, `spreadsheets:excel-live-control` |
+| Codex Security plugin | `codex-security:attack-path-analysis`, `codex-security:deep-security-scan`, `codex-security:define-security-policy`, `codex-security:finding-discovery`, `codex-security:fix-finding`, `codex-security:propose-security-hardening`, `codex-security:security-diff-scan`, `codex-security:security-scan`, `codex-security:threat-model`, `codex-security:track-findings`, `codex-security:triage-finding`, `codex-security:validation`, `codex-security:vulnerability-writeup` |
 | Codex Sites plugin | `sites:sites-building`, `sites:sites-hosting` |
 | Codex Visualize plugin | `visualize:visualize` |
 
