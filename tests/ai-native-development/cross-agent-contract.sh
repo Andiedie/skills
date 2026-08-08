@@ -27,7 +27,7 @@ reject_text() {
   fi
 }
 
-expected_metadata="$(printf '%s\n' \
+expected_policy_metadata="$(printf '%s\n' \
   'skills/ai-native-development/and-claim/agents/openai.yaml' \
   'skills/ai-native-development/and-clarify/agents/openai.yaml' \
   'skills/ai-native-development/and-finish/agents/openai.yaml' \
@@ -40,13 +40,14 @@ expected_metadata="$(printf '%s\n' \
   'skills/ai-native-development/and-wayfind/agents/openai.yaml' \
   'skills/ai-native-development/ask-andie/agents/openai.yaml' \
   'skills/ai-native-development/setup-and/agents/openai.yaml')"
-actual_metadata="$(
+actual_policy_metadata="$(
   find "$and_root" -path '*/agents/openai.yaml' -type f -print \
+    | xargs grep -lF 'allow_implicit_invocation: false' \
     | sed "s|^$repo_root/||" \
     | LC_ALL=C sort
 )"
 
-[[ "$actual_metadata" == "$expected_metadata" ]] \
+[[ "$actual_policy_metadata" == "$expected_policy_metadata" ]] \
   || fail "OpenAI invocation policy must exist for exactly the 12 user-invoked AND skills"
 
 while IFS= read -r relative_path; do
@@ -54,7 +55,7 @@ while IFS= read -r relative_path; do
     'policy:' \
     '  allow_implicit_invocation: false') \
     || fail "$relative_path must contain only the explicit-invocation policy"
-done <<<"$expected_metadata"
+done <<<"$expected_policy_metadata"
 
 cmp -s "$repo_root/CLAUDE.md" <(printf '%s\n' '@AGENTS.md') \
   || fail "root CLAUDE.md must be a thin AGENTS.md adapter"

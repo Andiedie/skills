@@ -25,20 +25,23 @@ Workflow skills use [`and-workflow-contract`](../and-workflow-contract/SKILL.md)
 
 Decision interviews use [`and-interview-contract`](../and-interview-contract/SKILL.md) for shared evidence, recovery, domain modeling, and artifact-ready output. `and-clarify` and `and-wayfind` retain their distinct workflow effects.
 
-## External Runtime Skills
+## Runtime Skills
 
-AND composes with five external runtime skills:
+AND composes with one repository-owned review skill and four external Matt skills:
 
-| Skill | Used by |
-| --- | --- |
-| `grilling` | `and-clarify` and `and-wayfind` for interview behavior. |
-| `research` | `and-wayfind` for unattended investigation. |
-| `prototype` | `and-wayfind` for human-in-the-loop concrete exploration. |
-| `tdd` | `and-implement` when test-first work is practical at the agreed seam. |
-| `code-review` | `and-implement` before finalizing the delivery-unit diff. |
+| Skill | Source | Used by |
+| --- | --- | --- |
+| `code-review` | `Andiedie/skills` | `and-implement` before finalizing the delivery-unit diff. |
+| `grilling` | `mattpocock/skills` | `and-clarify` and `and-wayfind` for interview behavior. |
+| `research` | `mattpocock/skills` | `and-wayfind` for unattended investigation. |
+| `prototype` | `mattpocock/skills` | `and-wayfind` for human-in-the-loop concrete exploration. |
+| `tdd` | `mattpocock/skills` | `and-implement` when test-first work is practical at the agreed seam. |
 
 Example for a global Codex and Claude Code environment:
 
 ```sh
-npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill grilling research prototype tdd code-review -y
+npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill code-review -y
+npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill grilling research prototype tdd -y
 ```
+
+The repository-owned generic `code-review` uses [mattpocock/skills v1.2.3](https://github.com/mattpocock/skills/releases/tag/v1.2.3) as its provenance baseline and remains available for direct review outside `and-implement`. A migration replaces the Matt source under the same public name rather than retaining both copies.

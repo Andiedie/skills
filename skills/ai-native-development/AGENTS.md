@@ -62,6 +62,7 @@ Use these dimensions when designing or editing an AND workflow skill. Choose the
 - When a skill is added, renamed, removed, or changes description or group membership, update `skills.sh.json` and the repository skill inventory where applicable.
 - When a skill is added, renamed, removed, or changes loop routing, recheck every affected `ask-andie` route.
 - When an external runtime dependency changes, update setup checks, installation guidance, and the usage guide together.
+- Keep repository-owned `code-review` runtime at a minimal behavior-only diff from its recorded upstream baseline. Adopt later upstream changes only through a separate evidence-backed work record and a verified tag diff; do not synchronize automatically.
 - Preserve established terminology unless the change explicitly includes a domain-model update.
 
 ## Verification

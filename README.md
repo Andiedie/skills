@@ -15,7 +15,7 @@ npx --yes skills add Andiedie/skills --list
 Example: install the AI-native development loop globally for Codex and Claude Code:
 
 ```bash
-npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill and-workflow-contract and-interview-contract ask-andie and-intake and-triage and-clarify and-wayfind and-pack and-pick and-claim and-implement and-finish and-sweep setup-and -y
+npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill and-workflow-contract and-interview-contract ask-andie and-intake and-triage and-clarify and-wayfind and-pack and-pick and-claim and-implement and-finish and-sweep code-review setup-and -y
 ```
 
 Install the repository interactively:
@@ -64,6 +64,7 @@ It includes:
 - `and-implement`
 - `and-finish`
 - `and-sweep`
+- `code-review`
 - `setup-and`
 
 ### Documentation
@@ -84,23 +85,25 @@ It includes:
 
 ## AND Runtime Dependencies
 
-The AI-native development loop builds on [Matt Pocock's skills repository](https://github.com/mattpocock/skills). Thanks to Matt Pocock and the repository's contributors for the engineering workflows this package composes with.
+The AI-native development loop builds on selected workflows from [Matt Pocock's skills repository](https://github.com/mattpocock/skills). Thanks to Matt Pocock and the repository's contributors for those foundations.
 
-AND requires exactly these external runtime skills:
+`code-review` is a generic review skill owned and distributed by this repository. Its review model comes from [mattpocock/skills v1.2.3](https://github.com/mattpocock/skills/releases/tag/v1.2.3), with setup responsibility removed while caller-provided review inputs remain generic. Install this source under the existing name; do not retain the Matt copy alongside it.
+
+AND also requires exactly these external runtime skills from Matt:
 
 - `grilling`
 - `research`
 - `prototype`
 - `tdd`
-- `code-review`
 
 Example for a global Codex and Claude Code environment:
 
 ```sh
-npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill grilling research prototype tdd code-review -y
+npx --yes skills add Andiedie/skills -g --agent codex claude-code --skill code-review -y
+npx --yes skills add mattpocock/skills -g --agent codex claude-code --skill grilling research prototype tdd -y
 ```
 
-`setup-and` reports missing dependencies and the install command without installing them unless explicitly asked.
+`setup-and` reports missing dependencies with source-specific install commands without installing them unless explicitly asked.
 
 ## Current Personal Skills
 

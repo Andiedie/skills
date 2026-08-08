@@ -26,6 +26,7 @@ This package defines the AND delivery loop and the workflow skills that turn amb
 - `and-implement`
 - `and-finish`
 - `and-sweep`
+- `code-review`
 - `setup-and`
 
 See the repository [README](../../README.md) for installation commands. Install `and-workflow-contract` with any individually installed AND workflow skill. Install `and-interview-contract` as well when installing `and-clarify` or `and-wayfind` because both invoke that shared reference at runtime.
