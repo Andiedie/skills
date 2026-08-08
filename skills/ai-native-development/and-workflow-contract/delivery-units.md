@@ -42,7 +42,7 @@ Receipts are append-only comments on the record whose operation they evidence. T
 
 Use receipts for material turning points: State Reason changes, clarification decisions, Wayfinding publication and resolution, package publication, claim and approved ownership repair, implementation, review, verification, deployment or local-cleanup handoff, lifecycle outcome, and follow-up work.
 
-Branches, commits, pull requests, CI, and reviews are implementation artifacts linked from receipts. Investigation assets remain planning evidence unless a Package Contract promotes them. Neither kind of artifact replaces workflow state or ownership.
+Branches, commits, pull requests, CI, and reviews are implementation artifacts linked from receipts. Promoted Research evidence enters the Package Contract; other Research assets remain planning evidence under their disposition. Retained Prototype primary sources stay outside main and remain linked from the delivery unit. None of these artifacts replaces workflow state or ownership.
 
 The latest `## Implementation` receipt is the sole candidate for its deployment and local-cleanup handoffs; an incomplete or mismatched latest receipt never falls back to an older one. A newer implementation head requires a new reviewed receipt with both dispositions, plus a Deployment Manifest only when Deployment is `custom`. Later deployment or cleanup evidence does not replace or mutate either handoff.
 

@@ -27,7 +27,7 @@ require_text 'Only independent Research investigations may be selected together.
   "parallel selection is not limited to independent research investigations"
 require_text 'The Agent chooses a mechanism suited to the current environment; subagents are optional execution capacity, not an AND dependency.' \
   "parallel research is tied to an environment-specific mechanism"
-require_text 'Apply eligibility, ownership, evidence, resolution, asset disposition, and recovery separately to each investigation.' \
+require_text 'Apply eligibility, ownership, evidence, resolution, method-specific handling, and recovery separately to each investigation.' \
   "parallel research can mix investigation settlement"
 require_text 'A failure or interruption in one investigation does not invalidate completed work from another.' \
   "partial failure does not preserve completed research"

@@ -19,11 +19,11 @@ Use `and-interview-contract` for charting and every human-in-the-loop (HITL) inv
 ## Investigation Methods
 
 - **Research** (AFK): invoke `research` for facts requiring primary sources outside the current worktree, then link its Markdown evidence from the resolution.
-- **Prototype** (HITL): invoke `prototype` for a cheap concrete artifact that lets the human judge behavior or form. Resolution requires the human's actual reaction.
+- **Prototype** (HITL): invoke `prototype` for a cheap concrete artifact that lets the human judge behavior or form. Resolution records the human reaction and a resolvable branch/ref context pointer.
 - **Grilling** (HITL): invoke `grilling` under `and-interview-contract` for a live decision and keep the exchange on its Wayfinding investigation.
 - **Task** (AFK or HITL): perform a bounded prerequisite whose result makes a later decision possible. Agent scope is routine, authorized, verifiable, idempotent action after re-checking current state; the accountable human owns non-idempotent action and action involving permissions, cost, secrets, terms, or broader shared state. Record the resulting non-secret facts. A task advances the route without delivering the destination.
 
-Research and prototype assets live in a dedicated investigation branch/worktree. The resolution links each asset with `cleanup` or `promote-to-package` disposition; its answer remains durable after a throwaway asset is removed.
+Research assets live in a dedicated investigation branch/worktree and use `cleanup` or `promote-to-package` disposition. Prototype artifacts remain primary sources on a dedicated branch outside main. Their context pointers stay linked through resolution and delivery while the validated decision, not the prototype code, advances toward implementation.
 
 ## Process
 
@@ -76,7 +76,7 @@ Use this path for an existing map. An investigation argument is optional.
 2. Choose and claim investigation work.
    - A named investigation selects only that investigation. It must belong to the map, be open and unblocked, and be unclaimed or already owned by the current actor. Otherwise resume the first eligible investigation owned by the actor, then the first unclaimed frontier investigation in native child order.
    - When the frontier offers several useful Research investigations with no dependency between them, the Agent may select and claim more than one. Only independent Research investigations may be selected together. The Agent chooses a mechanism suited to the current environment; subagents are optional execution capacity, not an AND dependency. Serial research remains valid when parallel execution is unavailable or not useful.
-   - Apply eligibility, ownership, evidence, resolution, asset disposition, and recovery separately to each investigation. Re-read blockers before resuming owned work; a newly blocked investigation is excluded without changing the eligibility of the others.
+   - Apply eligibility, ownership, evidence, resolution, method-specific handling, and recovery separately to each investigation. Re-read blockers before resuming owned work; a newly blocked investigation is excluded without changing the eligibility of the others.
    - Claim each selected unclaimed investigation separately, then re-read its membership, lifecycle, blockers, method, and ownership. An ownership race excludes only the affected investigation. Ordinary eligibility changes preserve the changed state and current frontier; malformed relationships or method state route to `and-sweep`.
    - Completion criterion: one eligible investigation or one independent Research set is selected, every selected investigation is owned by the current actor, and map and delivery ownership remain unchanged.
 
@@ -86,10 +86,10 @@ Use this path for an existing map. An investigation argument is optional.
    - A durable answer carries one repository knowledge disposition. AFK work applies the same authority test directly; HITL work uses the disposition covered by its checkpoint.
    - The current owner keeps unfinished ownership with its blocker or recovery evidence. An explicit abandonment may release only that investigation after preserving the reason.
    - A failure or interruption in one investigation does not invalidate completed work from another. Record one precise recoverable blocker for each selected investigation without a durable answer and leave it open; completed investigations may still advance.
-   - Completion criterion: every selected investigation has either one durable answer with required evidence and asset disposition or one precise recoverable blocker.
+   - Completion criterion: every selected investigation has either one durable answer with method-required evidence and handling or one precise recoverable blocker.
 
 4. Advance the map for completed investigations.
-   - Apply the workflow contract's Resolve Investigation operation separately for each complete answer, re-reading the map immediately before each mutation. Never combine resolution receipts or asset dispositions. The durable resolution and HITL checkpoint precede that investigation's close and map projection.
+   - Apply the workflow contract's Resolve Investigation operation separately for each complete answer, re-reading the map immediately before each mutation. Never combine resolution receipts or method-specific evidence. The durable resolution and HITL checkpoint precede that investigation's close and map projection.
    - For each answer, project one linked, named gist into `Decisions so far`, or one linked reason into `Out of scope` when the answer lies beyond the Destination.
    - Publish newly sharp investigations through Chart Wayfinding Map with batch key `<source-investigation-key>:batch` and stable confirmed-order keys such as `<source-investigation-key>:N01`. Resume only that source investigation's batch history; route competing intent or mismatched content to `and-sweep`.
    - Remove graduated fog, update invalidated investigations, and move beyond-destination findings to `Out of scope` while preserving unresolved selected investigations and newer concurrent map changes.
@@ -99,7 +99,7 @@ Use this path for an existing map. An investigation argument is optional.
    - Completion criterion: the authoritative map reflects every advanced answer, the current frontier, remaining fog, and clear-or-resume state; unfinished investigations retain their independent recovery state.
 
 5. Report the work receipt.
-   - Name the map, resolved investigations and blockers, new frontier or clear state, each relevant asset disposition, and next `and-wayfind` or `and-pack`.
+   - Name the map, resolved investigations and blockers, new frontier or clear state, each method-required asset reference or disposition, and next `and-wayfind` or `and-pack`.
    - Leave full answers and record bodies in their durable authority.
    - Completion criterion: the user can resume the named frontier or package the clear map without reconstructing the investigation.
 
@@ -151,8 +151,9 @@ Answer:
 
 Repository knowledge disposition: <Required items or None — reason from and-interview-contract>
 
-Assets:
-- <link and cleanup or Package-promotion disposition, or none>
+Method evidence:
+- Research: <asset link with cleanup or Package-promotion disposition; omit for other methods>
+- Prototype: <retained primary-source branch/ref context pointer; omit for other methods>
 ```
 
 The disposition begins with a completed Wayfinding Exit or Investigation Resolution. Investigation Publication remains the planning intent.

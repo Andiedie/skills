@@ -130,7 +130,7 @@ Return one complete, compact result. Its primary output is:
 
 - `clarify-decision`: the confirmed decisions and rationale needed to resolve one bounded decision space, one precise remaining blocker, or destination-level uncertainty routed to `and-wayfind` when later questions depend on investigation;
 - `chart-map`: confirmed destination and scope, currently sharp investigation candidates with methods and dependencies, and any remaining fog;
-- `resolve-investigation`: one durable answer with required evidence and asset disposition, or one precise remaining blocker.
+- `resolve-investigation`: one durable answer with method-required evidence, or one precise remaining blocker.
 
 A resolved `clarify-decision`, `resolve-investigation`, or no-map Wayfinding Exit with confirmed decisions includes the complete repository knowledge disposition. A blocker-only result and a chart that publishes investigations remain unclassified. Include acceptance implications when they are confirmed package inputs.
 
@@ -157,4 +157,4 @@ The contract is complete when:
 
 - Workflow state and durable receipts remain with the calling skill and GitHub.
 - Repository docs, ADRs, glossary files, tests, and implementation files remain unchanged; required edits are package inputs for claimed implementation.
-- An isolated investigation asset and its disposition remain linked evidence owned by the calling workflow, not a mutation by this contract.
+- Isolated investigation evidence and its method-owned handling remain linked evidence owned by the calling workflow, not a mutation by this contract.
