@@ -10,7 +10,7 @@ Finish is a resumable transaction: publish one reviewed delivery unit through on
 
 ## Runtime Contracts
 
-Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) and [delivery-units.md](../and-workflow-contract/delivery-units.md) for `Read Delivery Unit`, `Finish Delivery`, `Record Receipt`, and `Record Lifecycle Outcome`. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) and [local-cleanup.md](../and-workflow-contract/local-cleanup.md) directly for their handoff operations when resolving, revalidating, or resuming the implementation handoff. Route incomplete setup to `setup-and`; stop before mutation when the Git remote does not identify one GitHub repository.
+Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) and [delivery-units.md](../and-workflow-contract/delivery-units.md) for `Read Delivery Unit`, `Finish Delivery`, `Record Receipt`, and `Record Lifecycle Outcome`. Read [review-attestation.md](../and-workflow-contract/review-attestation.md) for conditional shadow freshness validation of the latest Implementation receipt. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) and [local-cleanup.md](../and-workflow-contract/local-cleanup.md) directly for their handoff operations when resolving, revalidating, or resuming the implementation handoff. Route incomplete setup to `setup-and`; stop before mutation when the Git remote does not identify one GitHub repository.
 
 ## Preconditions
 
@@ -22,7 +22,7 @@ Report pending acceptance as a wait for its recorded owner without mutation.
 ## Process
 
 1. **Resolve the transaction.**
-   - Read the complete delivery unit, claim, contract, every PRD child, Implementation receipt, Deployment disposition and any present Cleanup handoff, the conditional Deployment Manifest or typed cleanup items when required, verification, review, acceptance, blockers, relationships, and linked artifacts.
+   - Read the complete delivery unit, claim, contract, every PRD child, latest Implementation receipt and any embedded review attestation, Deployment disposition and any present Cleanup handoff, the conditional Deployment Manifest or typed cleanup items when required, verification, review, acceptance, blockers, relationships, and linked artifacts.
    - Resolve the actor, source branch and worktree, reviewed head, implementation-handoff permalink, fixed point, GitHub repository, default branch, explicit target when any, merge policy, and one matching open or merged pull request.
    - Prove the actor can push, create or update and merge the pull request, and complete GitHub workflow state. Match pull requests by repository, source, and target; multiple or mismatched matches are ambiguity, not permission to create another.
    - Completion criterion: scope, owner, source, reviewed head, Deployment disposition and any present Cleanup handoff, repository, target evidence, capabilities, and pull-request identity are unambiguous.
@@ -49,9 +49,10 @@ Report pending acceptance as a wait for its recorded owner without mutation.
    - Completion criterion: exactly one ready or merged pull request represents the complete delivery unit.
 
 5. **Revalidate the final head.**
-   - Immediately before merge, re-read the delivery unit, claim, acceptance, blockers, contract, Implementation receipt, Deployment disposition and any present Cleanup handoff with its conditional Deployment Manifest or typed cleanup items, source worktree, remote branch, pull request, checks, reviews, conflicts, target, and cleanup candidates.
-   - Reapply shared handoff head-binding and form validations to the final head. Prove required checks, reviews, acceptance, and blocker evidence apply to that head and are successful, no blocking review or conflict remains, and GitHub reports it mergeable.
-   - Report a genuine external wait without claiming completion. Route a changed head, stale or defective handoff, or implementation defect back to `and-implement`; route a contract defect to `and-pack`; route conflicting authorities to `and-sweep`; and verify the source still represents open work.
+   - Immediately before merge, re-read the delivery unit, claim, acceptance, blockers, contract, latest Implementation receipt and its conditional attestation, Deployment disposition and any present Cleanup handoff with its conditional Deployment Manifest or typed cleanup items, source worktree, remote branch, pull request, checks, reviews, conflicts, target, and cleanup candidates.
+   - Reapply shared handoff head-binding and form validations to the final head. Run the shared `validate` operation on the latest Implementation receipt with fresh current records. Report the shadow result and precise reasons through [review-attestation.md](../and-workflow-contract/review-attestation.md); never fall back to an older block.
+   - The shadow result is visible evidence only. Its status alone does not block, authorize, or reroute Finish or change existing review, acceptance, deployment, cleanup, or lifecycle authority. Prove required checks, reviews, acceptance, and blocker evidence apply to that head and are successful, no blocking review or conflict remains, and GitHub reports it mergeable.
+   - Report a genuine external wait without claiming completion. Route a changed head, stale or defective handoff, or implementation defect back to `and-implement` only when an independent existing readiness rule requires it; a shadow status alone never routes. Route a contract defect to `and-pack`, route conflicting authorities to `and-sweep`, and verify the source still represents open work.
    - Completion criterion: the current pull-request head is safe to merge, or one precise wait or owning route is named.
 
 6. **Merge exactly once.**
@@ -92,6 +93,7 @@ Reviewed implementation head: <full commit SHA>
 Target: <repository and branch>
 Delivery evidence: <merge commit and pull request>
 Verification / review: <linked evidence>
+Review attestation shadow: <result and precise reasons from review-attestation.md in AND context, including `missing` when the latest receipt has no block>
 Deployment handoff: <none|standard|custom and Implementation receipt permalink>
 Lifecycle outcome: completed
 ```

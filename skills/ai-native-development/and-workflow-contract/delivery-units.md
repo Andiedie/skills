@@ -12,7 +12,7 @@ Begin with current identity and execution-safety pointers:
 - latest State Reason, Claim, Implementation, Completion, and ownership-repair headings and permalinks;
 - linked branch, pull request, reviewed head, CI, and review identities when present.
 
-Zoom in to the complete Package Contract and every acceptance-bearing PRD child before Pick, Claim, Implement, or Finish decides or mutates delivery. Load the complete current authoritative receipt selected by the operation, including its Deployment disposition and any present local-cleanup handoff when reviewed implementation exists. Earlier receipts, historical comments, and raw API metadata stay retrievable and are loaded only when they can change authority, recovery, duplicate-work risk, or the terminal result.
+Zoom in to the complete Package Contract and every acceptance-bearing PRD child before Pick, Claim, Implement, or Finish decides or mutates delivery. Load the complete current authoritative receipt selected by the operation, including its Deployment disposition and any local-cleanup handoff when present, plus the conditional review attestation when reviewed implementation exists. Earlier receipts, historical comments, and raw API metadata stay retrievable and are loaded only when they can change authority, recovery, duplicate-work risk, or the terminal result.
 
 ## Package Shapes
 
@@ -44,7 +44,7 @@ Use receipts for material turning points: State Reason changes, clarification de
 
 Branches, commits, pull requests, CI, and reviews are implementation artifacts linked from receipts. Promoted Research evidence enters the Package Contract; other Research assets remain planning evidence under their disposition. Retained Prototype primary sources stay outside main and remain linked from the delivery unit. None of these artifacts replaces workflow state or ownership.
 
-The latest `## Implementation` receipt is the sole candidate for its Deployment disposition and any local-cleanup handoff; an incomplete or mismatched latest receipt never falls back to an older one. A newer implementation head requires a new reviewed receipt with its Deployment disposition, plus a Deployment Manifest only when Deployment is `custom`. Local-cleanup selection and refresh follow [local-cleanup.md](local-cleanup.md). Later deployment or cleanup evidence does not replace or mutate the latest receipt.
+The latest `## Implementation` receipt is the sole candidate for its Deployment disposition, any local-cleanup handoff, and the review attestation; an incomplete or mismatched latest receipt never falls back to an older one. A newer implementation head requires a new reviewed receipt with its Deployment disposition and a newly paired attestation. Same-head superseding receipt reuse follows the complete conditions in [review-attestation.md](review-attestation.md). A Deployment Manifest appears only when Deployment is `custom`. Local-cleanup selection and refresh follow [local-cleanup.md](local-cleanup.md); review-attestation selection and freshness follow [review-attestation.md](review-attestation.md). Later deployment or cleanup evidence does not replace or mutate the latest receipt.
 
 ## Finish Delivery
 
