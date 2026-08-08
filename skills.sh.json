@@ -23,6 +23,7 @@
       "description": "Personal helpers for keeping Agent work concise and visible.",
       "skills": [
         "codex-executor",
+        "luna-executor",
         "progress-title"
       ]
     },
