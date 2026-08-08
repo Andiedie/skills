@@ -49,7 +49,7 @@ The detailed answer lives only in the investigation resolution. The map and huma
 
 ## Read A Map
 
-Begin with the map identity, lifecycle, stage, latest State Reason pointer, and each native investigation's identity, lifecycle, method label, blocker state, assignee, latest resolution pointer, and asset link. Expand the map's destination, Notes, decision pointers, fog, and out-of-scope boundary when charting, resolving, publishing, or handing off can change them. Expand a complete investigation resolution or asset only when that investigation or decision is selected; do not preload unrelated resolutions or raw relationship metadata.
+Begin with the map identity, lifecycle, stage, latest State Reason pointer, and each native investigation's identity, lifecycle, method label, blocker state, assignee, latest resolution pointer, and method-specific evidence link. Expand the map's destination, Notes, decision pointers, fog, and out-of-scope boundary when charting, resolving, publishing, or handing off can change them. Expand a complete investigation resolution or its evidence only when that investigation or decision is selected; do not preload unrelated resolutions or raw relationship metadata.
 
 Derive the frontier from current investigation state rather than storing a second list.
 
@@ -106,7 +106,7 @@ A map is clear only when no open investigation or in-scope fog remains. Replace 
 
 Derive one deterministic handoff key and append pending handoff evidence before creating a separate delivery unit. Create the replacement as an open top-level issue in `needs-pack`; its initial body carries `<!-- and-map-handoff:<key> -->` and a source-map link. Re-read the map and exact-key matches immediately before allocation and after creation.
 
-Continue only when exactly one replacement matches. Multiple matches remain non-executable and route to `and-sweep`; the handoff never chooses a winner. Finish Package promotion and every temporary-asset cleanup or promotion before making the replacement `ready-for-agent`.
+Continue only when exactly one replacement matches. Multiple matches remain non-executable and route to `and-sweep`; the handoff never chooses a winner. Resolve every temporary Research asset disposition and retain every Prototype primary-source pointer in the replacement before making it `ready-for-agent`.
 
 After all effects verify, append completed handoff evidence with the replacement identity, remove the map's active stage, and close the map. Pending and completed evidence with one key are one operation. Resolved investigations remain closed planning evidence; a failed handoff leaves the map open and resumable.
 

@@ -50,7 +50,7 @@ The contract is complete only when an implementation agent can begin without rep
    - Verify discoverable facts locally. Missing human judgment, reporter facts, permission, access, external state, acceptance input, or a testing or deployment decision required for safe implementation blocks packaging.
    - Route product, domain, architecture, naming, testing, rollout, or deployment-risk judgment through `and-triage`. Route other missing input to its accountable owner. Use `Write Stage State` to route the work to `needs-info`, record the wait with `Write State Reason`, then stop.
    - A post-cutover missing, conflicting, or stale disposition blocks publication and routes back through the source's Clarify or Wayfind stage. A confirmed path-only relocation may update the target when meaning stays unchanged. Completed historical records keep their existing form. A still-open historical source may be mechanically promoted when it already states Required updates or a reasoned no-doc conclusion; other omissions remain unclassified.
-   - A Wayfinding source returns to `and-wayfind` while any investigation or in-scope fog remains. Proceed only when it carries `needs-pack`, every completed investigation has a durable resolution, and every linked asset has a cleanup or Package-promotion disposition. Use the handoff operation to detect an incomplete or competing replacement before allocating work.
+   - A Wayfinding source returns to `and-wayfind` while any investigation or in-scope fog remains. Proceed only when it carries `needs-pack`, every completed investigation has a durable resolution, every linked Research asset has a cleanup or Package-promotion disposition, and every Prototype resolution has a retained primary-source branch/ref context pointer. Use the handoff operation to detect an incomplete or competing replacement before allocating work.
    - Choose the highest practical verification seam. Use a single issue when one record is a sufficient delivery and verification boundary; use a PRD when internal slices are needed for progress, ordering, delegation, or acceptance.
    - Completion criterion: either one durable blocker names its owner, resume authority, and exit criteria with no ready publication, or no unresolved input remains and exactly one verification seam and package shape are justified. A map also meets every eligibility condition above and is free of competing handoffs.
 
@@ -60,14 +60,14 @@ The contract is complete only when an implementation agent can begin without rep
    - If prefactoring is needed, make it an explicit implementation decision or the first child.
    - A wide refactor is available only when one mechanical form fans out so broadly that no ordinary vertical slice can land green. When all parts of that trigger hold, read [wide-refactors.md](wide-refactors.md).
    - Child slices may be delegated under the parent claim, while the parent remains the public pick and claim target.
-   - For a Wayfinding source, link the source map in `Further Notes` and translate every promoted investigation asset into a requirement, decision, acceptance criterion, documentation update, or child slice.
+   - For a Wayfinding source, link the source map in `Further Notes`, translate every promoted Research asset into a requirement, decision, acceptance criterion, documentation update, or child slice, and preserve every Prototype primary-source pointer in `Further Notes`. Translate the validated Prototype decision into the contract without promoting its artifact.
    - Completion criterion: the Package Contract meets the Contract Standard, and every child maps to parent stories, key interfaces, behavioral acceptance, dependency intent, deployment contribution, and a declared verification path.
 
 4. **Publish safely.**
    - Invocation authorizes publication from confirmed workflow state. Confirm only an ambiguous mutation target, overwrite of unrelated maintainer text, unclear GitHub authority or access, or unconfirmed human judgment.
    - Publish ordinary work in its existing record with `Publish Package`. Supply the full contract, ordered child bodies, semantic containment and dependency graph, and verification expectations; use the workflow contract's GitHub representation. If publication is partial or ambiguous, stop with the exact observed state and route it to `and-sweep` before retrying Pack.
    - For a clear map, run `Hand Off Wayfinding Map` with the Map Handoff receipt. Publish one separate replacement package and keep investigations as planning evidence.
-   - Completion criterion: GitHub expresses exactly one executable delivery unit with the correct ready state, containment, dependencies, and no unresolved blocker or contradictory workflow state. A map handoff also has one verified replacement, complete Package promotion and asset disposition, and a completed source map; an interrupted map handoff remains recoverable and a competing handoff remains non-executable.
+   - Completion criterion: GitHub expresses exactly one executable delivery unit with the correct ready state, containment, dependencies, and no unresolved blocker or contradictory workflow state. A map handoff also has one verified replacement, complete Research promotion or cleanup, retained Prototype primary-source pointers, and a completed source map; an interrupted map handoff remains recoverable and a competing handoff remains non-executable.
 
 5. **Return a short receipt.**
    - Report the package link or ID, shape, state change, verification path, and next skill. For a PRD, include child count and dependency-order summary. For a map, include the source and handoff result.
@@ -184,7 +184,8 @@ Handoff: <pending or completed>
 Replacement package: <pending or link/work ID>
 Package shape: <single issue or PRD package>
 Ready state verified: <yes or pending reason>
-Asset disposition: <none, promoted/cleaned list, or pending reason>
+Research asset disposition: <none, promoted/cleaned list, or pending reason>
+Prototype primary sources: <none, retained pointer list, or pending reason>
 Map result: <completed or exact remaining operation>
 ```
 

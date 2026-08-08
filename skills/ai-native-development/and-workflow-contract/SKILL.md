@@ -36,7 +36,7 @@ The calling skill owns its stage behavior and receipt wrapper. This contract own
 | Investigation | One sharp question under a Wayfinding map, sized for one Agent session and carrying no public stage. | Native sub-issue carrying one Wayfinding method label. |
 | Fog | In-scope uncertainty that cannot yet be phrased as a sharp investigation question. | Current map body under `## Not yet specified`. |
 | Frontier | Open, unblocked, unclaimed investigations on a map. | Derived from current investigation lifecycle, dependency, and assignee state. |
-| Investigation asset | Linked evidence produced to answer an investigation; repository truth only when a Package Contract promotes it. | Artifact link in the investigation resolution. |
+| Investigation asset | Linked evidence produced to answer an investigation. Its lifecycle is method-specific: Research evidence may be cleaned or promoted by its disposition; a Prototype remains a primary source outside main and stays reachable through its context pointer. Neither form is workflow state or repository truth. | Method-specific evidence link in the investigation resolution. |
 
 Repository files may describe the workflow but do not carry package state, ownership, relationships, or lifecycle outcomes.
 

@@ -53,7 +53,7 @@ Responsibility for one investigation while it is open; it grants no ownership of
 _Avoid_: Delivery claim, map claim
 
 **Investigation asset**:
-Linked evidence produced to answer an investigation, such as a research note or throwaway prototype; it is not workflow state or repository truth unless a Package Contract promotes it.
+Linked evidence produced to answer an investigation. Its lifecycle is method-specific: Research evidence may be temporary and receives cleanup or Package-promotion disposition; a prototype remains a primary source on a dedicated branch outside main and stays reachable through a durable context pointer. Neither form is workflow state or repository truth.
 _Avoid_: Implementation artifact, package requirement
 
 **Investigation method**:

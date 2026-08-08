@@ -28,6 +28,8 @@ Check for:
 - a map decision pointer that duplicates an answer, lacks a named investigation link, or points to an open investigation;
 - a clear map retaining `needs-info`, unresolved fog, or an open investigation;
 - a handoff that closed its map before the replacement Package Contract became authoritative, or multiple replacements sharing one handoff key;
-- a linked temporary investigation asset without cleanup or Package-promotion disposition.
+- a linked Research asset without cleanup or Package-promotion disposition;
+- a Prototype resolution with no resolvable primary-source branch/ref context pointer;
+- a Prototype resolution that assigns cleanup or Package promotion to its primary source.
 
 Each finding must identify the violated authority, observed evidence, impact, and owning repair stage. Detection alone does not authorize mutation.
