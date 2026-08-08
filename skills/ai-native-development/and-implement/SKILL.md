@@ -18,7 +18,7 @@ Real `tdd` and `code-review` skills are required. If either is unavailable, name
 
 Begin only when the current actor owns or is delegated the complete open `ready-for-agent` delivery unit and no external blocker remains. A PRD claim covers its parent and every child.
 
-Route an unready or unowned unit to the smallest upstream AND skill. If the current head already has clean implementation evidence, authoritative Deployment and Cleanup dispositions, a complete Deployment Manifest when Deployment is `custom`, and complete typed items when Cleanup is `required`, route to `and-finish`. If implementation and review are clean but either handoff is missing or stale, resume at handoff classification; route a linked non-authoritative finish proposal to `and-finish` before implementation resumes.
+Route an unready or unowned unit to the smallest upstream AND skill. If the current head already has clean implementation evidence, an authoritative Deployment disposition, and a valid optional Cleanup handoff when resources survive, plus a complete Deployment Manifest when Deployment is `custom`, route to `and-finish`. If implementation and review are clean but Deployment is missing or stale, or an emitted Cleanup handoff is malformed or stale, resume at handoff classification; route a linked non-authoritative finish proposal to `and-finish` before implementation resumes.
 
 ## Process
 
@@ -55,14 +55,14 @@ Route an unready or unowned unit to the smallest upstream AND skill. If the curr
    - If inspection exposes missing in-scope implementation or documentation, return to implementation, repeat verification and review, then regenerate the handoff for the new head.
    - Route a missing contract decision to `and-pack` and a new human-owned rollout or risk judgment through its current State Reason owner or `and-triage`. For a custom Manifest, link every pre-merge requirement to its existing acceptance or external-blocker authority; keep later external actions as deployment prerequisites with their owner and required evidence.
    - Completion criterion: one disposition bound to the reviewed head accounts for the whole delivery unit without unowned ambiguity or unstated deployment-affecting surfaces, and `custom` additionally has one complete Manifest covering every custom trigger.
-   - Account for every local-resource creator. Record Cleanup `none` as a backend-neutral attestation when no worktree-owned resource remains; do not create an identity or query a runtime for that form. Otherwise record Cleanup `required` with each surviving supported typed item. Remove unsupported or unowned resources before handoff.
-   - If inspection exposes missing ownership or a silent residual, return to implementation or cleanup, then regenerate both handoffs for any new reviewed head.
-   - Completion criterion: both dispositions are bound to the reviewed head, Cleanup `none` has no backend dependency, Cleanup `required` has complete typed items, and only Deployment `custom` has a Manifest.
+   - Account for every local-resource creator. When no worktree-owned local resource remains for Finish, omit Cleanup entirely; do not create a cleanup identity or query a runtime to justify the omission. Otherwise record `Cleanup: required` with each surviving supported typed item. Remove unsupported or unowned resources before handoff.
+   - After any later authorized action, apply the handoff-refresh rules in [local-cleanup.md](../and-workflow-contract/local-cleanup.md) before Finish. If inspection exposes missing ownership or a silent residual, return to implementation or cleanup and regenerate the handoff.
+   - Completion criterion: Deployment is bound to the reviewed head, Cleanup is omitted when no worktree-owned local resource remains for Finish or is a complete `required` handoff for surviving supported resources, and only Deployment `custom` has a Manifest.
 
 6. **Record the handoff.**
    - Verify every delivery-unit change is committed on the isolated branch and append the Implementation receipt to the delivery-unit issue.
-   - Include both dispositions in the same receipt, typed cleanup items only for Cleanup `required`, and a Deployment Manifest only for Deployment `custom`. Link the branch, reviewed head, pull request, CI, review, and cleanup evidence when they exist. Leave PR delivery, lifecycle completion, deployment execution, and valid handed-off terminal cleanup to their owning stages.
-   - Completion criterion: implementation and both reviewed-head-bound handoffs are committed, verified, reviewed, and recoverable from one GitHub receipt, or routed back with the smallest blocker.
+   - Include the Deployment disposition in the receipt and include `Cleanup: required` with typed items only when supported resources survive; omit Cleanup entirely otherwise. Include a Deployment Manifest only for Deployment `custom`. Link the branch, reviewed head, pull request, CI, review, and cleanup evidence when they exist. Leave PR delivery, lifecycle completion, deployment execution, and valid handed-off terminal cleanup to their owning stages.
+   - Completion criterion: implementation and the reviewed-head-bound Deployment disposition, plus any required Cleanup handoff, are committed, verified, reviewed, and recoverable from one GitHub receipt, or routed back with the smallest blocker.
 
 ## Implementation Receipt
 
@@ -84,7 +84,7 @@ Docs / domain updates:
 Remaining blockers:
 - <none or blocker>
 Deployment: <none — reason | standard — environments; stable runbook link | custom — see Deployment Manifest below>
-Cleanup: <complete form from local-cleanup.md>
+<omit Cleanup when no owned local resource remains; include the required form only for surviving supported resources>
 Next step:
 - <and-finish, acceptance owner, or route back>
 
@@ -92,7 +92,7 @@ Next step:
 <for Cleanup `required` only: complete typed cleanup items from local-cleanup.md>
 ```
 
-Report only the worktree, branch, reviewed head, pull request when any, verification and review result, Deployment and Cleanup dispositions, typed cleanup items or Deployment Manifest link when required, blocker when any, and next step.
+Report only the worktree, branch, reviewed head, pull request when any, verification and review result, Deployment disposition, Cleanup handoff and typed items when required, Deployment Manifest link when required, blocker when any, and next step.
 
 ## Boundaries
 

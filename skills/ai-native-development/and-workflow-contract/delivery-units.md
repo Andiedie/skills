@@ -12,7 +12,7 @@ Begin with current identity and execution-safety pointers:
 - latest State Reason, Claim, Implementation, Completion, and ownership-repair headings and permalinks;
 - linked branch, pull request, reviewed head, CI, and review identities when present.
 
-Zoom in to the complete Package Contract and every acceptance-bearing PRD child before Pick, Claim, Implement, or Finish decides or mutates delivery. Load the complete current authoritative receipt selected by the operation, including its deployment and local-cleanup handoffs when reviewed implementation exists. Earlier receipts, historical comments, and raw API metadata stay retrievable and are loaded only when they can change authority, recovery, duplicate-work risk, or the terminal result.
+Zoom in to the complete Package Contract and every acceptance-bearing PRD child before Pick, Claim, Implement, or Finish decides or mutates delivery. Load the complete current authoritative receipt selected by the operation, including its Deployment disposition and any present local-cleanup handoff when reviewed implementation exists. Earlier receipts, historical comments, and raw API metadata stay retrievable and are loaded only when they can change authority, recovery, duplicate-work risk, or the terminal result.
 
 ## Package Shapes
 
@@ -44,7 +44,7 @@ Use receipts for material turning points: State Reason changes, clarification de
 
 Branches, commits, pull requests, CI, and reviews are implementation artifacts linked from receipts. Promoted Research evidence enters the Package Contract; other Research assets remain planning evidence under their disposition. Retained Prototype primary sources stay outside main and remain linked from the delivery unit. None of these artifacts replaces workflow state or ownership.
 
-The latest `## Implementation` receipt is the sole candidate for its deployment and local-cleanup handoffs; an incomplete or mismatched latest receipt never falls back to an older one. A newer implementation head requires a new reviewed receipt with both dispositions, plus a Deployment Manifest only when Deployment is `custom`. Later deployment or cleanup evidence does not replace or mutate either handoff.
+The latest `## Implementation` receipt is the sole candidate for its Deployment disposition and any local-cleanup handoff; an incomplete or mismatched latest receipt never falls back to an older one. A newer implementation head requires a new reviewed receipt with its Deployment disposition, plus a Deployment Manifest only when Deployment is `custom`. Local-cleanup selection and refresh follow [local-cleanup.md](local-cleanup.md). Later deployment or cleanup evidence does not replace or mutate the latest receipt.
 
 ## Finish Delivery
 
@@ -55,4 +55,4 @@ Keep the delivery-unit issue open with its active stage until the reviewed pull 
 3. remove the active queue label; and
 4. close the single package or parent PRD issue.
 
-Complete a parent only after every claimed child requirement is integrated and every contained child is closed. Leave merely related work unchanged. If merge succeeds before lifecycle mutation completes, resume from the missing GitHub operation without repeating merge. After completion evidence, label removal, and closed state verify, apply the authoritative local-cleanup handoff and retain recovery-bearing source artifacts until every required item verifies absent.
+Complete a parent only after every claimed child requirement is integrated and every contained child is closed. Leave merely related work unchanged. If merge succeeds before lifecycle mutation completes, resume from the missing GitHub operation without repeating merge. After completion evidence, label removal, and closed state verify, apply the latest local-cleanup handoff when `Cleanup: required` is present; an omitted handoff requires no resource-runtime action. Retain recovery-bearing source artifacts until every required item verifies absent.

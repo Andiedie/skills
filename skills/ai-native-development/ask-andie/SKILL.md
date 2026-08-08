@@ -31,7 +31,7 @@ Main loop: `and-intake` -> `and-triage` -> `and-clarify` when a bounded decision
 | `needs-pack` | `and-pack` |
 | Ready slate with no selected delivery unit | `and-pick` |
 | Unclaimed ready single issue or parent PRD package with no active implementation evidence | `and-claim` |
-| Claimed delivery unit with incomplete implementation or review, or reviewed implementation whose latest Implementation receipt has a missing, stale, or contradictory Deployment or Cleanup disposition, or is missing content required by that disposition | `and-implement` |
+| Claimed delivery unit with incomplete implementation or review, or reviewed implementation whose latest Implementation receipt has a missing, stale, or contradictory Deployment disposition, or a malformed, stale, or contradictory present Cleanup handoff, or is missing content required by one | `and-implement` |
 | Claimed PRD child used as an internal work unit | `and-implement` with the parent PRD and child record |
 | Reviewed delivery with no pending acceptance or blocker, including an in-progress finish, merged implementation, incomplete lifecycle, or incomplete cleanup | `and-finish` |
 | Implementation waiting on required acceptance or another external owner | Ask that accountable owner for the exact pending input |
@@ -39,7 +39,7 @@ Main loop: `and-intake` -> `and-triage` -> `and-clarify` when a bounded decision
 
 ## Evidence Budget
 
-Read the smallest evidence set that distinguishes the routes: setup readiness, stage and lifecycle, latest State Reason, ownership or claim, blockers and parent/child identity, linked implementation artifacts, the current Deployment and Cleanup dispositions and any content they require when reviewed implementation exists, and the current branch or diff when relevant. Stop when one route follows from one or two decisive facts.
+Read the smallest evidence set that distinguishes the routes: setup readiness, stage and lifecycle, latest State Reason, ownership or claim, blockers and parent/child identity, linked implementation artifacts, the current Deployment disposition and any present Cleanup handoff or content it requires when reviewed implementation exists, and the current branch or diff when relevant. Stop when one route follows from one or two decisive facts.
 
 Leave full triage, ready-work ranking, package validation, implementation planning, and drift audit to their owning skills.
 

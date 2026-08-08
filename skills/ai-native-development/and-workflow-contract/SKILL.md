@@ -22,7 +22,7 @@ The calling skill owns its stage behavior and receipt wrapper. This contract own
 | Package Contract | The implementation source of truth published by `and-pack`. | Body of the single issue package or parent PRD issue. |
 | Deployment disposition | The reviewed-head-bound package classification `none`, `standard`, or `custom`. | `Deployment:` in the latest valid `## Implementation` receipt under the deployment-handoff selection rules. |
 | Deployment Manifest | Package-specific operational guidance required only for `custom`. | `## Deployment Manifest` in that same valid Implementation receipt. |
-| Cleanup disposition | The reviewed-head-bound declaration that no worktree-owned local resource remains or that supported typed cleanup items are handed to Finish. | `Cleanup:` in the latest valid `## Implementation` receipt under the local-cleanup selection rules. |
+| Cleanup handoff | The optional reviewed-head-bound declaration that supported typed cleanup items are handed to Finish. An omitted field is the valid no-handoff path. | `Cleanup: required` and its items, when present, in the latest valid `## Implementation` receipt under the local-cleanup selection rules. |
 | Containment relationship | Parent PRD and child-slice structure. | Native parent/sub-issue relationship under a parent carrying `parent-prd`. |
 | Map relationship | Wayfinding map and investigation membership. | Native parent/sub-issue relationship under a parent carrying `wayfinder:map`. |
 | Dependency relationship | Execution order between work records. | Native blocked-by/blocking relationship. |
@@ -80,7 +80,7 @@ Do not substitute low-resolution projections for the complete Package Contract, 
 | Write Relationships | This kernel's relationship vocabulary and [relationship-api.md](relationship-api.md). |
 | Record Ownership | [delivery-units.md](delivery-units.md). |
 | Record Investigation Ownership | [wayfinding.md](wayfinding.md#investigation-ownership). |
-| Record Receipt | This kernel for append-only representation and the caller for its receipt wrapper; add [delivery-units.md](delivery-units.md) when the receipt carries delivery ownership, implementation artifacts, deployment or local-cleanup handoff, or Finish evidence. |
+| Record Receipt | This kernel for append-only representation and the caller for its receipt wrapper; add [delivery-units.md](delivery-units.md) when the receipt carries delivery ownership, implementation artifacts, deployment, an optional local-cleanup handoff, or Finish evidence. |
 | Record Lifecycle Outcome | [work-records.md](work-records.md). |
 | Reference Implementation Artifact | [delivery-units.md](delivery-units.md). |
 | Read Deployment Handoff | [deployment-handoff.md](deployment-handoff.md). |
@@ -101,8 +101,8 @@ Do not substitute low-resolution projections for the complete Package Contract, 
 - Implementation artifacts are evidence rather than workflow state or ownership.
 - Every reviewed implementation handed to Finish has one authoritative Deployment disposition bound to its reviewed head.
 - A `custom` disposition has exactly one authoritative Deployment Manifest in the same receipt; `none` and `standard` dispositions have none.
-- Every reviewed implementation handed to Finish has one authoritative Cleanup disposition bound to its reviewed head.
-- Cleanup `none` requires no resource-runtime access; Cleanup `required` contains only supported typed items.
+- A reviewed implementation may omit Cleanup when no worktree-owned local resource remains for Finish; an emitted Cleanup `required` handoff is bound to its reviewed head and contains only supported typed items.
+- An omitted Cleanup field causes no resource-runtime access; a required handoff is consumed only through its typed rules.
 - Lifecycle outcomes are terminal rather than active queue state.
 - A completed delivery unit has implementation on its authorized target and completion evidence in GitHub.
 - Typed local cleanup follows authoritative lifecycle completion and verifies before recovery-bearing source artifacts are removed.
