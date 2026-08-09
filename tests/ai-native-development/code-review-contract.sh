@@ -98,6 +98,21 @@ require_regex "$implement" 'invoke .*code-review.*complete GitHub Package Contra
 require_regex "$implement" 'candidate unchanged.*complete Standards and Spec reports'
 require_text "$implement" 'all findings from that cycle as one batch'
 require_regex "$implement" '[Rr]erun relevant verification.*commit the updated candidate.*before invoking .*code-review.*complete diff'
+
+resolve_section="$(sed -n '/^1\. \*\*Resolve the work\.\*\*/,/^2\. \*\*Isolate the diff\.\*\*/p' "$implement")"
+[[ -n "$resolve_section" ]] || fail "and-implement Resolve the work section is missing"
+for required in \
+  'Before the first implementation mutation' \
+  'complete Package Contract and every acceptance-bearing child' \
+  'the contract requires X and the intended behavior changes X' \
+  'Package fact or acceptance defect to `and-pack`' \
+  'new human judgment through the existing Triage/Clarify route' \
+  'independent new behavior to `and-intake`' \
+  'within-contract refinement' \
+  'changes implementation means while preserving contracted behavior and acceptance' \
+  'proceed without another approval or upstream route'; do
+  [[ "$resolve_section" == *"$required"* ]] || fail "and-implement work resolution is missing required contract-gate behavior: $required"
+done
 require_text "$setup_skill" 'npx --yes skills add Andiedie/skills -g --skill code-review --agent <known-target...>'
 require_text "$setup_skill" 'npx --yes skills add mattpocock/skills -g --skill <missing-matt-skill...> --agent <known-target...>'
 reject_text "$setup_skill" 'npx --yes skills add mattpocock/skills -g --skill code-review'
