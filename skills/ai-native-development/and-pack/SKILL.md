@@ -31,6 +31,8 @@ Both shapes have equal contract strength. For either shape:
    - Write a comprehensive, numbered user-story list whose coverage determines its length: include every distinct actor, mode, edge case, failure, and acceptance path. Use `As an <actor>, I want <feature>, so that <benefit>.`
 - Name key interfaces, types, commands, config shapes, API payloads, domain terms, and architectural decisions when they constrain delivery.
 - Record confirmed implementation, documentation, testing, and deployment decisions, including the highest practical verification seam and relevant prior art.
+- In `Testing / Verification Decisions`, record a minimal, record-only Verification Plan. Explain the relevant risk and highest-practical-seam rationale; name each selected evidence item with the risk or failure boundary it covers; explain why the complete set is sufficient; and record known caveats, baseline limitations, or unavailable environments. When an evidence category is considered but empty, give an explicit reason rather than inventing work. Evidence may be local, CI-provided, real-protocol, browser, database, environment, manual, visual, or operational when that is the relevant boundary. When CI evidence is selected, record its stable check or workflow identity; an ephemeral run URL is delivery evidence, not the plan identity.
+- Let the risk and seam drive the evidence choice. Bounded low-risk work may select focused executable evidence when its coverage is explicit. For runtime, cache, data, authentication, streaming, or complex UI risk, select the relevant integration, broad-suite, real-protocol, browser, database, environment, or acceptance evidence. Keep the plan adaptable and record-only: do not turn it into a fixed classification or evidence enum, universal matrix, validator, metrics system, or shared schema.
 - Preserve the source permalink and repository knowledge disposition of each completed Clarify or Wayfind result. Required items are cumulative across sources; None does not cancel them.
 - Record confirmed target-environment, DDL or DML, rollout-order, mixed-version, recovery, and stable-runbook constraints when they affect safe implementation. Pack records `none known` when no constraint is confirmed; it does not predict the final Deployment disposition.
 - Make acceptance criteria behavioral, concrete, and independently verifiable. Include out of scope.
@@ -106,10 +108,13 @@ Summary: <one-line behavior change>
 
 ## Testing / Verification Decisions
 
-- Test seam or verification strategy:
-- Highest practical seam:
+- Verification Plan (record-only):
+  - Risk / highest-practical-seam rationale:
+  - Selected evidence and risk/failure coverage:
+  - Sufficiency rationale:
+  - Known caveats, baseline limitations, or unavailable environments:
+  - Empty evidence categories and their explicit reasons, when any:
 - Prior art:
-- Manual, visual, or operational acceptance:
 
 ## Deployment Constraints
 
