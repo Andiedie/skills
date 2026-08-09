@@ -10,7 +10,7 @@ Find the current position, name one next move, and teach one reusable rule. Read
 
 ## Workflow Contract
 
-Use `and-workflow-contract` when routing depends on GitHub workflow state. Start `Locate Work` with [work-records.md](../and-workflow-contract/work-records.md); add [delivery-units.md](../and-workflow-contract/delivery-units.md) only when package, blocker, ownership, receipt, or implementation evidence can decide the route. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) only when reviewed implementation evidence has a missing, stale, or contradictory Deployment disposition or required custom Manifest. Route incomplete repository setup or an unavailable contract to `setup-and`.
+Use `and-workflow-contract` when routing depends on GitHub workflow state. Start `Locate Work` with [work-records.md](../and-workflow-contract/work-records.md); add [delivery-units.md](../and-workflow-contract/delivery-units.md) only when package, blocker, ownership, receipt, or implementation evidence can decide the route. Read [acceptance-gate.md](../and-workflow-contract/acceptance-gate.md) only when a declared gate, latest typed Acceptance receipt, or unresolved side-effect refresh can decide the route. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) only when reviewed implementation evidence has a missing, stale, or contradictory Deployment disposition or required custom Manifest. Route incomplete repository setup or an unavailable contract to `setup-and`.
 
 ## Route Map
 
@@ -33,13 +33,14 @@ Main loop: `and-intake` -> `and-triage` -> `and-clarify` when a bounded decision
 | Unclaimed ready single issue or parent PRD package with no active implementation evidence | `and-claim` |
 | Claimed delivery unit with incomplete implementation or review, or reviewed implementation whose latest Implementation receipt has a missing, stale, or contradictory Deployment disposition, or a malformed, stale, or contradictory present Cleanup handoff, or is missing content required by one | `and-implement` |
 | Claimed PRD child used as an internal work unit | `and-implement` with the parent PRD and child record |
-| Reviewed delivery with no pending acceptance or blocker, including an in-progress finish, merged implementation, incomplete lifecycle, or incomplete cleanup | `and-finish` |
-| Implementation waiting on required acceptance or another external owner | Ask that accountable owner for the exact pending input |
+| Reviewed delivery at a Finish boundary, including an in-progress finish, merged implementation, incomplete lifecycle or cleanup, or a declared post-merge gate before source completion | `and-finish` |
+| Implementation waiting on required pre-merge acceptance or another external owner | Ask that accountable owner for the exact pending input |
+| Post-merge acceptance reports a source defect | `and-intake` |
 | Stale or partial claim, relationship drift, contradictory state, or blocked ready work | `and-sweep` |
 
 ## Evidence Budget
 
-Read the smallest evidence set that distinguishes the routes: setup readiness, stage and lifecycle, latest State Reason, ownership or claim, blockers and parent/child identity, linked implementation artifacts, the current Deployment disposition and any present Cleanup handoff or content it requires when reviewed implementation exists, and the current branch or diff when relevant. Stop when one route follows from one or two decisive facts.
+Read the smallest evidence set that distinguishes the routes: setup readiness, stage and lifecycle, latest State Reason, ownership or claim, blockers and parent/child identity, linked implementation artifacts, the current Deployment disposition and any present Cleanup handoff or content it requires when reviewed implementation exists, and the current branch or diff when relevant. When Acceptance can decide the route, conditionally add only the gate declaration, latest typed receipt, and unresolved side-effect refresh evidence. Stop when one route follows from one or two decisive facts.
 
 Leave full triage, ready-work ranking, package validation, implementation planning, and drift audit to their owning skills.
 

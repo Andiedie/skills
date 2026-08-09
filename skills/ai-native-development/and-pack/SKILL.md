@@ -12,7 +12,7 @@ Ordinary source work becomes its package. A clear Wayfinding map hands off to on
 
 ## Workflow Authority
 
-Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) for `Read Work Record`, `Resolve Canonical Identity`, `Write Stage State`, and `Write State Reason`, and with [delivery-units.md](../and-workflow-contract/delivery-units.md) for `Publish Package` and `Record Receipt`. Read [wayfinding.md](../and-workflow-contract/wayfinding.md) directly for `Hand Off Wayfinding Map` and [relationship-api.md](../and-workflow-contract/relationship-api.md) before `Write Relationships`. Pack owns Package Contract and Map Handoff receipt content; the workflow contract owns representation, identity, relationships, lifecycle mechanics, and operation recovery.
+Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) for `Read Work Record`, `Resolve Canonical Identity`, `Write Stage State`, and `Write State Reason`, and with [delivery-units.md](../and-workflow-contract/delivery-units.md) for `Publish Package` and `Record Receipt`. Load [acceptance-gate.md](../and-workflow-contract/acceptance-gate.md) when the source delivery needs a typed Acceptance Gate. Read [wayfinding.md](../and-workflow-contract/wayfinding.md) directly for `Hand Off Wayfinding Map` and [relationship-api.md](../and-workflow-contract/relationship-api.md) before `Write Relationships`. Pack owns Package Contract and Map Handoff receipt content; the workflow contract owns representation, identity, relationships, lifecycle mechanics, and operation recovery.
 
 If GitHub workflow state or the contract is unavailable, stop and route to `setup-and` or ask the user to install the missing skill.
 
@@ -35,6 +35,7 @@ Both shapes have equal contract strength. For either shape:
 - Let the risk and seam drive the evidence choice. Bounded low-risk work may select focused executable evidence when its coverage is explicit. For runtime, cache, data, authentication, streaming, or complex UI risk, select the relevant integration, broad-suite, real-protocol, browser, database, environment, or acceptance evidence. Keep the plan adaptable and record-only: do not turn it into a fixed classification or evidence enum, universal matrix, validator, metrics system, or shared schema.
 - Preserve the source permalink and repository knowledge disposition of each completed Clarify or Wayfind result. Required items are cumulative across sources; None does not cancel them.
 - Record confirmed target-environment, DDL or DML, rollout-order, mixed-version, recovery, and stable-runbook constraints when they affect safe implementation. Pack records `none known` when no constraint is confirmed; it does not predict the final Deployment disposition.
+- When source delivery needs acceptance, declare exactly one gate with the shared Acceptance authority; omit `## Acceptance Gate` when it does not. Validate the declaration before readiness publication.
 - Make acceptance criteria behavioral, concrete, and independently verifiable. Include out of scope.
 - Use file paths only as evidence or location hints. Include a decision-rich snippet only when it expresses a confirmed state machine, reducer, schema, type, or payload decision more precisely than prose.
 
@@ -63,6 +64,7 @@ The contract is complete only when an implementation agent can begin without rep
    - A wide refactor is available only when one mechanical form fans out so broadly that no ordinary vertical slice can land green. When all parts of that trigger hold, read [wide-refactors.md](wide-refactors.md).
    - Child slices may be delegated under the parent claim, while the parent remains the public pick and claim target.
    - For a Wayfinding source, link the source map in `Further Notes`, translate every promoted Research asset into a requirement, decision, acceptance criterion, documentation update, or child slice, and preserve every Prototype primary-source pointer in `Further Notes`. Translate the validated Prototype decision into the contract without promoting its artifact.
+   - Include the one shared Acceptance Gate declaration only when required; its receipt and selection remain owned by [acceptance-gate.md](../and-workflow-contract/acceptance-gate.md).
    - Completion criterion: the Package Contract meets the Contract Standard, and every child maps to parent stories, key interfaces, behavioral acceptance, dependency intent, deployment contribution, and a declared verification path.
 
 4. **Publish safely.**
@@ -84,6 +86,8 @@ The contract is complete only when an implementation agent can begin without rep
 Category: <bug, enhancement, or repository category>
 
 Summary: <one-line behavior change>
+
+<when required, add the shared Acceptance Gate declaration; omit this section otherwise>
 
 ## Problem / Current Behavior
 
