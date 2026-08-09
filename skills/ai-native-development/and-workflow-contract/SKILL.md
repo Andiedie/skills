@@ -20,6 +20,8 @@ The calling skill owns its stage behavior and receipt wrapper. This contract own
 | Stage state | The active queue position of an open top-level work record. | One active queue label on an open top-level issue. |
 | State Reason | The structured current reason a top-level work record is waiting in `needs-info`. | Latest issue comment headed `## State Reason`. |
 | Package Contract | The implementation source of truth published by `and-pack`. | Body of the single issue package or parent PRD issue. |
+| Acceptance Gate | Optional one-boundary source-delivery decision declared by a Package Contract. | Package Contract content governed by [acceptance-gate.md](acceptance-gate.md). |
+| Acceptance receipt | Typed result for a declared Acceptance Gate. | Delivery-unit Issue comment selected and validated by [acceptance-gate.md](acceptance-gate.md). |
 | Deployment disposition | The reviewed-head-bound package classification `none`, `standard`, or `custom`. | `Deployment:` in the latest valid `## Implementation` receipt under the deployment-handoff selection rules. |
 | Deployment Manifest | Package-specific operational guidance required only for `custom`. | `## Deployment Manifest` in that same valid Implementation receipt. |
 | Cleanup handoff | The optional reviewed-head-bound declaration that supported typed cleanup items are handed to Finish. An omitted field is the valid no-handoff path. | `Cleanup: required` and its items, when present, in the latest valid `## Implementation` receipt under the local-cleanup selection rules. |
@@ -78,6 +80,7 @@ Do not substitute low-resolution projections for the complete Package Contract, 
 | Write Stage State | [work-records.md](work-records.md). |
 | Write State Reason | [work-records.md](work-records.md). |
 | Publish Package | [delivery-units.md](delivery-units.md). |
+| Read or Validate Acceptance Gate | [acceptance-gate.md](acceptance-gate.md). |
 | Write Relationships | This kernel's relationship vocabulary and [relationship-api.md](relationship-api.md). |
 | Record Ownership | [delivery-units.md](delivery-units.md). |
 | Record Investigation Ownership | [wayfinding.md](wayfinding.md#investigation-ownership). |

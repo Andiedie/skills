@@ -121,6 +121,8 @@ The latest Implementation receipt always carries a lightweight Deployment dispos
 
 The receipt carries a Cleanup handoff only when a supported worktree-owned local resource survives for Finish. Omit Cleanup when no owned resource remains; omission requires no cleanup identity or Docker (or other runtime) access. `required` carries only cleanup items whose type has shared ownership, deletion, and verification rules; Docker Compose projects and AND-labeled Docker objects are the initial supported types. After delivery becomes authoritative, Finish reclaims handed-off items before removing recovery-bearing source worktrees or branches. Local cleanup neither changes deployment classification nor proves an environment rollout.
 
+Acceptance is an optional source-delivery gate. A pending pre-merge gate waits for its owner before merge; a declared post-merge gate enters Finish and waits only at source completion after the authorized merge. A post-merge source defect returns to `and-intake`; repair orchestration remains outside this source-delivery loop.
+
 Each stage leaves only the durable evidence needed to continue the work. Temporary reasoning and interview transcripts stay out of long-lived state unless they become a decision, blocker, requirement, or completion result.
 
 ## Repository Knowledge
@@ -141,7 +143,7 @@ The loop preserves correctness by making route-backs explicit:
 - Failed implementation verification returns to Implement unless it exposes a package defect.
 - A completed, duplicate, rejected, or superseded delivery unit receives a terminal lifecycle outcome with evidence.
 
-For a reviewed implementation with no pending acceptance or blocker, `and-finish` is the Close/Learn action. It delivers the implementation through one authorized GitHub pull request, records completion on the delivery-unit issue, performs typed local cleanup only for an explicit required handoff, and only then cleans proven-safe Git delivery artifacts. Review remains part of implementation evidence rather than being rerun during finish.
+For a reviewed implementation at a clear Finish boundary—no blocking pre-merge acceptance or a declared post-merge gate before source completion—`and-finish` is the Close/Learn action. It delivers the implementation through one authorized GitHub pull request, records completion on the delivery-unit issue, performs typed local cleanup only for an explicit required handoff, and only then cleans proven-safe Git delivery artifacts. Review remains part of implementation evidence rather than being rerun during finish.
 
 Closure can produce a new signal: a follow-up requirement, a documentation need, a newly discovered bug, or a lesson that changes future packages. That signal starts another loop instead of quietly expanding the completed delivery unit.
 
