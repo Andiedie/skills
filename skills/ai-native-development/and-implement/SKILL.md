@@ -25,7 +25,8 @@ Route an unready or unowned unit to the smallest upstream AND skill. If the curr
 1. **Resolve the work.**
    - Read the claim, Package Contract, accepted decisions, deployment constraints, blockers, implementation artifacts, verification expectations, and every PRD child.
    - Require an agreed test seam or explicit non-test verification strategy. Route any omission to `and-pack`; when human judgment is required, resume through an existing State Reason or `and-triage` before `and-clarify`.
-   - Completion criterion: the whole claim scope, expected behavior, dependency order, deployment constraints, blockers, seam, and verification path are known from GitHub.
+   - Before the first implementation mutation—whether to code, tests, documentation, worktree-owned local resources, or external state—compare the intended behavioral delta with the complete Package Contract and every acceptance-bearing child. When the contract requires X and the intended behavior changes X, stop before mutation: route a Package fact or acceptance defect to `and-pack`, a new human judgment through the existing Triage/Clarify route, and independent new behavior to `and-intake`. Treat a technical choice that changes implementation means while preserving contracted behavior and acceptance as a within-contract refinement and proceed without another approval or upstream route.
+   - Completion criterion: the whole claim scope, expected behavior, dependency order, deployment constraints, blockers, seam, verification path, and contract-preserving or routed behavioral delta are known from GitHub before mutation.
 
 2. **Isolate the diff.**
    - Inspect Git status, branches, worktrees, and linked artifacts. Reuse a worktree tied to this delivery unit only when all its changes are in scope; otherwise leave it untouched and create a dedicated branch and worktree, or stop when isolation cannot be proven.
