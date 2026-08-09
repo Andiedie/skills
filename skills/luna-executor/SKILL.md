@@ -1,17 +1,16 @@
 ---
 name: luna-executor
-description: Delegate bounded execution work to the configured Luna worker while the parent Agent keeps judgment and review.
-disable-model-invocation: true
+description: Proactively delegate meaningful, bounded execution work to the configured Luna worker when direction is settled and the work can be executed and verified independently, while the parent Agent keeps judgment and review.
 ---
 
 # Luna Executor
 
-Delegate one bounded execution assignment to the configured `luna_worker`. The parent Agent keeps decisions, supervision, verification, and final delivery.
+Use Luna proactively for one bounded execution assignment. The parent Agent keeps decisions, supervision, verification, and final delivery.
 
 ## Workflow
 
-1. **Choose the assignment.** Finish product, architecture, authorization, and scope decisions first. Delegate meaningful implementation, refactoring, testing, or batch-editing work when its boundary is clear, it can be executed independently, and its result can be checked independently. Complete tiny or still-judgment-heavy work in the parent.
-   - Completion criterion: one decided assignment and its acceptance signals are explicit.
+1. **Choose the assignment.** Finish product, architecture, authorization, and scope decisions first. When the remaining work contains a meaningful execution unit whose boundary is clear, can be executed independently, and has a result that can be checked independently, delegate it to Luna. Eligible work includes, but is not limited to, read-only exploration and evidence gathering; log, configuration, data, or repository-state analysis; command or script execution; build, lint, test, or verification runs; and batch editing, refactoring, or implementation. Keep tiny work or work that still depends on parent judgment, authorization, or tightly coupled context with the parent.
+   - Completion criterion: one decided assignment and its acceptance signals are explicit, or the parent has established that no unit meets the delegation boundary.
 
 2. **Write the task contract and delegate.** Give Luna a self-contained message containing the objective, owned scope and files, relevant facts and any useful context pointers, constraints, acceptance criteria, verification expectations, and required return format. For a long assignment, name its first observable milestone. Spawn exactly:
 
