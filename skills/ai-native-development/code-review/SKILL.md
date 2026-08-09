@@ -10,19 +10,35 @@ Two-axis review of the diff between `HEAD` and a fixed point the caller supplies
 
 Both axes run as **parallel sub-agents** so they don't pollute each other's context, then this skill aggregates their findings.
 
+Generic callers keep this behavior and output unchanged. When an AND caller
+supplies both a delivery-unit identity and the complete Spec authority set,
+load [review-attestation.md](../and-workflow-contract/review-attestation.md)
+and use its conditional attestation mode. That mode adds evidence binding to
+the ordinary reports; it does not rename this skill or make the AND package a
+generic review priority.
+
 ## Process
 
 ### 1. Pin the fixed point
 
 Whatever the caller supplied is the fixed point — a commit SHA, branch name, tag, `main`, `HEAD~5`, etc. If none was supplied, ask for it.
 
-Capture the diff command once: `git diff <fixed-point>...HEAD` (three-dot, so the comparison is against the merge-base). Also note the list of commits via `git log <fixed-point>..HEAD --oneline`.
+For a generic call, capture the existing diff command once: `git diff <fixed-point>...HEAD` (three-dot, so the comparison is against the merge-base) and note `git log <fixed-point>..HEAD --oneline`. Before going further, confirm
+the fixed point resolves (`git rev-parse <fixed-point>`) and the diff is
+non-empty. A bad ref or empty diff should fail here — not inside two parallel
+sub-agents.
 
-Before going further, confirm the fixed point resolves (`git rev-parse <fixed-point>`) and the diff is non-empty. A bad ref or empty diff should fail here — not inside two parallel sub-agents.
+For attestation mode, call the shared freeze operation in
+[review-attestation.md](../and-workflow-contract/review-attestation.md): resolve
+the fixed point and `HEAD` to full SHAs, freeze the exact diff, and freeze the
+commit list from `git log <full fixed-point SHA>..<full reviewed-head SHA> --oneline`.
+Retain the same invalid-ref and empty-diff preflight as a generic call.
+Pass those frozen values unchanged to both prompts and recheck the candidate
+head at aggregation; a move after dispatch is stale evidence.
 
 ### 2. Identify the spec source
 
-Look for the originating spec, in this order:
+For a generic call, look for the originating spec in this order:
 
 1. Spec contents or a path supplied explicitly by the caller.
 2. Issue references in the commit messages (`#123`, `Closes #45`, GitLab `!67`, etc.) — fetch through an available repository or issue authority.
@@ -30,6 +46,10 @@ Look for the originating spec, in this order:
 4. If nothing is found, ask the user where the spec is.
 
 Only skip the Spec axis after the user explicitly confirms that no Spec exists. In that case, skip the **Spec** sub-agent and report "no spec available".
+
+In attestation mode, pass the caller's complete authority records through the
+shared reference as the Spec input; do not infer a partial set from a commit
+message or a generic route.
 
 ### 3. Identify the standards sources
 
@@ -65,17 +85,32 @@ Verify that the runtime can create isolated review contexts. When both axes are 
 - The list of standards-source files you found in step 3, **plus the smell baseline from step 3** pasted in full — the sub-agent has no other access to it.
 - The brief: "Report — per file/hunk where relevant — (a) every place the diff violates a documented standard: cite the standard (file + the rule); and (b) any baseline smell you spot: name it and quote the hunk. Distinguish hard violations from judgement calls — documented-standard breaches can be hard, but baseline smells are always judgement calls, and a documented repo standard overrides the baseline. Skip anything tooling enforces. Under 400 words."
 
+In attestation mode, pass the shared freeze records and the runtime-issued
+identity from dispatch. Require the child response to echo the frozen reviewed head and one Standards axis result defined by the shared attestation authority.
+
 **Spec sub-agent prompt** — include:
 
 - The diff command and commit list.
 - The path or fetched contents of the spec.
 - The brief: "Report: (a) requirements the spec asked for that are missing or partial; (b) behaviour in the diff that wasn't asked for (scope creep); (c) requirements that look implemented but where the implementation looks wrong. Quote the spec line for each finding. Under 400 words."
 
+In attestation mode, pass the same shared freeze and complete authority records
+with a different runtime-issued child identity. Include each supplied
+authority's exact source content, canonical digest, and canonical record
+unchanged; the shared reference owns membership and ordering rules. Require the
+child response to echo the frozen reviewed head and one Spec axis result
+defined by the shared attestation authority.
+
 If the user explicitly confirmed that no Spec exists, skip the Spec sub-agent and note this in the final report.
 
 ### 5. Aggregate
 
 Present the two reports under `## Standards` and `## Spec` headings, verbatim or lightly cleaned. Do **not** merge or rerank findings — the two axes are deliberately separate (see _Why two axes_).
+
+In attestation mode, pass the two axis results and runtime identities to the
+shared `render` operation, then append exactly its one block from
+[review-attestation.md](../and-workflow-contract/review-attestation.md).
+Generic output remains the ordinary two reports.
 
 End with a one-line summary: total findings per axis, and the worst issue _within each axis_ (if any). Don't pick a single winner across axes — that's the reranking the separation exists to prevent. When the Spec axis was explicitly skipped, retain `## Spec` and report it as skipped rather than as a pass.
 

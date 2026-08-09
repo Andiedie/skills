@@ -10,7 +10,7 @@ Implement the complete claimed delivery unit from its GitHub Package Contract. W
 
 ## Runtime Contracts
 
-Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) and [delivery-units.md](../and-workflow-contract/delivery-units.md) for `Read Delivery Unit`, `Record Receipt`, and `Reference Implementation Artifact`. Read [local-cleanup.md](../and-workflow-contract/local-cleanup.md) directly before creating a worktree-owned local resource and again before finalizing its reviewed handoff. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) directly for `Read Deployment Handoff` before that handoff. Route incomplete setup or a missing contract to `setup-and`.
+Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) and [delivery-units.md](../and-workflow-contract/delivery-units.md) for `Read Delivery Unit`, `Record Receipt`, and `Reference Implementation Artifact`. When the repository-owned review is called with AND context, load [review-attestation.md](../and-workflow-contract/review-attestation.md) for its attestation operation. Read [local-cleanup.md](../and-workflow-contract/local-cleanup.md) directly before creating a worktree-owned local resource and again before finalizing its reviewed handoff. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) directly for `Read Deployment Handoff` before that handoff. Route incomplete setup or a missing contract to `setup-and`.
 
 Real `tdd` and `code-review` skills are required. If either is unavailable, name the missing skill and stop with the documented installation route. Give `tdd` the Package Contract's agreed seam as confirmed input where test-first work is practical. Use `code-review` against the retained fixed point with the complete Package Contract and every acceptance-bearing PRD child supplied as the Spec.
 
@@ -45,8 +45,9 @@ Route an unready or unowned unit to the smallest upstream AND skill. If the curr
 
 4. **Review the complete diff.**
    - Commit the scoped review candidate so no relevant change exists only in the working tree.
-   - Verify the fixed point still resolves, then invoke the repository-owned `code-review` with that fixed point and the complete GitHub Package Contract plus every acceptance-bearing PRD child supplied as the Spec.
+   - Verify the fixed point still resolves, then invoke the repository-owned `code-review` with that fixed point and the complete GitHub Package Contract plus every acceptance-bearing PRD child supplied as the Spec. Provide the delivery-unit identity and complete authority records so the shared conditional mode is selected; a generic call without that context stays generic.
    - Fix in-scope implementation findings, update the scoped commit, rerun relevant verification, and review the same complete diff again. Spec review checks each documentation item against its source, Package entry, and diff. Route contract defects to `and-pack`; route human-owned judgments through the current State Reason owner or `and-triage` when no decision route exists.
+   - When attestation mode is active, call the shared `render` operation and retain its exact block bytes for the later Implementation receipt. Do not append a GitHub comment or perform readback in this review step; do not transcribe, reinterpret, or publish another review receipt.
    - Completion criterion: Standards and Spec review are clean, or every remaining finding is explicitly outside scope or human-owned.
 
 5. **Classify deployment and local cleanup handoffs.**
@@ -60,7 +61,8 @@ Route an unready or unowned unit to the smallest upstream AND skill. If the curr
    - Completion criterion: Deployment is bound to the reviewed head, Cleanup is omitted when no worktree-owned local resource remains for Finish or is a complete `required` handoff for surviving supported resources, and only Deployment `custom` has a Manifest.
 
 6. **Record the handoff.**
-   - Verify every delivery-unit change is committed on the isolated branch and append the Implementation receipt to the delivery-unit issue.
+   - Verify every delivery-unit change is committed on the isolated branch and append the `## Implementation` receipt to the delivery-unit issue.
+   - After the GitHub comment is written, attestation mode immediately runs shared `extract` against that comment's node/permalink, compares the exact block bytes and reviewed implementation head, and retains the node/permalink readback; a mismatch is a failed persistence check.
    - Include the Deployment disposition in the receipt and include `Cleanup: required` with typed items only when supported resources survive; omit Cleanup entirely otherwise. Include a Deployment Manifest only for Deployment `custom`. Link the branch, reviewed head, pull request, CI, review, and cleanup evidence when they exist. Leave PR delivery, lifecycle completion, deployment execution, and valid handed-off terminal cleanup to their owning stages.
    - Completion criterion: implementation and the reviewed-head-bound Deployment disposition, plus any required Cleanup handoff, are committed, verified, reviewed, and recoverable from one GitHub receipt, or routed back with the smallest blocker.
 
@@ -79,6 +81,8 @@ Verification:
 - <tests, typecheck, manual verification, CI, or none with reason>
 Review:
 - <code-review result or pending with reason>
+Review attestation:
+<embed the complete block emitted by shared attestation render unchanged when AND context is supplied; omit this section for generic review>
 Docs / domain updates:
 - <source, target, and reviewed diff evidence for each Required item; or source and reason for None>
 Remaining blockers:

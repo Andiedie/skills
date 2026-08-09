@@ -23,6 +23,7 @@ The calling skill owns its stage behavior and receipt wrapper. This contract own
 | Deployment disposition | The reviewed-head-bound package classification `none`, `standard`, or `custom`. | `Deployment:` in the latest valid `## Implementation` receipt under the deployment-handoff selection rules. |
 | Deployment Manifest | Package-specific operational guidance required only for `custom`. | `## Deployment Manifest` in that same valid Implementation receipt. |
 | Cleanup handoff | The optional reviewed-head-bound declaration that supported typed cleanup items are handed to Finish. An omitted field is the valid no-handoff path. | `Cleanup: required` and its items, when present, in the latest valid `## Implementation` receipt under the local-cleanup selection rules. |
+| Review attestation | Versioned evidence binding one paired AND review to exact code and Spec-authority inputs. | One `and-review-attestation/v1` JSON block embedded in the latest `## Implementation` receipt. |
 | Containment relationship | Parent PRD and child-slice structure. | Native parent/sub-issue relationship under a parent carrying `parent-prd`. |
 | Map relationship | Wayfinding map and investigation membership. | Native parent/sub-issue relationship under a parent carrying `wayfinder:map`. |
 | Dependency relationship | Execution order between work records. | Native blocked-by/blocking relationship. |
@@ -85,6 +86,7 @@ Do not substitute low-resolution projections for the complete Package Contract, 
 | Reference Implementation Artifact | [delivery-units.md](delivery-units.md). |
 | Read Deployment Handoff | [deployment-handoff.md](deployment-handoff.md). |
 | Read Local Cleanup Handoff | [local-cleanup.md](local-cleanup.md). |
+| Read Review Attestation | [review-attestation.md](review-attestation.md). |
 | Finish Delivery | [work-records.md](work-records.md) and [delivery-units.md](delivery-units.md). |
 | Audit Invariants | [sweep-checks.md](sweep-checks.md), plus only the direct operation authorities for the selected scope. |
 
