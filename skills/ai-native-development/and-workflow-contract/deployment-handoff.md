@@ -109,3 +109,13 @@ Stable runbook: <link or none>
 `and-finish` selects the authoritative disposition and checks its receipt and head identity, form, and internal consistency. For `custom`, it also checks the Manifest's head identity, schema completeness, internal consistency, and pre-merge evidence links. The exhaustive semantic inspection belongs to `and-implement`; Finish neither reconstructs the disposition or Manifest from the diff nor executes deployment actions or claims that an environment is deployed.
 
 Environment rollout order governs only rollout sequencing; it does not replace a native dependency relationship or change work-record readiness. When the same prerequisite also blocks implementation, the Manifest links the authoritative native edge instead of duplicating it.
+
+## Deferred Finish follow-up
+
+Finish opens the deferred-work path only when the current Finish evidence confirms two facts: a concrete piece of work must continue after source Finish, and that work is still incomplete. Create a new ordinary Issue only when no single open Issue already fully tracks the same remaining work; an exact single match is reused and linked instead. A deployment classification is an input to that judgment, not the judgment itself. In particular, `Deployment: none`, no confirmed delay, and work completed within the current process do not create an Issue; `standard` or `custom` alone never does.
+
+Read current open Issues and existing Completion or handoff evidence before creating or retrying. Search the current open Issues for the same source and remaining work. Reuse and link exactly one complete match. If there is no match, create one ordinary `needs-triage` Issue. If the search returns multiple or unclear matches, stop and report the observed ambiguity instead of choosing or creating another Issue.
+
+Keep the follow-up body as free text that names the source, remaining work, next responsible actor or normal queue, and next or resume action. The body is a new signal for the normal delivery loop, not a second workflow contract.
+
+Use the existing Completion or handoff evidence to record an Issue URL/text cross-reference between the source and follow-up; this is not a native relationship. Before source lifecycle completion, verify that the cross-reference resolves to the source and follow-up Issue and retain that evidence. After an interruption, read the current merge, lifecycle, Issue, and cross-reference state before retrying; reuse the same follow-up Issue, preserve any existing merge, and do not repeat either action. Once the follow-up exists and its link is verified, source completion does not wait for environment rollout.

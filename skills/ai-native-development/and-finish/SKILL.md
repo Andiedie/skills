@@ -10,7 +10,7 @@ Finish is a resumable transaction: publish one reviewed delivery unit through on
 
 ## Runtime Contracts
 
-Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) and [delivery-units.md](../and-workflow-contract/delivery-units.md) for `Read Delivery Unit`, `Finish Delivery`, `Record Receipt`, and `Record Lifecycle Outcome`. Load [acceptance-gate.md](../and-workflow-contract/acceptance-gate.md) when the Package Contract declares an Acceptance Gate. Read [review-attestation.md](../and-workflow-contract/review-attestation.md) for conditional shadow freshness validation of the latest Implementation receipt. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) and [local-cleanup.md](../and-workflow-contract/local-cleanup.md) directly for their handoff operations when resolving, revalidating, or resuming the implementation handoff. Route incomplete setup to `setup-and`; stop before mutation when the Git remote does not identify one GitHub repository.
+Use `and-workflow-contract` with [work-records.md](../and-workflow-contract/work-records.md) and [delivery-units.md](../and-workflow-contract/delivery-units.md) for `Read Delivery Unit`, `Finish Delivery`, `Read Work Record`, `Write Work Record`, `Record Receipt`, and `Record Lifecycle Outcome`. Load [acceptance-gate.md](../and-workflow-contract/acceptance-gate.md) when the Package Contract declares an Acceptance Gate. Read [review-attestation.md](../and-workflow-contract/review-attestation.md) for conditional shadow freshness validation of the latest Implementation receipt. Read [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) and [local-cleanup.md](../and-workflow-contract/local-cleanup.md) directly for their handoff operations when resolving, revalidating, or resuming the implementation handoff. Route incomplete setup to `setup-and`; stop before mutation when the Git remote does not identify one GitHub repository.
 
 ## Preconditions
 
@@ -63,9 +63,10 @@ Route stale implementation or review evidence to `and-implement`, contract defec
 
 7. **Complete workflow state.**
    - After merge and before lifecycle completion, run the shared `Validate Acceptance Gate` operation and perform only its returned action.
+   - When current Finish evidence confirms concrete unfinished work that must continue after source Finish, apply `Deferred Finish follow-up` in [deployment-handoff.md](../and-workflow-contract/deployment-handoff.md) before source lifecycle completion; do not infer a follow-up from the deployment class alone.
    - Run the workflow contract's post-merge Finish Delivery steps for exactly the claimed unit. For a PRD, verify every claimed child requirement is integrated, complete every contained child, then complete the parent; leave merely related work unchanged.
    - If merge succeeded but lifecycle completion did not, resume only that operation. Route contradictory state to `and-sweep`.
-   - Completion criterion: GitHub records `completed` with delivery evidence for the single package or every contained PRD child followed by its parent.
+   - Completion criterion: GitHub records `completed` with delivery evidence for the single package or every contained PRD child followed by its parent, with any required follow-up link verified or current evidence confirming none is required.
 
 8. **Clean typed local resources.**
    - Preserve the order lifecycle completion, typed local cleanup, then Git cleanup. When Cleanup is omitted, perform no resource-runtime operation.
@@ -80,7 +81,7 @@ Route stale implementation or review evidence to `and-implement`, contract defec
    - Completion criterion: all proven-safe source artifacts are gone and the clean target is synchronized, or every retained artifact has one exact reason and resume point.
 
 10. **Report the result.**
-   - Report delivery unit, pull request, target, merge, lifecycle, the Deployment disposition, any Cleanup handoff and implementation-handoff permalink, local cleanup result when applicable, and the one remaining operation when any.
+   - Report delivery unit, pull request, target, merge, lifecycle, the Deployment disposition, any Cleanup handoff and implementation-handoff permalink, local cleanup result when applicable, the one remaining operation when any, and—when present—the selected deferred follow-up Issue URL.
    - Completion criterion: delivery, operational handoff, completion, and cleanup status are each clear without copying contracts, manifests, logs, or diffs.
 
 ## Completion Receipt
@@ -96,7 +97,7 @@ Target: <repository and branch>
 Delivery evidence: <merge commit and pull request>
 Verification / review: <linked evidence>
 Review attestation shadow: <result and precise reasons from review-attestation.md in AND context, including `missing` when the latest receipt has no block>
-Deployment handoff: <none|standard|custom and Implementation receipt permalink>
+Deployment handoff: <none|standard|custom and Implementation receipt permalink; when a deferred follow-up exists, include the deferred follow-up Issue URL>
 Lifecycle outcome: completed
 ```
 

@@ -147,6 +147,8 @@ For a reviewed implementation at a clear Finish boundary—no blocking pre-merge
 
 Closure can produce a new signal: a follow-up requirement, a documentation need, a newly discovered bug, or a lesson that changes future packages. That signal starts another loop instead of quietly expanding the completed delivery unit.
 
+When Finish evidence confirms concrete unfinished work after source completion, [Deferred Finish follow-up](../and-workflow-contract/deployment-handoff.md#deferred-finish-follow-up) is the handoff to that new loop; environment rollout is not an extra source-completion stage.
+
 ## Continue Reading
 
 - Use the [skills guide](skills.md) to choose the next workflow skill.
