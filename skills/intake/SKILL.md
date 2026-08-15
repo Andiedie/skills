@@ -1,6 +1,6 @@
 ---
 name: intake
-description: Create one unlabeled GitHub Issue from a raw signal and return its URL.
+description: Create one unlabeled GitHub Issue from a raw signal.
 disable-model-invocation: true
 ---
 

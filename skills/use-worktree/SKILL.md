@@ -1,6 +1,7 @@
 ---
 name: use-worktree
-description: Isolated checkout. Use when repository-writing work needs its own worktree.
+description: Create an isolated Git worktree and run repository setup.
+disable-model-invocation: true
 ---
 
 Create `.worktrees/<name>` and a same-named branch from the current `HEAD`. Use the caller's name, or generate a legal random name.

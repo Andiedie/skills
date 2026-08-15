@@ -1,6 +1,6 @@
 ---
 name: finish
-description: Ship the current reviewed branch, merge it, close the Spec or ticket, teardown, and clean safe Git artifacts.
+description: Ship reviewed work, close its Spec or ticket, and clean up its worktree.
 disable-model-invocation: true
 ---
 

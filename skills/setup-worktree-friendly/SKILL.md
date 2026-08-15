@@ -1,6 +1,6 @@
 ---
 name: setup-worktree-friendly
-description: Make one repository's local resources worktree-safe and record a setup/teardown interface.
+description: Prepare a repository for concurrent Git worktrees.
 disable-model-invocation: true
 ---
 
