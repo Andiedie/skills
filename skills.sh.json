@@ -23,29 +23,7 @@
       "description": "Personal helpers for keeping Agent work concise and visible.",
       "skills": [
         "codex-executor",
-        "luna-executor",
-        "progress-title"
-      ]
-    },
-    {
-      "title": "AI-Native Development",
-      "description": "Workflow skills for turning ambiguous signals into verified software changes.",
-      "skills": [
-        "and-workflow-contract",
-        "and-interview-contract",
-        "ask-andie",
-        "and-intake",
-        "and-triage",
-        "and-clarify",
-        "and-wayfind",
-        "and-pack",
-        "and-pick",
-        "and-claim",
-        "and-implement",
-        "and-finish",
-        "and-sweep",
-        "code-review",
-        "setup-and"
+        "luna-executor"
       ]
     }
   ]
