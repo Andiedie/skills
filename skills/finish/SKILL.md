@@ -10,7 +10,7 @@ The invocation authorizes the normal ship path for the current reviewed work.
 
 ## Process
 
-1. **Resolve identities.** Take the current Spec, or the current ticket and its parent Spec, from the current task context. Ask only when that context is missing or contradicts itself.
+1. **Resolve identities.** Take the current Spec, or the current ticket and its parent Spec, from the current task context. Ask only when that context is missing or contradicts itself. The close set is that Spec, or that ticket plus its parent when the ticket is the last open child. A whole-Spec delivery also includes the Spec's contained tickets.
    - Completion criterion: the Issue numbers to close after merge are known.
 
 2. **Prove the branch is shippable.** Working tree clean, every change committed. Use the Matt `code-review` result already in this conversation. Target is the repository default branch; merge method is squash. An explicit argument on this invocation overrides either default. Stop if the chosen merge method is not enabled on the repository.
@@ -19,7 +19,7 @@ The invocation authorizes the normal ship path for the current reviewed work.
 3. **Publish.** Push the source branch. Reuse the single open PR for this head and target, or create that one PR. Wait until every GitHub required check on that PR has succeeded. Merge with the chosen method.
    - Completion criterion: the target contains the merge, or the failed step (push, checks, or merge) is reported with remaining work.
 
-4. **Complete the tracker.** After merge, close the Issues resolved in step 1 with `gh issue close`. When a ticket delivery finishes its parent Spec — it was the last open child — close the parent. A whole-Spec delivery also closes its contained tickets.
+4. **Complete the tracker.** After merge, close the Issues resolved in step 1 with `gh issue close`.
    - Completion criterion: the Issues resolved in step 1 are closed, or the failed close is reported with remaining work.
 
 5. **Tear down and clean.** Run the recorded teardown command from the current worktree when repository instructions name one. Then remove the worktree and branches that belong only to this finished delivery and are clean. Keep a dirty worktree, a branch that still contains other work, and the default or target branch.
