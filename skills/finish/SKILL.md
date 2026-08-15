@@ -19,7 +19,7 @@ The invocation authorizes the normal ship path for the current reviewed work.
 3. **Publish.** Push the source branch. Reuse the single open PR for this head and target, or create that one PR. Wait until every GitHub required check on that PR has succeeded. Merge with the chosen method.
    - Completion criterion: the target contains the merge, or the failed step (push, checks, or merge) is reported with remaining work.
 
-4. **Complete the tracker.** Close the current ticket with `gh issue close` after merge. When this delivery finishes the parent Spec — the current ticket was the last open child, or the current work is the whole Spec — close the parent. A whole-Spec delivery also closes its contained tickets.
+4. **Complete the tracker.** After merge, close the Issues resolved in step 1 with `gh issue close`. When a ticket delivery finishes its parent Spec — it was the last open child — close the parent. A whole-Spec delivery also closes its contained tickets.
    - Completion criterion: the Issues resolved in step 1 are closed, or the failed close is reported with remaining work.
 
 5. **Tear down and clean.** Run the recorded teardown command from the current worktree when repository instructions name one. Then remove the worktree and branches that belong only to this finished delivery and are clean. Keep a dirty worktree, a branch that still contains other work, and the default or target branch.
