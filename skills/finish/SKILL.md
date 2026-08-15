@@ -10,7 +10,7 @@ The invocation authorizes the normal ship path for the current reviewed work.
 
 ## Process
 
-1. **Resolve identities.** Take the parent Spec and current ticket from the current task context. Ask only when that context is missing or contradicts itself.
+1. **Resolve identities.** Take the current Spec, or the current ticket and its parent Spec, from the current task context. Ask only when that context is missing or contradicts itself.
    - Completion criterion: the Issue numbers to close after merge are known.
 
 2. **Prove the branch is shippable.** Working tree clean, every change committed. Use the Matt `code-review` result already in this conversation. Target is the repository default branch; merge method is squash. An explicit argument on this invocation overrides either default. Stop if the chosen merge method is not enabled on the repository.
