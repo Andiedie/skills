@@ -27,6 +27,4 @@ Prepare one target repository so native Git worktrees can run side by side. Adap
    ```
 
    Run setup in both concurrently. Prove they coexist: distinct live bindings, both healthy. Tear down A and prove B is still healthy. Tear down B. Remove both temporary worktrees and branches.
-   - Completion criterion: coexistence and independent teardown were observed, and no `setup-accept-*` worktree or branch remains.
-
-Report the recorded setup and teardown commands.
+   - Completion criterion: coexistence and independent teardown were observed, no `setup-accept-*` worktree or branch remains, and the recorded setup and teardown commands are reported.
