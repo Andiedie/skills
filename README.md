@@ -22,8 +22,6 @@ Install one skill:
 npx --yes skills add Andiedie/skills --skill <skill-name>
 ```
 
-`skills.sh.json` is the machine-readable export list.
-
 ## Skills
 
 - `codex-executor`: delegate bounded execution work to a user-selected Codex CLI profile while the parent Agent keeps planning and review.
