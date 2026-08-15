@@ -29,7 +29,7 @@ npx --yes skills add Andiedie/skills --skill <skill-name>
 - `codex-executor`: delegate bounded execution work to a user-selected Codex CLI profile while the parent Agent keeps planning and review.
 - `documentation-maintenance`: maintain agent-facing project docs without turning them into stale notes.
 - `documentation-reseed`: rebuild a repository's docs from verified current facts when the existing structure is too stale to maintain incrementally.
-- `finish`: ship the current reviewed branch, close the Spec or ticket, tear down, and clean safe Git artifacts.
+- `finish`: ship the current reviewed branch, merge it, close the Spec or ticket, tear down, and clean safe Git artifacts.
 - `install-skills`: install, update, inspect, and troubleshoot `npx skills` managed skills.
 - `intake`: create one unlabeled GitHub Issue from a raw signal and return its URL.
 - `luna-executor`: proactively delegate suitable bounded execution work to the configured Luna worker through model invocation while the parent Agent keeps judgment and review.
@@ -40,4 +40,4 @@ npx --yes skills add Andiedie/skills --skill <skill-name>
 ## Maintenance
 
 - Skill source files live under `skills/*/SKILL.md`.
-- When adding, renaming, or removing a skill, update `skills.sh.json`.
+- When adding, renaming, or removing a skill, keep `skills.sh.json` groupings accurate. Ungrouped skills are discovered from those `SKILL.md` files.

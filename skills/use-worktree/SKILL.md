@@ -1,6 +1,6 @@
 ---
 name: use-worktree
-description: Create a Git worktree at .worktrees/<name> from current HEAD and run repository setup. Use when implementation needs an isolated checkout.
+description: Isolated checkout. Create .worktrees/<name> from current HEAD and run repository setup.
 ---
 
 # Use Worktree

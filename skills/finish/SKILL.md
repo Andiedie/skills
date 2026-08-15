@@ -22,7 +22,7 @@ The invocation authorizes the normal ship path for the current reviewed work.
 4. **Complete the tracker.** Close the current ticket with `gh issue close` after merge. When this delivery finishes the parent Spec — the current ticket was the last open child, or the current work is the whole Spec — close the parent. A whole-Spec delivery also closes its contained tickets.
    - Completion criterion: the Issues resolved in step 1 are closed, or the failed close is reported with remaining work.
 
-5. **Tear down and clean.** Run the recorded teardown command from the current worktree when repository instructions name one. Then remove only the worktree and branches that uniquely belong to this finished delivery and are clean. Keep anything dirty, unique, shared, default, or target.
+5. **Tear down and clean.** Run the recorded teardown command from the current worktree when repository instructions name one. Then remove the worktree and branches that belong only to this finished delivery and are clean. Keep a dirty worktree, a branch that still contains other work, and the default or target branch.
    - Completion criterion: teardown ran or was absent; every removed Git artifact was proven exclusive and clean; every retained artifact has a reason.
 
 On any failure, stop at that step, report what failed and what remains, and leave repair to a later invocation or the user.

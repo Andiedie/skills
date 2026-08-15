@@ -16,7 +16,7 @@ Prepare one target repository so native Git worktrees can run side by side. Adap
 2. **Isolate each collision.** Give each worktree its own values derived from its path or name: ports, compose project, database or schema, socket, pid file, cache directory, and similar. Bind those values through the repository's existing config style.
    - Completion criterion: two worktrees starting from the same tree would receive different bindings for every listed collision.
 
-3. **Publish one lifecycle interface.** Add or reuse a repository-owned `setup` command and a `teardown` command that apply and reverse those bindings. Prefer the repo's existing runner (`just`, `make`, `package.json` scripts, or `scripts/`). Record the exact two commands in repository instructions (`AGENTS.md` when that is the agent entrypoint). Ignore `.worktrees/` in Git.
+3. **Publish one lifecycle interface.** Add or reuse a repository-owned `setup` command and a `teardown` command that apply and reverse those bindings. Prefer the repo's existing runner (`just`, `make`, `package.json` scripts, or `scripts/`). Record the exact two commands in repository instructions (`AGENTS.md` when that is the agent entrypoint). Add `.worktrees/` to `.gitignore`.
    - Completion criterion: repository instructions contain the exact setup and teardown commands, `.worktrees/` is gitignored, and both commands are executable from a worktree root.
 
 4. **Accept with two temporary worktrees.** From the current `HEAD`:
