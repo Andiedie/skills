@@ -24,7 +24,6 @@ npx --yes skills add Andiedie/skills --skill <skill-name>
 
 ## Skills
 
-- `codex-executor`: delegate bounded execution work to a user-selected Codex CLI profile while the parent Agent keeps planning and review.
 - `documentation-maintenance`: maintain agent-facing project docs without turning them into stale notes.
 - `documentation-reseed`: rebuild a repository's docs from verified current facts when the existing structure is too stale to maintain incrementally.
 - `finish`: ship the current reviewed branch, merge it, close the Spec or ticket, tear down, and clean safe Git artifacts.
