@@ -24,6 +24,7 @@ npx --yes skills add Andiedie/skills --skill <skill-name>
 
 ## Skills
 
+- `codebase-simplify`: audit a whole repository for evidence-backed opportunities to remove or collapse complexity.
 - `documentation-maintenance`: maintain agent-facing project docs without turning them into stale notes.
 - `documentation-reseed`: rebuild a repository's docs from verified current facts when the existing structure is too stale to maintain incrementally.
 - `finish`: ship the current reviewed branch, merge it, close the Spec or ticket, tear down, and clean safe Git artifacts.
